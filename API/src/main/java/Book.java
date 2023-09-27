@@ -5,7 +5,7 @@ public class Book implements Serializable {
     private int id;
     private String title;
     private String author;
-    private boolean available;
+    private boolean isAvailable;
 
     public Book() {
     }
@@ -14,7 +14,7 @@ public class Book implements Serializable {
         this.id = id;
         this.title = title;
         this.author = author;
-        this.available = available;
+        this.isAvailable = available;
     }
 
     public int getId() {
@@ -42,10 +42,10 @@ public class Book implements Serializable {
     }
 
     public boolean isAvailable() {
-        return available;
+        return isAvailable;
     }
 
     public void setAvailable(boolean available) {
-        this.available = available;
+        this.isAvailable = available;
     }
 }
