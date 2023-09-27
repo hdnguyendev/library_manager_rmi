@@ -4,6 +4,11 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 
 public interface LibraryRemote extends Remote {
-    public boolean user_login(String username, String pass) throws RemoteException, SQLException;
+    public Response user_login(String username, String pass) throws RemoteException, SQLException;
+    public Response user_borrowBook(int user_id, int book_id) throws RemoteException, SQLException;
+
+
+
+
     public DefaultTableModel list_books() throws RemoteException, SQLException;
 }

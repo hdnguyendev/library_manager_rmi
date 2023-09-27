@@ -57,9 +57,26 @@ VALUES
 -- Thêm dữ liệu mẫu vào bảng Book
 INSERT INTO Book (Title, Author, Available)
 VALUES
-    ('Book 1', 'Author 1', TRUE),
-    ('Book 2', 'Author 2', TRUE),
-    ('Book 3', 'Author 3', TRUE);
+    ('To Kill a Mockingbird', 'Harper Lee', TRUE),
+    ('1984', 'George Orwell', TRUE),
+    ('Pride and Prejudice', 'Jane Austen', TRUE),
+    ('The Great Gatsby', 'F. Scott Fitzgerald', TRUE),
+    ('Moby-Dick', 'Herman Melville', TRUE),
+    ('The Catcher in the Rye', 'J.D. Salinger', TRUE),
+    ('Brave New World', 'Aldous Huxley', TRUE),
+    ('The Lord of the Rings', 'J.R.R. Tolkien', TRUE),
+    ('The Chronicles of Narnia', 'C.S. Lewis', TRUE),
+    ('Harry Potter and the Philosopher\'s Stone', 'J.K. Rowling', TRUE),
+    ('To the Lighthouse', 'Virginia Woolf', TRUE),
+    ('The Odyssey', 'Homer', TRUE),
+    ('Crime and Punishment', 'Fyodor Dostoevsky', TRUE),
+    ('One Hundred Years of Solitude', 'Gabriel Garcia Marquez', TRUE),
+    ('The Hobbit', 'J.R.R. Tolkien', TRUE),
+    ('Don Quixote', 'Miguel de Cervantes', TRUE),
+    ('War and Peace', 'Leo Tolstoy', TRUE),
+    ('The Divine Comedy', 'Dante Alighieri', TRUE),
+    ('Alice\'s Adventures in Wonderland', 'Lewis Carroll', TRUE),
+    ('The Adventures of Huckleberry Finn', 'Mark Twain', TRUE);
 
 -- Thêm dữ liệu mẫu vào bảng BorrowedBook
 INSERT INTO BorrowedBook (UserId, BookId, BorrowDate, ReturnDate)

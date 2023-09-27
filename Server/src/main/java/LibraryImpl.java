@@ -20,29 +20,86 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
 
-    public boolean user_login(String username, String pass) throws RemoteException, SQLException {
+    public Response user_login(String username, String pass) throws RemoteException, SQLException {
         String query = "SELECT * FROM user WHERE username = ? AND password = ?";
-        PreparedStatement pstmt = conn.prepareStatement(query);
-        pstmt.setString(1, username);
-        pstmt.setString(2, pass);
-        ResultSet rs = pstmt.executeQuery();
-        boolean isValidUser = rs.next();
-
+        pst = conn.prepareStatement(query);
+        pst.setString(1, username);
+        pst.setString(2, pass);
+        rst = pst.executeQuery();
+        boolean isValidUser = rst.next();
+        User user = null;
         if (isValidUser) {
+            int id = rst.getInt("Id");
+            String fullName = rst.getString("Fullname");
+            String lastAccessedServer = rst.getString("LastAccessedServer");
+            Time lastAccessedDateTime = rst.getTime("LastAccessedDateTime");
+
+            user = new User(id, username, pass, fullName, lastAccessedServer, lastAccessedDateTime);
+
             String updateQuery = "UPDATE user SET LastAccessedServer = ?, LastAccessedDateTime = ? WHERE username = ?";
-            PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
-            updateStmt.setString(1,ipAddress);
-            updateStmt.setTimestamp(2, new java.sql.Timestamp(System.currentTimeMillis()));
-            updateStmt.setString(3, username);
-            updateStmt.executeUpdate();
-            updateStmt.close();
+            pst = conn.prepareStatement(updateQuery);
+            pst.setString(1, ipAddress);
+            pst.setTimestamp(2, new java.sql.Timestamp(System.currentTimeMillis()));
+            pst.setString(3, username);
+            pst.executeUpdate();
+            pst.close();
+            return new Response(200, user);
         }
 
-        rs.close();
-        pstmt.close();
-
-        return isValidUser;
+        return new Response(100, null);
     }
+
+    @Override
+    public Response user_borrowBook(int user_id, int book_id) throws RemoteException, SQLException {
+        PreparedStatement stmt = null;
+        try {
+            // Kết nối tới cơ sở dữ liệu
+
+            // Kiểm tra xem sách có sẵn để mượn không
+            String checkAvailabilityQuery = "SELECT Available FROM Book WHERE Id = ?";
+
+            stmt = conn.prepareStatement(checkAvailabilityQuery);
+            stmt.setInt(1, book_id);
+            rst = stmt.executeQuery();
+
+            if (rst.next()) {
+                boolean available = rst.getBoolean("Available");
+
+                if (available) {
+                    // Cập nhật trạng thái sách đã được mượn
+                    String borrowBookQuery = "UPDATE Book SET Available = FALSE WHERE Id = ?";
+                    stmt = conn.prepareStatement(borrowBookQuery);
+                    stmt.setInt(1, book_id);
+                    int rowsUpdated = stmt.executeUpdate();
+
+                    if (rowsUpdated > 0) {
+                        // Thêm thông tin mượn sách vào bảng BorrowedBook
+                        String borrowInfoQuery = "INSERT INTO BorrowedBook (UserId, BookId, BorrowDate) VALUES (?, ?, CURDATE())";
+                        stmt = conn.prepareStatement(borrowInfoQuery);
+                        stmt.setInt(1, user_id);
+                        stmt.setInt(2, book_id);
+                        int rowsInserted = stmt.executeUpdate();
+
+                        if (rowsInserted > 0) {
+                            return new Response(200, "Book borrowed successfully.");
+                        } else {
+                            return new Response(100, "Failed to insert borrowing information.");
+                        }
+                    } else {
+                        return new Response(100, "Failed to update book availability.");
+                    }
+                } else {
+                    return new Response(100, "The book is not available for borrowing.");
+                }
+            } else {
+                return new Response(100, "Book not found.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new Response(100, "An error occurred while borrowing the book.");
+    }
+
+}
 
     @Override
     public DefaultTableModel list_books() throws RemoteException, SQLException {
@@ -54,7 +111,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             vData.clear();
 
             String[] title = new String[]{
-                    "Book ID", "Title", "Author", "Available", "Delete"
+                    "Book ID", "Title", "Author", "Available"
             };
             for (int i = 0; i < title.length; i++) {
                 vTitle.add(title[i]);
@@ -66,9 +123,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
                 row.add(rst.getInt("Id"));
                 row.add(rst.getString("Title"));
                 row.add(rst.getString("Author"));
-                row.add(rst.getBoolean("Available"));
-                row.add("DELETE");
-
+                row.add(rst.getBoolean("Available") ? "Available" : "Unavailable");
                 vData.add(row);
             }
             rst.close();

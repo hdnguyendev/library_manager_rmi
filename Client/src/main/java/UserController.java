@@ -12,13 +12,14 @@ public class UserController {
         libraryRemote = (LibraryRemote) Naming.lookup("rmi://localhost:1234/api");
     }
 
-    public boolean login(String username, String pass) throws SQLException, RemoteException {
-        if (libraryRemote.user_login(username, pass)) {
+    public Response login(String username, String pass) throws SQLException, RemoteException {
+        Response response = libraryRemote.user_login(username, pass);
+        if (response.getStatus() == 200) {
             JOptionPane.showMessageDialog(null, "Login successfully!!");
-            return true;
+            return response;
         }
         JOptionPane.showMessageDialog(null, "Login failed!");
-        return false;
+        return response;
     }
 
 }

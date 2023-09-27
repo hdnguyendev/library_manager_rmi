@@ -7,6 +7,7 @@ new FormModel {
 			name: "this"
 			"$sizePolicy": 1
 			"$locationPolicy": 1
+			"title": "eLibrary VKU"
 			add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
 				name: "tabbedPane1"
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
@@ -25,11 +26,8 @@ new FormModel {
 								"text": "Search"
 							} )
 							add( new FormComponent( "javax.swing.JTextField" ) {
-								name: "textField1"
-							} )
-							add( new FormComponent( "javax.swing.JButton" ) {
-								name: "button1"
-								"text": "✅"
+								name: "tfSearch"
+								"preferredSize": new java.awt.Dimension( 200, 36 )
 							} )
 						}, new FormLayoutConstraints( class java.lang.String ) {
 							"value": "North"
@@ -39,21 +37,24 @@ new FormModel {
 					} )
 					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "scrollPane1"
+						"border": new javax.swing.border.TitledBorder( "List Books" )
 						add( new FormComponent( "javax.swing.JTable" ) {
 							name: "tableBooks"
+							"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector, new java.util.Vector, new java.util.Vector, new java.util.Vector )
+							addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "tableBooksMouseClicked", true ) )
 						} )
 					}, new FormLayoutConstraints( class java.lang.String ) {
 						"value": "Center"
 					} )
 				}, new FormLayoutConstraints( null ) {
-					"title": "Libary"
+					"title": "Books"
 				} )
 			}, new FormLayoutConstraints( class java.lang.String ) {
 				"value": "Center"
 			} )
 		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 85, 85 )
-			"size": new java.awt.Dimension( 700, 445 )
+			"location": new java.awt.Point( 35, 85 )
+			"size": new java.awt.Dimension( 755, 445 )
 		} )
 	}
 }

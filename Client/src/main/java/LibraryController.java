@@ -18,4 +18,8 @@ public class LibraryController {
         return defaultTableModel;
     }
 
+    public Response userBorrowBook(int user_id, int book_id) throws SQLException, RemoteException {
+        return libraryRemote.user_borrowBook(user_id,book_id);
+    }
+
 }

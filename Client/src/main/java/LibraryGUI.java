@@ -3,29 +3,65 @@
  */
 
 import java.awt.*;
+import java.awt.event.*;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.*;
 
 /**
  * @author nguye
  */
 public class LibraryGUI extends JFrame {
+    User user;
+    TableRowSorter sorter;
     LibraryController controller = new LibraryController();
-    public LibraryGUI() throws MalformedURLException, NotBoundException, RemoteException {
+    public LibraryGUI(User user) throws MalformedURLException, NotBoundException, RemoteException {
+        this.user = user;
+        if (user == null) {
+            System.out.println("User has error data");
+        }
         initComponents();
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
         updateTableBooks();
+
         
     }
 
     private void updateTableBooks() {
         try {
-            tableBooks.setModel(controller.getDataTableBooks());
+            DefaultTableModel model = controller.getDataTableBooks();
+            tableBooks.setModel(model);
+            sorter = new TableRowSorter<>(model);
+            tableBooks.setRowSorter(sorter);
+            tfSearch.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    search(tfSearch.getText());
+                }
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    search(tfSearch.getText());
+                }
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    search(tfSearch.getText());
+                }
+                public void search(String str) {
+                    if (str.length() == 0) {
+                        sorter.setRowFilter(null);
+                    } else {
+                        sorter.setRowFilter(RowFilter.regexFilter(str));
+                    }
+                }
+            });
+            tableBooks.setDefaultEditor(Object.class, null);
             scrollPane1.setViewportView(tableBooks);
 
         } catch (RemoteException e) {
@@ -34,6 +70,35 @@ public class LibraryGUI extends JFrame {
             throw new RuntimeException(e);
         }
         tableBooks.setRowHeight(50);
+    }
+
+    private void tableBooksMouseClicked(MouseEvent e) throws SQLException, RemoteException, MalformedURLException, NotBoundException {
+        int selectedRow = tableBooks.getSelectedRow();
+
+        if (selectedRow != -1) {
+            // Lấy thông tin từ hàng dữ liệu được chọn
+            int bookId = (int) tableBooks.getValueAt(selectedRow, 0);
+            String title = (String) tableBooks.getValueAt(selectedRow, 1);
+            String author = (String) tableBooks.getValueAt(selectedRow, 2);
+            String available = (String) tableBooks.getValueAt(selectedRow, 3);
+            Book book = new Book(bookId,title,author, available.equals("Available"));
+            // Sử dụng thông tin sách được chọn
+            System.out.println("Selected Book:");
+            System.out.println("Book ID: " + bookId);
+            System.out.println("Title: " + title);
+            System.out.println("Author: " + author);
+            System.out.println("Available: " + available);
+            BookDetailGUI dialog = new BookDetailGUI(this, true, book, user);
+
+            dialog.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                   updateTableBooks();
+                }
+            });
+
+
+        }
     }
 
     private void initComponents() {
@@ -45,12 +110,12 @@ public class LibraryGUI extends JFrame {
         panel3 = new JPanel();
         panel4 = new JPanel();
         label1 = new JLabel();
-        textField1 = new JTextField();
-        button1 = new JButton();
+        tfSearch = new JTextField();
         scrollPane1 = new JScrollPane();
         tableBooks = new JTable();
 
         //======== this ========
+        setTitle("eLibrary VKU");
         var contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
 
@@ -59,13 +124,13 @@ public class LibraryGUI extends JFrame {
 
             //======== panel1 ========
             {
-                panel1.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new javax
-                . swing. border .EmptyBorder ( 0, 0 ,0 , 0) ,  "JFor\u006dDesi\u0067ner \u0045valu\u0061tion" , javax. swing
-                .border . TitledBorder. CENTER ,javax . swing. border .TitledBorder . BOTTOM, new java. awt .
-                Font ( "Dia\u006cog", java .awt . Font. BOLD ,12 ) ,java . awt. Color .red
-                ) ,panel1. getBorder () ) ); panel1. addPropertyChangeListener( new java. beans .PropertyChangeListener ( ){ @Override
-                public void propertyChange (java . beans. PropertyChangeEvent e) { if( "bord\u0065r" .equals ( e. getPropertyName (
-                ) ) )throw new RuntimeException( ) ;} } );
+                panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax.
+                swing. border. EmptyBorder( 0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing. border
+                . TitledBorder. CENTER, javax. swing. border. TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog"
+                ,java .awt .Font .BOLD ,12 ), java. awt. Color. red) ,panel1. getBorder
+                ( )) ); panel1. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java
+                .beans .PropertyChangeEvent e) {if ("\u0062ord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException
+                ( ); }} );
                 panel1.setLayout(new BorderLayout());
 
                 //======== panel2 ========
@@ -85,11 +150,10 @@ public class LibraryGUI extends JFrame {
                         //---- label1 ----
                         label1.setText("Search");
                         panel4.add(label1);
-                        panel4.add(textField1);
 
-                        //---- button1 ----
-                        button1.setText("\u2705");
-                        panel4.add(button1);
+                        //---- tfSearch ----
+                        tfSearch.setPreferredSize(new Dimension(200, 36));
+                        panel4.add(tfSearch);
                     }
                     panel2.add(panel4, BorderLayout.NORTH);
                 }
@@ -97,14 +161,33 @@ public class LibraryGUI extends JFrame {
 
                 //======== scrollPane1 ========
                 {
+                    scrollPane1.setBorder(new TitledBorder("List Books"));
+
+                    //---- tableBooks ----
+                    tableBooks.setModel(new DefaultTableModel());
+                    tableBooks.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            try {
+tableBooksMouseClicked(e);} catch (SQLException ex) {
+    throw new RuntimeException(ex);
+} catch (RemoteException ex) {
+    throw new RuntimeException(ex);
+}catch (MalformedURLException ex) {
+    throw new RuntimeException(ex);
+}catch (NotBoundException ex) {
+    throw new RuntimeException(ex);
+}
+                        }
+                    });
                     scrollPane1.setViewportView(tableBooks);
                 }
                 panel1.add(scrollPane1, BorderLayout.CENTER);
             }
-            tabbedPane1.addTab("Libary", panel1);
+            tabbedPane1.addTab("Books", panel1);
         }
         contentPane.add(tabbedPane1, BorderLayout.CENTER);
-        setSize(700, 445);
+        setSize(755, 445);
         setLocationRelativeTo(null);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
@@ -117,8 +200,7 @@ public class LibraryGUI extends JFrame {
     private JPanel panel3;
     private JPanel panel4;
     private JLabel label1;
-    private JTextField textField1;
-    private JButton button1;
+    private JTextField tfSearch;
     private JScrollPane scrollPane1;
     private JTable tableBooks;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on

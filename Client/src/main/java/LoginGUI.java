@@ -16,6 +16,7 @@ import javax.swing.*;
  */
 public class LoginGUI extends JFrame {
     UserController controller = new UserController();
+
     public LoginGUI() throws MalformedURLException, NotBoundException, RemoteException {
         initComponents();
     }
@@ -23,9 +24,10 @@ public class LoginGUI extends JFrame {
     private void btnLogin(ActionEvent e) throws SQLException, RemoteException, MalformedURLException, NotBoundException {
         String username = tfUsername.getText().trim();
         String pass = tfPassword.getText();
-        if (controller.login(username, pass)) {
+        Response response = controller.login(username, pass);
+        if (response.getStatus() == 200) {
             setVisible(false);
-            new LibraryGUI();
+            new LibraryGUI((User) response.getData());
         }
     }
 
