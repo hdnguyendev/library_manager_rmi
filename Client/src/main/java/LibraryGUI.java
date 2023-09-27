@@ -21,20 +21,55 @@ public class LibraryGUI extends JFrame {
     User user;
     TableRowSorter sorter;
     LibraryController controller = new LibraryController();
+
     public LibraryGUI(User user) throws MalformedURLException, NotBoundException, RemoteException {
         this.user = user;
         if (user == null) {
             System.out.println("User has error data");
         }
         initComponents();
-        setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
         updateTableBooks();
 
-        
+
+        setVisible(true);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    class CenteredTableCellRenderer extends DefaultTableCellRenderer {
+        public CenteredTableCellRenderer() {
+            setHorizontalAlignment(JLabel.CENTER);
+        }
+    }
+    class CustomHeaderRenderer extends DefaultTableCellRenderer {
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            label.setBackground(Color.BLUE); // Đặt màu nền là màu xanh
+            label.setForeground(Color.WHITE); // Đặt màu chữ là màu trắng
+            label.setFont(label.getFont().deriveFont(Font.BOLD)); // Đặt chữ in đậm
+            label.setHorizontalAlignment(JLabel.CENTER); // Căn giữa tiêu đề
+            return label;
+        }
+    }
+    class IconCellRenderer extends DefaultTableCellRenderer {
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if (value instanceof String) {
+                String check = (String) value;
+                if (check.equals("Available")){
+                    setIcon(new ImageIcon("/images/checked.png")); // Đường dẫn đến biểu tượng
+                    setText("Available");
+                } else{
+                    setIcon(new ImageIcon("/images/warning.png"));
+                    setText("Unavailable");
+                }
+            }
+
+            setHorizontalAlignment(JLabel.CENTER); // Căn giữa biểu tượng
+            return this;
+        }
     }
 
     private void updateTableBooks() {
+
         try {
             DefaultTableModel model = controller.getDataTableBooks();
             tableBooks.setModel(model);
@@ -45,14 +80,17 @@ public class LibraryGUI extends JFrame {
                 public void insertUpdate(DocumentEvent e) {
                     search(tfSearch.getText());
                 }
+
                 @Override
                 public void removeUpdate(DocumentEvent e) {
                     search(tfSearch.getText());
                 }
+
                 @Override
                 public void changedUpdate(DocumentEvent e) {
                     search(tfSearch.getText());
                 }
+
                 public void search(String str) {
                     if (str.length() == 0) {
                         sorter.setRowFilter(null);
@@ -69,7 +107,17 @@ public class LibraryGUI extends JFrame {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        tableBooks.setRowHeight(50);
+        // modify table
+        tableBooks.getTableHeader().setDefaultRenderer(new CustomHeaderRenderer());
+
+
+
+        tableBooks.setRowHeight(25);
+        TableColumn indexColumn = tableBooks.getColumnModel().getColumn(0);
+        TableColumn statusColumn = tableBooks.getColumnModel().getColumn(3);
+        indexColumn.setPreferredWidth(20); // Đặt độ rộng cố định
+        indexColumn.setCellRenderer(new CenteredTableCellRenderer());
+        statusColumn.setCellRenderer(new IconCellRenderer());
     }
 
     private void tableBooksMouseClicked(MouseEvent e) throws SQLException, RemoteException, MalformedURLException, NotBoundException {
@@ -81,7 +129,7 @@ public class LibraryGUI extends JFrame {
             String title = (String) tableBooks.getValueAt(selectedRow, 1);
             String author = (String) tableBooks.getValueAt(selectedRow, 2);
             String available = (String) tableBooks.getValueAt(selectedRow, 3);
-            Book book = new Book(bookId,title,author, available.equals("Available"));
+            Book book = new Book(bookId, title, author, available.equals("Available"));
             // Sử dụng thông tin sách được chọn
             System.out.println("Selected Book:");
             System.out.println("Book ID: " + bookId);
@@ -93,7 +141,7 @@ public class LibraryGUI extends JFrame {
             dialog.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
-                   updateTableBooks();
+                    updateTableBooks();
                 }
             });
 
@@ -101,6 +149,32 @@ public class LibraryGUI extends JFrame {
         }
     }
 
+    private void tableBooksMousePressed(MouseEvent e) throws MalformedURLException, SQLException, NotBoundException, RemoteException {
+        int selectedRow = tableBooks.getSelectedRow();
+
+        if (selectedRow != -1) {
+            // Lấy thông tin từ hàng dữ liệu được chọn
+            int bookId = (int) tableBooks.getValueAt(selectedRow, 0);
+            String title = (String) tableBooks.getValueAt(selectedRow, 1);
+            String author = (String) tableBooks.getValueAt(selectedRow, 2);
+            String available = (String) tableBooks.getValueAt(selectedRow, 3);
+            Book book = new Book(bookId, title, author, available.equals("Available"));
+            // Sử dụng thông tin sách được chọn
+            System.out.println("Selected Book:");
+            System.out.println("Book ID: " + bookId);
+            System.out.println("Title: " + title);
+            System.out.println("Author: " + author);
+            System.out.println("Available: " + available);
+            BookDetailGUI dialog = new BookDetailGUI(this, true, book, user);
+
+            dialog.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    updateTableBooks();
+                }
+            });
+        }
+    }
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Evaluation license - Hồ Đăng Nguyện
@@ -124,13 +198,12 @@ public class LibraryGUI extends JFrame {
 
             //======== panel1 ========
             {
-                panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax.
-                swing. border. EmptyBorder( 0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing. border
-                . TitledBorder. CENTER, javax. swing. border. TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog"
-                ,java .awt .Font .BOLD ,12 ), java. awt. Color. red) ,panel1. getBorder
-                ( )) ); panel1. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java
-                .beans .PropertyChangeEvent e) {if ("\u0062ord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException
-                ( ); }} );
+                panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing.
+                border. EmptyBorder( 0, 0, 0, 0) , "JF\u006frm\u0044es\u0069gn\u0065r \u0045va\u006cua\u0074io\u006e", javax. swing. border. TitledBorder. CENTER
+                , javax. swing. border. TitledBorder. BOTTOM, new java .awt .Font ("D\u0069al\u006fg" ,java .awt .Font
+                .BOLD ,12 ), java. awt. Color. red) ,panel1. getBorder( )) ); panel1. addPropertyChangeListener (
+                new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("\u0062or\u0064er"
+                .equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
                 panel1.setLayout(new BorderLayout());
 
                 //======== panel2 ========
@@ -167,15 +240,15 @@ public class LibraryGUI extends JFrame {
                     tableBooks.setModel(new DefaultTableModel());
                     tableBooks.addMouseListener(new MouseAdapter() {
                         @Override
-                        public void mouseClicked(MouseEvent e) {
+                        public void mousePressed(MouseEvent e) {
                             try {
-tableBooksMouseClicked(e);} catch (SQLException ex) {
+tableBooksMousePressed(e);} catch (MalformedURLException ex) {
+    throw new RuntimeException(ex);
+} catch (SQLException ex) {
+    throw new RuntimeException(ex);
+} catch (NotBoundException ex) {
     throw new RuntimeException(ex);
 } catch (RemoteException ex) {
-    throw new RuntimeException(ex);
-}catch (MalformedURLException ex) {
-    throw new RuntimeException(ex);
-}catch (NotBoundException ex) {
     throw new RuntimeException(ex);
 }
                         }
@@ -187,7 +260,7 @@ tableBooksMouseClicked(e);} catch (SQLException ex) {
             tabbedPane1.addTab("Books", panel1);
         }
         contentPane.add(tabbedPane1, BorderLayout.CENTER);
-        setSize(755, 445);
+        setSize(1040, 445);
         setLocationRelativeTo(null);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }

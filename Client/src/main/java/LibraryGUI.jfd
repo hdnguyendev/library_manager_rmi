@@ -41,7 +41,7 @@ new FormModel {
 						add( new FormComponent( "javax.swing.JTable" ) {
 							name: "tableBooks"
 							"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector, new java.util.Vector, new java.util.Vector, new java.util.Vector )
-							addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "tableBooksMouseClicked", true ) )
+							addEvent( new FormEvent( "java.awt.event.MouseListener", "mousePressed", "tableBooksMousePressed", true ) )
 						} )
 					}, new FormLayoutConstraints( class java.lang.String ) {
 						"value": "Center"
@@ -54,7 +54,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 35, 85 )
-			"size": new java.awt.Dimension( 755, 445 )
+			"size": new java.awt.Dimension( 1040, 445 )
 		} )
 	}
 }
