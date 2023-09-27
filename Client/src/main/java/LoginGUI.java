@@ -20,7 +20,7 @@ public class LoginGUI extends JFrame {
         initComponents();
     }
 
-    private void btnLogin(ActionEvent e) throws SQLException, RemoteException {
+    private void btnLogin(ActionEvent e) throws SQLException, RemoteException, MalformedURLException, NotBoundException {
         String username = tfUsername.getText().trim();
         String pass = tfPassword.getText();
         if (controller.login(username, pass)) {
@@ -95,6 +95,10 @@ public class LoginGUI extends JFrame {
 btnLogin(e);} catch (SQLException ex) {
     throw new RuntimeException(ex);
 } catch (RemoteException ex) {
+    throw new RuntimeException(ex);
+}catch (MalformedURLException ex) {
+    throw new RuntimeException(ex);
+}catch (NotBoundException ex) {
     throw new RuntimeException(ex);
 }});
             panel2.add(btnLogin);
