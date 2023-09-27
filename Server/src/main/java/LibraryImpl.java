@@ -50,6 +50,11 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
     @Override
+    public Response user_logout(String username) throws RemoteException, SQLException {
+        return null;
+    }
+
+    @Override
     public Response user_borrowBook(int user_id, int book_id) throws RemoteException, SQLException {
         try {
             // Kết nối tới cơ sở dữ liệu
@@ -96,9 +101,9 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
         } catch (SQLException e) {
             e.printStackTrace();
             return new Response(100, "An error occurred while borrowing the book.");
-    }
+        }
 
-}
+    }
 
     @Override
     public Response book_addBook(Book book) throws RemoteException {
@@ -114,9 +119,76 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return new Response(200,"Insert data success!");
+        return new Response(200, "Insert data successfully!");
 
     }
+
+    @Override
+    public Response book_updateBook(Book book) throws RemoteException {
+        try {
+            String updateQuery = "UPDATE book SET title = ?, author = ?, description = ?, isAvailable= ? WHERE id = ?";
+            pst = conn.prepareStatement(updateQuery);
+            pst.setString(1, book.getTitle());
+            pst.setString(2, book.getAuthor());
+            pst.setString(3, book.getDescription());
+            pst.setBoolean(4, book.isAvailable());
+            pst.setInt(5, book.getId());
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return new Response(200, "Update data successfully!");
+    }
+
+    @Override
+    public Response book_deleteBook(Book book) throws RemoteException {
+        try {
+            String deleteQuery = "DELETE FROM book WHERE id = ?";
+            pst = conn.prepareStatement(deleteQuery);
+            pst.setInt(1, book.getId());
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return new Response(200, "Delete data successfully!");
+    }
+
+    @Override
+    public DefaultTableModel listBorrowed() throws RemoteException {
+        Vector vTitle = new Vector();
+        Vector vData = new Vector();
+        try {
+            String listBorrowed = "SELECT b.id, u.username, bk.title, b.borrowDate, b.returnDate " +
+                    "FROM borrowedbook b " +
+                    "INNER JOIN user u ON b.userId = u.id " +
+                    "INNER JOIN book bk ON b.bookId = bk.id";
+            rst = stm.executeQuery(listBorrowed);
+            vTitle.clear();
+            vData.clear();
+            String[] title = new String[]{
+                    "ID", "Username", "Book Title","Borrowed Date", "Return Date"
+            };
+            for (int i = 0; i < title.length; i++) {
+                vTitle.add(title[i]);
+            }
+            while (rst.next()) {
+                Vector row = new Vector();
+
+                row.add(rst.getInt("id"));
+                row.add(rst.getString("username"));
+                row.add(rst.getString("title"));
+                row.add(rst.getString("borrowDate"));
+                row.add(rst.getString("returnDate"));
+                vData.add(row);
+            }
+            rst.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return new DefaultTableModel(vData, vTitle);
+
+    }
+
 
     @Override
     public DefaultTableModel list_books() throws RemoteException, SQLException {

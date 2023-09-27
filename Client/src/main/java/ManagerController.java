@@ -26,8 +26,20 @@ public class ManagerController {
         Response response = libraryRemote.book_addBook(book);
         return response;
     }
+    public Response book_updateBook(Book book)throws RemoteException,SQLException{
+        Response response = libraryRemote.book_updateBook(book);
+        return response;
+    }
     public DefaultTableModel getDataTableBooks() throws SQLException, RemoteException {
         DefaultTableModel defaultTableModel = libraryRemote.list_books();
+        return defaultTableModel;
+    }
+    public Response book_deleteBook(Book book)throws RemoteException,SQLException {
+        Response response = libraryRemote.book_deleteBook(book);
+        return response;
+    }
+    public DefaultTableModel listBorrowed()throws RemoteException,SQLException{
+        DefaultTableModel defaultTableModel = libraryRemote.listBorrowed();
         return defaultTableModel;
     }
 }
