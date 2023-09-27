@@ -51,16 +51,15 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
     @Override
     public Response user_borrowBook(int user_id, int book_id) throws RemoteException, SQLException {
-        PreparedStatement stmt = null;
         try {
             // Kết nối tới cơ sở dữ liệu
 
             // Kiểm tra xem sách có sẵn để mượn không
             String checkAvailabilityQuery = "SELECT isAvailable FROM Book WHERE id = ?";
 
-            stmt = conn.prepareStatement(checkAvailabilityQuery);
-            stmt.setInt(1, book_id);
-            rst = stmt.executeQuery();
+            pst = conn.prepareStatement(checkAvailabilityQuery);
+            pst.setInt(1, book_id);
+            rst = pst.executeQuery();
 
             if (rst.next()) {
                 boolean available = rst.getBoolean("isAvailable");
@@ -68,17 +67,17 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
                 if (available) {
                     // Cập nhật trạng thái sách đã được mượn
                     String borrowBookQuery = "UPDATE Book SET isAvailable = FALSE WHERE id = ?";
-                    stmt = conn.prepareStatement(borrowBookQuery);
-                    stmt.setInt(1, book_id);
-                    int rowsUpdated = stmt.executeUpdate();
+                    pst = conn.prepareStatement(borrowBookQuery);
+                    pst.setInt(1, book_id);
+                    int rowsUpdated = pst.executeUpdate();
 
                     if (rowsUpdated > 0) {
                         // Thêm thông tin mượn sách vào bảng BorrowedBook
                         String borrowInfoQuery = "INSERT INTO BorrowedBook (userId, bookId, borrowDate) VALUES (?, ?, CURDATE())";
-                        stmt = conn.prepareStatement(borrowInfoQuery);
-                        stmt.setInt(1, user_id);
-                        stmt.setInt(2, book_id);
-                        int rowsInserted = stmt.executeUpdate();
+                        pst = conn.prepareStatement(borrowInfoQuery);
+                        pst.setInt(1, user_id);
+                        pst.setInt(2, book_id);
+                        int rowsInserted = pst.executeUpdate();
 
                         if (rowsInserted > 0) {
                             return new Response(200, "Book borrowed successfully.");
