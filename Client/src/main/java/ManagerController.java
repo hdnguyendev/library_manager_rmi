@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -24,5 +25,9 @@ public class ManagerController {
     public Response book_addBook(Book book) throws RemoteException,SQLException {
         Response response = libraryRemote.book_addBook(book);
         return response;
+    }
+    public DefaultTableModel getDataTableBooks() throws SQLException, RemoteException {
+        DefaultTableModel defaultTableModel = libraryRemote.list_books();
+        return defaultTableModel;
     }
 }

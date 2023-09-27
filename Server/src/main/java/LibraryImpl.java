@@ -123,12 +123,12 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
         Vector vTitle = new Vector();
         Vector vData = new Vector();
         try {
-            rst = stm.executeQuery("SELECT id, title, author, isAvailable FROM Book");
+            rst = stm.executeQuery("SELECT id, title, author, description, isAvailable FROM Book");
             vTitle.clear();
             vData.clear();
 
             String[] title = new String[]{
-                    "Book ID", "Title", "Author", "Status"
+                    "Book ID", "Title", "Author","Description", "Status"
             };
             for (int i = 0; i < title.length; i++) {
                 vTitle.add(title[i]);
@@ -140,6 +140,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
                 row.add(rst.getInt("id"));
                 row.add(rst.getString("title"));
                 row.add(rst.getString("author"));
+                row.add(rst.getString("description"));
                 row.add(rst.getBoolean("isAvailable") ? "Available" : "Unavailable");
                 vData.add(row);
             }
