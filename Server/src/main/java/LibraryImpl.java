@@ -101,6 +101,24 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 }
 
     @Override
+    public Response book_addBook(Book book) throws RemoteException {
+        try {
+            String addBook_query = "INSERT INTO book (id, title, author, description, isAvailable) VALUES (?, ?, ?, ?, ?)";
+            pst = conn.prepareStatement(addBook_query);
+            pst.setInt(1, book.getId());
+            pst.setString(2, book.getTitle());
+            pst.setString(3, book.getAuthor());
+            pst.setString(4, book.getDescription());
+            pst.setBoolean(5, book.isAvailable());
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return new Response(200,"Insert data success!");
+
+    }
+
+    @Override
     public DefaultTableModel list_books() throws RemoteException, SQLException {
         Vector vTitle = new Vector();
         Vector vData = new Vector();

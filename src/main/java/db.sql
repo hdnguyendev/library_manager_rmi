@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS Book
     id          INT PRIMARY KEY AUTO_INCREMENT,
     title       VARCHAR(100) NOT NULL,
     author      VARCHAR(100) NOT NULL,
+    description      VARCHAR(100) DEFAULT NULL,
     isAvailable BOOLEAN DEFAULT TRUE
 );
 

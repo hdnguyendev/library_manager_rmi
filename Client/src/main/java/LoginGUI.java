@@ -8,7 +8,6 @@ import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
-import java.util.Arrays;
 import javax.swing.*;
 
 /**
@@ -27,13 +26,14 @@ public class LoginGUI extends JFrame {
         Response response = controller.login(username, pass);
         if (response.getStatus() == 200) {
             setVisible(false);
-            new LibraryGUI((User) response.getData());
+//            new LibraryGUI((User) response.getData());
+            new BookManageGUI();
         }
     }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
-        // Generated using JFormDesigner Evaluation license - Hồ Đăng Nguyện
+        // Generated using JFormDesigner Evaluation license - CassanoQuan
         panel1 = new JPanel();
         label1 = new JLabel();
         tfUsername = new JTextField();
@@ -52,11 +52,13 @@ public class LoginGUI extends JFrame {
 
         //======== panel1 ========
         {
-            panel1.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0
-            ,0,0,0), "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn",javax.swing.border.TitledBorder.CENTER,javax.swing.border.TitledBorder.BOTTOM
-            ,new java.awt.Font("Dia\u006cog",java.awt.Font.BOLD,12),java.awt.Color.red),
-            panel1. getBorder()));panel1. addPropertyChangeListener(new java.beans.PropertyChangeListener(){@Override public void propertyChange(java.beans.PropertyChangeEvent e
-            ){if("\u0062ord\u0065r".equals(e.getPropertyName()))throw new RuntimeException();}});
+            panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax
+            . swing. border. EmptyBorder( 0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing
+            . border. TitledBorder. CENTER, javax. swing. border. TitledBorder. BOTTOM, new java .awt .
+            Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ), java. awt. Color. red
+            ) ,panel1. getBorder( )) ); panel1. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override
+            public void propertyChange (java .beans .PropertyChangeEvent e) {if ("\u0062ord\u0065r" .equals (e .getPropertyName (
+            ) )) throw new RuntimeException( ); }} );
             panel1.setLayout(new GridLayout(2, 2));
 
             //---- label1 ----
@@ -98,9 +100,9 @@ btnLogin(e);} catch (SQLException ex) {
     throw new RuntimeException(ex);
 } catch (RemoteException ex) {
     throw new RuntimeException(ex);
-}catch (MalformedURLException ex) {
+} catch (MalformedURLException ex) {
     throw new RuntimeException(ex);
-}catch (NotBoundException ex) {
+} catch (NotBoundException ex) {
     throw new RuntimeException(ex);
 }});
             panel2.add(btnLogin);
@@ -112,7 +114,7 @@ btnLogin(e);} catch (SQLException ex) {
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-    // Generated using JFormDesigner Evaluation license - Hồ Đăng Nguyện
+    // Generated using JFormDesigner Evaluation license - CassanoQuan
     private JPanel panel1;
     private JLabel label1;
     private JTextField tfUsername;
