@@ -26,20 +26,24 @@ public class LoginGUI extends JFrame {
         Response response = controller.login(username, pass);
         if (response.getStatus() == 200) {
             setVisible(false);
-//            new LibraryGUI((User) response.getData());
-            new BookManageGUI();
+            if (pickManager.isSelected()) {
+                new BookManageGUI();
+            } else {
+                new LibraryGUI((User) response.getData());
+            }
         }
     }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
-        // Generated using JFormDesigner Evaluation license - CassanoQuan
+        // Generated using JFormDesigner Evaluation license - Hồ Đăng Nguyện
         panel1 = new JPanel();
         label1 = new JLabel();
         tfUsername = new JTextField();
         label2 = new JLabel();
         tfPassword = new JPasswordField();
         panel2 = new JPanel();
+        pickManager = new JCheckBox();
         btnLogin = new JButton();
 
         //======== this ========
@@ -52,13 +56,13 @@ public class LoginGUI extends JFrame {
 
         //======== panel1 ========
         {
-            panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax
-            . swing. border. EmptyBorder( 0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing
-            . border. TitledBorder. CENTER, javax. swing. border. TitledBorder. BOTTOM, new java .awt .
-            Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ), java. awt. Color. red
-            ) ,panel1. getBorder( )) ); panel1. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override
-            public void propertyChange (java .beans .PropertyChangeEvent e) {if ("\u0062ord\u0065r" .equals (e .getPropertyName (
-            ) )) throw new RuntimeException( ); }} );
+            panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing
+            . border. EmptyBorder( 0, 0, 0, 0) , "JFor\u006dDesi\u0067ner \u0045valu\u0061tion", javax. swing. border. TitledBorder
+            . CENTER, javax. swing. border. TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .
+            awt .Font .BOLD ,12 ), java. awt. Color. red) ,panel1. getBorder( )) )
+            ; panel1. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e
+            ) {if ("bord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} )
+            ;
             panel1.setLayout(new GridLayout(2, 2));
 
             //---- label1 ----
@@ -93,6 +97,10 @@ public class LoginGUI extends JFrame {
         {
             panel2.setLayout(new FlowLayout());
 
+            //---- pickManager ----
+            pickManager.setText("Manage");
+            panel2.add(pickManager);
+
             //---- btnLogin ----
             btnLogin.setText("Login");
             btnLogin.addActionListener(e -> {try {
@@ -114,13 +122,14 @@ btnLogin(e);} catch (SQLException ex) {
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-    // Generated using JFormDesigner Evaluation license - CassanoQuan
+    // Generated using JFormDesigner Evaluation license - Hồ Đăng Nguyện
     private JPanel panel1;
     private JLabel label1;
     private JTextField tfUsername;
     private JLabel label2;
     private JPasswordField tfPassword;
     private JPanel panel2;
+    private JCheckBox pickManager;
     private JButton btnLogin;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

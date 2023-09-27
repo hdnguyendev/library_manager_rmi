@@ -135,7 +135,12 @@ public class BookManageGUI extends JFrame {
 
                     //---- button1 ----
                     button1.setText("Apply");
-                    button1.addActionListener(e -> btApply(e));
+                    button1.addActionListener(e -> {try {
+btApply(e);} catch (SQLException ex) {
+    throw new RuntimeException(ex);
+} catch (RemoteException ex) {
+    throw new RuntimeException(ex);
+}});
                     panel1.add(button1);
                 }
                 panel2.add(panel1, BorderLayout.WEST);

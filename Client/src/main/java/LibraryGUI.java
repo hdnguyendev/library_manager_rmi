@@ -114,7 +114,7 @@ public class LibraryGUI extends JFrame {
 
         tableBooks.setRowHeight(25);
         TableColumn indexColumn = tableBooks.getColumnModel().getColumn(0);
-        TableColumn statusColumn = tableBooks.getColumnModel().getColumn(3);
+        TableColumn statusColumn = tableBooks.getColumnModel().getColumn(4);
         indexColumn.setPreferredWidth(20); // Đặt độ rộng cố định
         indexColumn.setCellRenderer(new CenteredTableCellRenderer());
         statusColumn.setCellRenderer(new IconCellRenderer());
@@ -157,16 +157,10 @@ public class LibraryGUI extends JFrame {
             int bookId = (int) tableBooks.getValueAt(selectedRow, 0);
             String title = (String) tableBooks.getValueAt(selectedRow, 1);
             String author = (String) tableBooks.getValueAt(selectedRow, 2);
-            String available = (String) tableBooks.getValueAt(selectedRow, 3);
-            Book book = new Book(bookId, title, author, available.equals("Available"));
-            // Sử dụng thông tin sách được chọn
-            System.out.println("Selected Book:");
-            System.out.println("Book ID: " + bookId);
-            System.out.println("Title: " + title);
-            System.out.println("Author: " + author);
-            System.out.println("Available: " + available);
+            String description = (String) tableBooks.getValueAt(selectedRow, 3);
+            String available = (String) tableBooks.getValueAt(selectedRow, 4);
+            Book book = new Book(bookId, title, author,description, available.equals("Available"));
             BookDetailGUI dialog = new BookDetailGUI(this, true, book, user);
-
             dialog.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
@@ -177,7 +171,7 @@ public class LibraryGUI extends JFrame {
     }
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
-        // Generated using JFormDesigner Evaluation license - CassanoQuan
+        // Generated using JFormDesigner Evaluation license - Hồ Đăng Nguyện
         tabbedPane1 = new JTabbedPane();
         panel1 = new JPanel();
         panel2 = new JPanel();
@@ -187,9 +181,16 @@ public class LibraryGUI extends JFrame {
         tfSearch = new JTextField();
         scrollPane1 = new JScrollPane();
         tableBooks = new JTable();
+        panel6 = new JPanel();
+        panel5 = new JPanel();
+        panel7 = new JPanel();
+        label2 = new JLabel();
+        label3 = new JLabel();
+        button1 = new JButton();
 
         //======== this ========
         setTitle("eLibrary VKU");
+        setIconImage(new ImageIcon(getClass().getResource("/images/stack-of-books.png")).getImage());
         var contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
 
@@ -198,12 +199,13 @@ public class LibraryGUI extends JFrame {
 
             //======== panel1 ========
             {
-                panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border
-                . EmptyBorder( 0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing. border. TitledBorder. CENTER, javax
-                . swing. border. TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,
-                12 ), java. awt. Color. red) ,panel1. getBorder( )) ); panel1. addPropertyChangeListener (new java. beans
-                . PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("\u0062ord\u0065r" .equals (e .
-                getPropertyName () )) throw new RuntimeException( ); }} );
+                panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing
+                . border. EmptyBorder( 0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing. border. TitledBorder
+                . CENTER, javax. swing. border. TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .
+                awt .Font .BOLD ,12 ), java. awt. Color. red) ,panel1. getBorder( )) )
+                ; panel1. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e
+                ) {if ("\u0062ord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} )
+                ;
                 panel1.setLayout(new BorderLayout());
 
                 //======== panel2 ========
@@ -258,16 +260,51 @@ tableBooksMousePressed(e);} catch (MalformedURLException ex) {
                 }
                 panel1.add(scrollPane1, BorderLayout.CENTER);
             }
-            tabbedPane1.addTab("Books", panel1);
+            tabbedPane1.addTab("Borrow Books", panel1);
+
+            //======== panel6 ========
+            {
+                panel6.setLayout(new BorderLayout());
+            }
+            tabbedPane1.addTab("Profile", panel6);
         }
         contentPane.add(tabbedPane1, BorderLayout.CENTER);
+
+        //======== panel5 ========
+        {
+            panel5.setLayout(new BorderLayout());
+
+            //======== panel7 ========
+            {
+                panel7.setLayout(new BorderLayout());
+
+                //---- label2 ----
+                label2.setText("eLibrary VKU ");
+                label2.setIcon(new ImageIcon(getClass().getResource("/images/stack-of-books.png")));
+                label2.setFont(new Font("Montserrat Black", Font.PLAIN, 18));
+                panel7.add(label2, BorderLayout.CENTER);
+
+                //---- label3 ----
+                label3.setText("Hello, VKUer");
+                label3.setFont(new Font("Montserrat", Font.PLAIN, 12));
+                panel7.add(label3, BorderLayout.EAST);
+            }
+            panel5.add(panel7, BorderLayout.CENTER);
+
+            //---- button1 ----
+            button1.setText("Exit");
+            button1.setFont(new Font("Montserrat", Font.BOLD, 12));
+            button1.setIcon(new ImageIcon(getClass().getResource("/images/enter.png")));
+            panel5.add(button1, BorderLayout.EAST);
+        }
+        contentPane.add(panel5, BorderLayout.NORTH);
         setSize(1040, 445);
         setLocationRelativeTo(null);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-    // Generated using JFormDesigner Evaluation license - CassanoQuan
+    // Generated using JFormDesigner Evaluation license - Hồ Đăng Nguyện
     private JTabbedPane tabbedPane1;
     private JPanel panel1;
     private JPanel panel2;
@@ -277,5 +314,11 @@ tableBooksMousePressed(e);} catch (MalformedURLException ex) {
     private JTextField tfSearch;
     private JScrollPane scrollPane1;
     private JTable tableBooks;
+    private JPanel panel6;
+    private JPanel panel5;
+    private JPanel panel7;
+    private JLabel label2;
+    private JLabel label3;
+    private JButton button1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

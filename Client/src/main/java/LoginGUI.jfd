@@ -47,6 +47,10 @@ new FormModel {
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
 				name: "panel2"
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "pickManager"
+					"text": "Manage"
+				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnLogin"
 					"text": "Login"
