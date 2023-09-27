@@ -15,7 +15,6 @@ import javax.swing.table.TableRowSorter;
  */
 
 
-
 /**
  * @author ADMIN
  */
@@ -27,10 +26,10 @@ public class BookManageGUI extends JFrame {
         updateTableBooks();
 
 
-
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
+
     private void updateTableBooks() {
 
         try {
@@ -54,112 +53,236 @@ public class BookManageGUI extends JFrame {
 
     private void btApply(ActionEvent e) throws SQLException, RemoteException {
         String title = tfTitle.getText();
-        String author =  tfAuthor.getText();
-        String desc =  tfDes.getText();
+        String author = tfAuthor.getText();
+        String desc = tfDes.getText();
         boolean status = cbStatus.getSelectedItem().toString().equals("Available");
         Book saveBook = new Book(title, author, desc, status);
         Response response = controller.book_addBook(saveBook);
         if (response.getStatus() == 200) {
+            updateTableBooks();
+            JOptionPane.showMessageDialog(this, response.getData(), "Notification", JOptionPane.INFORMATION_MESSAGE);
+        } else {
 
+            JOptionPane.showMessageDialog(this, response.getData(), "Notification", JOptionPane.INFORMATION_MESSAGE);
         }
+
+
         System.out.println(response.getData());
+    }
+
+    private void btClear(ActionEvent e) {
+        tfTitle.setText("");
+        tfAuthor.setText("");
+        tfDes.setText("");
+    }
+
+    private void btModify(ActionEvent e) {
+        // TODO add your code here
     }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Evaluation license - CassanoQuan
         tabbedPane1 = new JTabbedPane();
-        panel2 = new JPanel();
-        panel1 = new JPanel();
-        label2 = new JLabel();
+        panel3 = new JPanel();
+        panel6 = new JPanel();
+        label1 = new JLabel();
         tfTitle = new JTextField();
-        label3 = new JLabel();
+        label2 = new JLabel();
         tfAuthor = new JTextField();
-        label4 = new JLabel();
+        label3 = new JLabel();
         tfDes = new JTextField();
-        label5 = new JLabel();
+        label4 = new JLabel();
         cbStatus = new JComboBox<>();
-        hSpacer1 = new JPanel(null);
         button1 = new JButton();
+        button2 = new JButton();
+        button3 = new JButton();
+        panel7 = new JPanel();
         scrollPane1 = new JScrollPane();
         tableBooks = new JTable();
-        panel3 = new JPanel();
+        panel5 = new JPanel();
 
         //======== this ========
         var contentPane = getContentPane();
-        contentPane.setLayout(new BorderLayout());
+        contentPane.setLayout(null);
 
         //======== tabbedPane1 ========
         {
 
-            //======== panel2 ========
+            //======== panel3 ========
             {
-                panel2.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.border.
-                EmptyBorder(0,0,0,0), "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn",javax.swing.border.TitledBorder.CENTER,javax.swing
-                .border.TitledBorder.BOTTOM,new java.awt.Font("Dia\u006cog",java.awt.Font.BOLD,12),
-                java.awt.Color.red),panel2. getBorder()));panel2. addPropertyChangeListener(new java.beans.PropertyChangeListener()
-                {@Override public void propertyChange(java.beans.PropertyChangeEvent e){if("\u0062ord\u0065r".equals(e.getPropertyName()))
-                throw new RuntimeException();}});
-                panel2.setLayout(new BorderLayout());
+                panel3.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new javax . swing
+                        . border .EmptyBorder ( 0, 0 ,0 , 0) ,  "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn" , javax. swing .border . TitledBorder
+                        . CENTER ,javax . swing. border .TitledBorder . BOTTOM, new java. awt .Font ( "Dia\u006cog", java .
+                        awt . Font. BOLD ,12 ) ,java . awt. Color .red ) ,panel3. getBorder () ) )
+                ; panel3. addPropertyChangeListener( new java. beans .PropertyChangeListener ( ){ @Override public void propertyChange (java . beans. PropertyChangeEvent e
+            ) { if( "\u0062ord\u0065r" .equals ( e. getPropertyName () ) )throw new RuntimeException( ) ;} } )
+            ;
+                panel3.setLayout(null);
 
-                //======== panel1 ========
+                //======== panel6 ========
                 {
-                    panel1.setLayout(new GridLayout(5, 2));
+                    panel6.setLayout(null);
+
+                    //---- label1 ----
+                    label1.setText("Title");
+                    panel6.add(label1);
+                    label1.setBounds(25, 25, 55, 25);
+                    panel6.add(tfTitle);
+                    tfTitle.setBounds(115, 20, 210, 35);
 
                     //---- label2 ----
-                    label2.setText("Title");
-                    panel1.add(label2);
-                    panel1.add(tfTitle);
+                    label2.setText("Author");
+                    panel6.add(label2);
+                    label2.setBounds(25, 70, 55, 25);
+                    panel6.add(tfAuthor);
+                    tfAuthor.setBounds(115, 70, 210, 30);
 
                     //---- label3 ----
-                    label3.setText("Author");
-                    panel1.add(label3);
-                    panel1.add(tfAuthor);
+                    label3.setText("Description ");
+                    panel6.add(label3);
+                    label3.setBounds(25, 125, 90, 25);
+                    panel6.add(tfDes);
+                    tfDes.setBounds(115, 125, 210, 30);
 
                     //---- label4 ----
-                    label4.setText("Description");
-                    panel1.add(label4);
-                    panel1.add(tfDes);
-
-                    //---- label5 ----
-                    label5.setText("Status");
-                    panel1.add(label5);
+                    label4.setText("Status");
+                    panel6.add(label4);
+                    label4.setBounds(25, 175, 90, 25);
 
                     //---- cbStatus ----
                     cbStatus.setModel(new DefaultComboBoxModel<>(new String[] {
-                        "Available",
-                        "Unavailable"
+                            "Available",
+                            "Unavailable"
                     }));
-                    panel1.add(cbStatus);
-                    panel1.add(hSpacer1);
+                    panel6.add(cbStatus);
+                    cbStatus.setBounds(115, 175, 210, cbStatus.getPreferredSize().height);
 
                     //---- button1 ----
                     button1.setText("Apply");
                     button1.addActionListener(e -> {try {
-btApply(e);} catch (SQLException ex) {
-    throw new RuntimeException(ex);
-} catch (RemoteException ex) {
-    throw new RuntimeException(ex);
-}});
-                    panel1.add(button1);
-                }
-                panel2.add(panel1, BorderLayout.WEST);
+                        btApply(e);} catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }});
+                    panel6.add(button1);
+                    button1.setBounds(new Rectangle(new Point(225, 235), button1.getPreferredSize()));
 
-                //======== scrollPane1 ========
+                    //---- button2 ----
+                    button2.setText("Clear");
+                    button2.addActionListener(e -> btClear(e));
+                    panel6.add(button2);
+                    button2.setBounds(new Rectangle(new Point(130, 235), button2.getPreferredSize()));
+
+                    //---- button3 ----
+                    button3.setText("Modify");
+                    button3.addActionListener(e -> btModify(e));
+                    panel6.add(button3);
+                    button3.setBounds(new Rectangle(new Point(25, 235), button3.getPreferredSize()));
+
+                    {
+                        // compute preferred size
+                        Dimension preferredSize = new Dimension();
+                        for(int i = 0; i < panel6.getComponentCount(); i++) {
+                            Rectangle bounds = panel6.getComponent(i).getBounds();
+                            preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                            preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                        }
+                        Insets insets = panel6.getInsets();
+                        preferredSize.width += insets.right;
+                        preferredSize.height += insets.bottom;
+                        panel6.setMinimumSize(preferredSize);
+                        panel6.setPreferredSize(preferredSize);
+                    }
+                }
+                panel3.add(panel6);
+                panel6.setBounds(20, 20, 350, 435);
+
+                //======== panel7 ========
                 {
-                    scrollPane1.setViewportView(tableBooks);
-                }
-                panel2.add(scrollPane1, BorderLayout.CENTER);
-            }
-            tabbedPane1.addTab("text", panel2);
+                    panel7.setLayout(null);
 
-            //======== panel3 ========
-            {
-                panel3.setLayout(new BorderLayout());
+                    //======== scrollPane1 ========
+                    {
+                        scrollPane1.setViewportView(tableBooks);
+                    }
+                    panel7.add(scrollPane1);
+                    scrollPane1.setBounds(0, 0, 580, 435);
+
+                    {
+                        // compute preferred size
+                        Dimension preferredSize = new Dimension();
+                        for(int i = 0; i < panel7.getComponentCount(); i++) {
+                            Rectangle bounds = panel7.getComponent(i).getBounds();
+                            preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                            preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                        }
+                        Insets insets = panel7.getInsets();
+                        preferredSize.width += insets.right;
+                        preferredSize.height += insets.bottom;
+                        panel7.setMinimumSize(preferredSize);
+                        panel7.setPreferredSize(preferredSize);
+                    }
+                }
+                panel3.add(panel7);
+                panel7.setBounds(new Rectangle(new Point(385, 15), panel7.getPreferredSize()));
+
+                {
+                    // compute preferred size
+                    Dimension preferredSize = new Dimension();
+                    for(int i = 0; i < panel3.getComponentCount(); i++) {
+                        Rectangle bounds = panel3.getComponent(i).getBounds();
+                        preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                        preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                    }
+                    Insets insets = panel3.getInsets();
+                    preferredSize.width += insets.right;
+                    preferredSize.height += insets.bottom;
+                    panel3.setMinimumSize(preferredSize);
+                    panel3.setPreferredSize(preferredSize);
+                }
             }
-            tabbedPane1.addTab("text", panel3);
+            tabbedPane1.addTab("Management Book", panel3);
+
+            //======== panel5 ========
+            {
+                panel5.setLayout(null);
+
+                {
+                    // compute preferred size
+                    Dimension preferredSize = new Dimension();
+                    for(int i = 0; i < panel5.getComponentCount(); i++) {
+                        Rectangle bounds = panel5.getComponent(i).getBounds();
+                        preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                        preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                    }
+                    Insets insets = panel5.getInsets();
+                    preferredSize.width += insets.right;
+                    preferredSize.height += insets.bottom;
+                    panel5.setMinimumSize(preferredSize);
+                    panel5.setPreferredSize(preferredSize);
+                }
+            }
+            tabbedPane1.addTab("text", panel5);
         }
-        contentPane.add(tabbedPane1, BorderLayout.NORTH);
+        contentPane.add(tabbedPane1);
+        tabbedPane1.setBounds(5, 5, 970, 500);
+
+        {
+            // compute preferred size
+            Dimension preferredSize = new Dimension();
+            for(int i = 0; i < contentPane.getComponentCount(); i++) {
+                Rectangle bounds = contentPane.getComponent(i).getBounds();
+                preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+            }
+            Insets insets = contentPane.getInsets();
+            preferredSize.width += insets.right;
+            preferredSize.height += insets.bottom;
+            contentPane.setMinimumSize(preferredSize);
+            contentPane.setPreferredSize(preferredSize);
+        }
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -168,20 +291,22 @@ btApply(e);} catch (SQLException ex) {
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
     // Generated using JFormDesigner Evaluation license - CassanoQuan
     private JTabbedPane tabbedPane1;
-    private JPanel panel2;
-    private JPanel panel1;
-    private JLabel label2;
+    private JPanel panel3;
+    private JPanel panel6;
+    private JLabel label1;
     private JTextField tfTitle;
-    private JLabel label3;
+    private JLabel label2;
     private JTextField tfAuthor;
-    private JLabel label4;
+    private JLabel label3;
     private JTextField tfDes;
-    private JLabel label5;
+    private JLabel label4;
     private JComboBox<String> cbStatus;
-    private JPanel hSpacer1;
     private JButton button1;
+    private JButton button2;
+    private JButton button3;
+    private JPanel panel7;
     private JScrollPane scrollPane1;
     private JTable tableBooks;
-    private JPanel panel3;
+    private JPanel panel5;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
