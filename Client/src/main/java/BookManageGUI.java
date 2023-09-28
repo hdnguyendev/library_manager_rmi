@@ -151,10 +151,15 @@ public class BookManageGUI extends JFrame {
     private void tableBooksMouseEntered(MouseEvent e) throws MalformedURLException, SQLException, NotBoundException, RemoteException {
        
     }
+
+    private void logout(ActionEvent e) throws MalformedURLException, NotBoundException, RemoteException {
+        dispose();
+        new LoginGUI().setVisible(true);
+    }
     
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
-        // Generated using JFormDesigner Evaluation license - CassanoQuan
+        // Generated using JFormDesigner Evaluation license - hdnguyendev
         tabbedPane1 = new JTabbedPane();
         panel3 = new JPanel();
         panel6 = new JPanel();
@@ -166,9 +171,10 @@ public class BookManageGUI extends JFrame {
         tfDes = new JTextField();
         label4 = new JLabel();
         cbStatus = new JComboBox<>();
+        panel2 = new JPanel();
+        button3 = new JButton();
         button1 = new JButton();
         button2 = new JButton();
-        button3 = new JButton();
         label5 = new JLabel();
         label6 = new JLabel();
         button4 = new JButton();
@@ -181,22 +187,26 @@ public class BookManageGUI extends JFrame {
         tableBorrow = new JTable();
         label7 = new JLabel();
         label8 = new JLabel();
+        panel4 = new JPanel();
+        panel8 = new JPanel();
+        button5 = new JButton();
 
         //======== this ========
         var contentPane = getContentPane();
-        contentPane.setLayout(null);
+        contentPane.setLayout(new BorderLayout());
 
         //======== tabbedPane1 ========
         {
 
             //======== panel3 ========
             {
-                panel3.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.
-                border.EmptyBorder(0,0,0,0), "JF\u006frm\u0044es\u0069gn\u0065r \u0045va\u006cua\u0074io\u006e",javax.swing.border.TitledBorder.CENTER
-                ,javax.swing.border.TitledBorder.BOTTOM,new java.awt.Font("D\u0069al\u006fg",java.awt.Font
-                .BOLD,12),java.awt.Color.red),panel3. getBorder()));panel3. addPropertyChangeListener(
-                new java.beans.PropertyChangeListener(){@Override public void propertyChange(java.beans.PropertyChangeEvent e){if("\u0062or\u0064er"
-                .equals(e.getPropertyName()))throw new RuntimeException();}});
+                panel3.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new
+                javax. swing. border. EmptyBorder( 0, 0, 0, 0) , "JF\u006frmDesi\u0067ner Ev\u0061luatio\u006e", javax
+                . swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder. BOTTOM, new java
+                .awt .Font ("Dialo\u0067" ,java .awt .Font .BOLD ,12 ), java. awt
+                . Color. red) ,panel3. getBorder( )) ); panel3. addPropertyChangeListener (new java. beans.
+                PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("borde\u0072" .
+                equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
                 panel3.setLayout(null);
 
                 //======== panel6 ========
@@ -205,31 +215,40 @@ public class BookManageGUI extends JFrame {
 
                     //---- label1 ----
                     label1.setText("Title");
-                    label1.setFont(label1.getFont().deriveFont(label1.getFont().getSize() + 1f));
+                    label1.setFont(new Font("Montserrat", Font.PLAIN, 14));
                     panel6.add(label1);
                     label1.setBounds(25, 95, 55, 25);
+
+                    //---- tfTitle ----
+                    tfTitle.setFont(new Font("Montserrat", Font.PLAIN, 14));
                     panel6.add(tfTitle);
-                    tfTitle.setBounds(115, 90, 210, 35);
+                    tfTitle.setBounds(115, 90, 310, 35);
 
                     //---- label2 ----
                     label2.setText("Author");
-                    label2.setFont(label2.getFont().deriveFont(label2.getFont().getSize() + 1f));
+                    label2.setFont(new Font("Montserrat", Font.PLAIN, 14));
                     panel6.add(label2);
                     label2.setBounds(25, 140, 55, 25);
+
+                    //---- tfAuthor ----
+                    tfAuthor.setFont(new Font("Montserrat", Font.PLAIN, 14));
                     panel6.add(tfAuthor);
-                    tfAuthor.setBounds(115, 140, 210, 35);
+                    tfAuthor.setBounds(115, 140, 310, 35);
 
                     //---- label3 ----
                     label3.setText("Description ");
-                    label3.setFont(label3.getFont().deriveFont(label3.getFont().getSize() + 1f));
+                    label3.setFont(new Font("Montserrat", Font.PLAIN, 14));
                     panel6.add(label3);
                     label3.setBounds(25, 195, 90, 25);
+
+                    //---- tfDes ----
+                    tfDes.setFont(new Font("Montserrat", Font.PLAIN, 14));
                     panel6.add(tfDes);
-                    tfDes.setBounds(115, 195, 210, 85);
+                    tfDes.setBounds(115, 195, 310, 85);
 
                     //---- label4 ----
                     label4.setText("Status");
-                    label4.setFont(label4.getFont().deriveFont(label4.getFont().getSize() + 1f));
+                    label4.setFont(new Font("Montserrat", Font.PLAIN, 14));
                     panel6.add(label4);
                     label4.setBounds(25, 300, 90, 25);
 
@@ -238,39 +257,47 @@ public class BookManageGUI extends JFrame {
                         "Available",
                         "Unavailable"
                     }));
+                    cbStatus.setFont(new Font("Montserrat", Font.PLAIN, 14));
                     panel6.add(cbStatus);
-                    cbStatus.setBounds(115, 300, 210, 40);
+                    cbStatus.setBounds(115, 300, 305, 40);
 
-                    //---- button1 ----
-                    button1.setText("Apply");
-                    button1.setIcon(new ImageIcon(getClass().getResource("/images/checked.png")));
-                    button1.addActionListener(e -> {try {
-btApply(e);} catch (SQLException ex) {
-    throw new RuntimeException(ex);
-} catch (RemoteException ex) {
-    throw new RuntimeException(ex);
-}});
-                    panel6.add(button1);
-                    button1.setBounds(240, 355, 105, 45);
+                    //======== panel2 ========
+                    {
+                        panel2.setLayout(new FlowLayout());
 
-                    //---- button2 ----
-                    button2.setText("Clear");
-                    button2.setIcon(new ImageIcon(getClass().getResource("/images/cleaning.png")));
-                    button2.addActionListener(e -> btClear(e));
-                    panel6.add(button2);
-                    button2.setBounds(130, 355, 105, 45);
-
-                    //---- button3 ----
-                    button3.setText("Modify");
-                    button3.setIcon(new ImageIcon(getClass().getResource("/images/edit.png")));
-                    button3.addActionListener(e -> {try {
+                        //---- button3 ----
+                        button3.setText("Modify");
+                        button3.setIcon(new ImageIcon(getClass().getResource("/images/edit.png")));
+                        button3.setFont(new Font("Montserrat Black", Font.PLAIN, 12));
+                        button3.addActionListener(e -> {try {
 btModify(e);} catch (SQLException ex) {
     throw new RuntimeException(ex);
 } catch (RemoteException ex) {
     throw new RuntimeException(ex);
 }});
-                    panel6.add(button3);
-                    button3.setBounds(20, 355, button3.getPreferredSize().width, 43);
+                        panel2.add(button3);
+
+                        //---- button1 ----
+                        button1.setText("Apply");
+                        button1.setIcon(new ImageIcon(getClass().getResource("/images/checked.png")));
+                        button1.setFont(new Font("Montserrat Black", Font.PLAIN, 12));
+                        button1.addActionListener(e -> {try {
+btApply(e);} catch (SQLException ex) {
+    throw new RuntimeException(ex);
+} catch (RemoteException ex) {
+    throw new RuntimeException(ex);
+}});
+                        panel2.add(button1);
+
+                        //---- button2 ----
+                        button2.setText("Clear");
+                        button2.setIcon(new ImageIcon(getClass().getResource("/images/cleaning.png")));
+                        button2.setFont(new Font("Montserrat Black", Font.PLAIN, 12));
+                        button2.addActionListener(e -> btClear(e));
+                        panel2.add(button2);
+                    }
+                    panel6.add(panel2);
+                    panel2.setBounds(new Rectangle(new Point(85, 375), panel2.getPreferredSize()));
 
                     //---- label5 ----
                     label5.setIcon(new ImageIcon(getClass().getResource("/images/online-library.png")));
@@ -279,9 +306,9 @@ btModify(e);} catch (SQLException ex) {
 
                     //---- label6 ----
                     label6.setText("eLibrary VKU");
-                    label6.setFont(label6.getFont().deriveFont(label6.getFont().getStyle() & ~Font.ITALIC, label6.getFont().getSize() + 10f));
+                    label6.setFont(new Font("Montserrat Black", Font.PLAIN, 24));
                     panel6.add(label6);
-                    label6.setBounds(new Rectangle(new Point(135, 35), label6.getPreferredSize()));
+                    label6.setBounds(135, 35, 245, label6.getPreferredSize().height);
 
                     {
                         // compute preferred size
@@ -299,7 +326,7 @@ btModify(e);} catch (SQLException ex) {
                     }
                 }
                 panel3.add(panel6);
-                panel6.setBounds(5, 20, 370, 435);
+                panel6.setBounds(5, 20, 470, 435);
 
                 //---- button4 ----
                 button4.setIcon(new ImageIcon(getClass().getResource("/images/bin.png")));
@@ -314,41 +341,26 @@ btDelete(e);} catch (SQLException ex) {
 
                 //======== panel7 ========
                 {
-                    panel7.setLayout(null);
-
-                    //======== scrollPane1 ========
-                    {
-
-                        //---- tableBooks ----
-                        tableBooks.setFont(tableBooks.getFont().deriveFont(tableBooks.getFont().getSize() + 2f));
-                        tableBooks.addMouseListener(new MouseAdapter() {
-                            @Override
-                            public void mouseClicked(MouseEvent e) {
-                                tableBooksMouseClicked(e);
-                            }
-                        });
-                        scrollPane1.setViewportView(tableBooks);
-                    }
-                    panel7.add(scrollPane1);
-                    scrollPane1.setBounds(0, 15, 710, 425);
-
-                    {
-                        // compute preferred size
-                        Dimension preferredSize = new Dimension();
-                        for(int i = 0; i < panel7.getComponentCount(); i++) {
-                            Rectangle bounds = panel7.getComponent(i).getBounds();
-                            preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-                            preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
-                        }
-                        Insets insets = panel7.getInsets();
-                        preferredSize.width += insets.right;
-                        preferredSize.height += insets.bottom;
-                        panel7.setMinimumSize(preferredSize);
-                        panel7.setPreferredSize(preferredSize);
-                    }
+                    panel7.setLayout(new BorderLayout());
                 }
                 panel3.add(panel7);
                 panel7.setBounds(385, 15, panel7.getPreferredSize().width, 470);
+
+                //======== scrollPane1 ========
+                {
+
+                    //---- tableBooks ----
+                    tableBooks.setFont(tableBooks.getFont().deriveFont(tableBooks.getFont().getSize() + 2f));
+                    tableBooks.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            tableBooksMouseClicked(e);
+                        }
+                    });
+                    scrollPane1.setViewportView(tableBooks);
+                }
+                panel3.add(scrollPane1);
+                scrollPane1.setBounds(435, 30, 620, 445);
 
                 {
                     // compute preferred size
@@ -431,30 +443,38 @@ btDelete(e);} catch (SQLException ex) {
             }
             tabbedPane1.addTab("Management Borrow", panel5);
         }
-        contentPane.add(tabbedPane1);
-        tabbedPane1.setBounds(5, 5, 1105, 515);
+        contentPane.add(tabbedPane1, BorderLayout.CENTER);
 
+        //======== panel4 ========
         {
-            // compute preferred size
-            Dimension preferredSize = new Dimension();
-            for(int i = 0; i < contentPane.getComponentCount(); i++) {
-                Rectangle bounds = contentPane.getComponent(i).getBounds();
-                preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-                preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+            panel4.setLayout(new BorderLayout());
+
+            //======== panel8 ========
+            {
+                panel8.setLayout(new BorderLayout());
+
+                //---- button5 ----
+                button5.setText("Log out");
+                button5.addActionListener(e -> {try {
+logout(e);} catch (MalformedURLException ex) {
+    throw new RuntimeException(ex);
+} catch (NotBoundException ex) {
+    throw new RuntimeException(ex);
+} catch (RemoteException ex) {
+    throw new RuntimeException(ex);
+}});
+                panel8.add(button5, BorderLayout.CENTER);
             }
-            Insets insets = contentPane.getInsets();
-            preferredSize.width += insets.right;
-            preferredSize.height += insets.bottom;
-            contentPane.setMinimumSize(preferredSize);
-            contentPane.setPreferredSize(preferredSize);
+            panel4.add(panel8, BorderLayout.EAST);
         }
-        pack();
-        setLocationRelativeTo(getOwner());
+        contentPane.add(panel4, BorderLayout.NORTH);
+        setSize(1140, 565);
+        setLocationRelativeTo(null);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-    // Generated using JFormDesigner Evaluation license - CassanoQuan
+    // Generated using JFormDesigner Evaluation license - hdnguyendev
     private JTabbedPane tabbedPane1;
     private JPanel panel3;
     private JPanel panel6;
@@ -466,9 +486,10 @@ btDelete(e);} catch (SQLException ex) {
     private JTextField tfDes;
     private JLabel label4;
     private JComboBox<String> cbStatus;
+    private JPanel panel2;
+    private JButton button3;
     private JButton button1;
     private JButton button2;
-    private JButton button3;
     private JLabel label5;
     private JLabel label6;
     private JButton button4;
@@ -481,5 +502,8 @@ btDelete(e);} catch (SQLException ex) {
     private JTable tableBorrow;
     private JLabel label7;
     private JLabel label8;
+    private JPanel panel4;
+    private JPanel panel8;
+    private JButton button5;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

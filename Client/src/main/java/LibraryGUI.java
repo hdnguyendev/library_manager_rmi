@@ -169,9 +169,14 @@ public class LibraryGUI extends JFrame {
             });
         }
     }
+
+    private void logout(ActionEvent e) throws MalformedURLException, NotBoundException, RemoteException {
+        dispose();
+        new LoginGUI().setVisible(true);
+    }
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
-        // Generated using JFormDesigner Evaluation license - Hồ Đăng Nguyện
+        // Generated using JFormDesigner Evaluation license - hdnguyendev
         tabbedPane1 = new JTabbedPane();
         panel1 = new JPanel();
         panel2 = new JPanel();
@@ -199,12 +204,12 @@ public class LibraryGUI extends JFrame {
 
             //======== panel1 ========
             {
-                panel1.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new javax . swing. border .EmptyBorder
-                ( 0, 0 ,0 , 0) ,  "JFor\u006dDesi\u0067ner \u0045valu\u0061tion" , javax. swing .border . TitledBorder. CENTER ,javax . swing. border
-                .TitledBorder . BOTTOM, new java. awt .Font ( "Dia\u006cog", java .awt . Font. BOLD ,12 ) ,java . awt
-                . Color .red ) ,panel1. getBorder () ) ); panel1. addPropertyChangeListener( new java. beans .PropertyChangeListener ( ){ @Override public void
-                propertyChange (java . beans. PropertyChangeEvent e) { if( "bord\u0065r" .equals ( e. getPropertyName () ) )throw new RuntimeException( )
-                ;} } );
+                panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border.
+                EmptyBorder( 0, 0, 0, 0) , "JF\u006frmDes\u0069gner \u0045valua\u0074ion", javax. swing. border. TitledBorder. CENTER, javax. swing
+                . border. TitledBorder. BOTTOM, new java .awt .Font ("D\u0069alog" ,java .awt .Font .BOLD ,12 ),
+                java. awt. Color. red) ,panel1. getBorder( )) ); panel1. addPropertyChangeListener (new java. beans. PropertyChangeListener( )
+                { @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("\u0062order" .equals (e .getPropertyName () ))
+                throw new RuntimeException( ); }} );
                 panel1.setLayout(new BorderLayout());
 
                 //======== panel2 ========
@@ -294,6 +299,14 @@ tableBooksMousePressed(e);} catch (MalformedURLException ex) {
             button1.setText("Exit");
             button1.setFont(new Font("Montserrat", Font.BOLD, 12));
             button1.setIcon(new ImageIcon(getClass().getResource("/images/enter.png")));
+            button1.addActionListener(e -> {try {
+logout(e);} catch (MalformedURLException ex) {
+    throw new RuntimeException(ex);
+} catch (NotBoundException ex) {
+    throw new RuntimeException(ex);
+} catch (RemoteException ex) {
+    throw new RuntimeException(ex);
+}});
             panel5.add(button1, BorderLayout.EAST);
         }
         contentPane.add(panel5, BorderLayout.NORTH);
@@ -303,7 +316,7 @@ tableBooksMousePressed(e);} catch (MalformedURLException ex) {
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-    // Generated using JFormDesigner Evaluation license - Hồ Đăng Nguyện
+    // Generated using JFormDesigner Evaluation license - hdnguyendev
     private JTabbedPane tabbedPane1;
     private JPanel panel1;
     private JPanel panel2;

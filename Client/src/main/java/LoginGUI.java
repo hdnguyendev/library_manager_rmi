@@ -14,6 +14,7 @@ import javax.swing.*;
  * @author nguye
  */
 public class LoginGUI extends JFrame {
+    public static String IP_SERVER = "localhost";
     UserController controller = new UserController();
 
     public LoginGUI() throws MalformedURLException, NotBoundException, RemoteException {
@@ -27,8 +28,10 @@ public class LoginGUI extends JFrame {
         if (response.getStatus() == 200) {
             setVisible(false);
             if (pickManager.isSelected()) {
+                IP_SERVER = tfServer.getText();
                 new BookManageGUI();
             } else {
+                IP_SERVER = tfServer.getText();
                 new LibraryGUI((User) response.getData());
             }
         }
@@ -36,13 +39,15 @@ public class LoginGUI extends JFrame {
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
-        // Generated using JFormDesigner Evaluation license - Hồ Đăng Nguyện
+        // Generated using JFormDesigner Evaluation license - hdnguyendev
         panel1 = new JPanel();
         label1 = new JLabel();
         tfUsername = new JTextField();
         label2 = new JLabel();
         tfPassword = new JPasswordField();
         panel2 = new JPanel();
+        label3 = new JLabel();
+        tfServer = new JTextField();
         pickManager = new JCheckBox();
         btnLogin = new JButton();
 
@@ -56,12 +61,11 @@ public class LoginGUI extends JFrame {
 
         //======== panel1 ========
         {
-            panel1.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.border
-            .EmptyBorder(0,0,0,0), "JFor\u006dDesi\u0067ner \u0045valu\u0061tion",javax.swing.border.TitledBorder.CENTER,javax
-            .swing.border.TitledBorder.BOTTOM,new java.awt.Font("Dia\u006cog",java.awt.Font.BOLD,
-            12),java.awt.Color.red),panel1. getBorder()));panel1. addPropertyChangeListener(new java.beans
-            .PropertyChangeListener(){@Override public void propertyChange(java.beans.PropertyChangeEvent e){if("bord\u0065r".equals(e.
-            getPropertyName()))throw new RuntimeException();}});
+            panel1.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new javax . swing. border .EmptyBorder (
+            0, 0 ,0 , 0) ,  "JF\u006frm\u0044es\u0069gn\u0065r \u0045va\u006cua\u0074io\u006e" , javax. swing .border . TitledBorder. CENTER ,javax . swing. border .TitledBorder
+            . BOTTOM, new java. awt .Font ( "D\u0069al\u006fg", java .awt . Font. BOLD ,12 ) ,java . awt. Color .
+            red ) ,panel1. getBorder () ) ); panel1. addPropertyChangeListener( new java. beans .PropertyChangeListener ( ){ @Override public void propertyChange (java .
+            beans. PropertyChangeEvent e) { if( "\u0062or\u0064er" .equals ( e. getPropertyName () ) )throw new RuntimeException( ) ;} } );
             panel1.setLayout(new GridLayout(2, 2));
 
             //---- label1 ----
@@ -71,10 +75,12 @@ public class LoginGUI extends JFrame {
             label1.setMaximumSize(new Dimension(50, 32));
             label1.setMinimumSize(new Dimension(50, 32));
             label1.setPreferredSize(new Dimension(50, 32));
+            label1.setFont(new Font("Montserrat", Font.PLAIN, 12));
             panel1.add(label1);
 
             //---- tfUsername ----
             tfUsername.setColumns(2);
+            tfUsername.setFont(new Font("Montserrat", Font.PLAIN, 12));
             panel1.add(tfUsername);
 
             //---- label2 ----
@@ -84,6 +90,7 @@ public class LoginGUI extends JFrame {
             label2.setMaximumSize(new Dimension(50, 32));
             label2.setMinimumSize(new Dimension(50, 32));
             label2.setPreferredSize(new Dimension(50, 32));
+            label2.setFont(new Font("Montserrat", Font.PLAIN, 12));
             panel1.add(label2);
 
             //---- tfPassword ----
@@ -96,12 +103,24 @@ public class LoginGUI extends JFrame {
         {
             panel2.setLayout(new FlowLayout());
 
+            //---- label3 ----
+            label3.setText("IP Server");
+            label3.setFont(new Font("Montserrat", Font.PLAIN, 12));
+            panel2.add(label3);
+
+            //---- tfServer ----
+            tfServer.setPreferredSize(new Dimension(150, 36));
+            tfServer.setFont(new Font("Montserrat", Font.PLAIN, 12));
+            panel2.add(tfServer);
+
             //---- pickManager ----
             pickManager.setText("Manage");
+            pickManager.setFont(new Font("Montserrat", Font.PLAIN, 12));
             panel2.add(pickManager);
 
             //---- btnLogin ----
             btnLogin.setText("Login");
+            btnLogin.setFont(new Font("Montserrat", Font.PLAIN, 12));
             btnLogin.addActionListener(e -> {try {
 btnLogin(e);} catch (SQLException ex) {
     throw new RuntimeException(ex);
@@ -115,19 +134,21 @@ btnLogin(e);} catch (SQLException ex) {
             panel2.add(btnLogin);
         }
         contentPane.add(panel2, BorderLayout.SOUTH);
-        setSize(335, 160);
+        setSize(455, 160);
         setLocationRelativeTo(null);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-    // Generated using JFormDesigner Evaluation license - Hồ Đăng Nguyện
+    // Generated using JFormDesigner Evaluation license - hdnguyendev
     private JPanel panel1;
     private JLabel label1;
     private JTextField tfUsername;
     private JLabel label2;
     private JPasswordField tfPassword;
     private JPanel panel2;
+    private JLabel label3;
+    private JTextField tfServer;
     private JCheckBox pickManager;
     private JButton btnLogin;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on

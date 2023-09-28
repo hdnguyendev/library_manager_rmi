@@ -1,10 +1,12 @@
-JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.7" encoding: "UTF-8"
+JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.8" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
-		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 			name: "this"
+			"$sizePolicy": 1
+			"$locationPolicy": 1
 			add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
 				name: "tabbedPane1"
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
@@ -14,7 +16,7 @@ new FormModel {
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label1"
 							"text": "Title"
-							"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 1, false )
+							"font": &Font0 new java.awt.Font( "Montserrat", 0, 14 )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"x": 25
 							"y": 95
@@ -23,16 +25,17 @@ new FormModel {
 						} )
 						add( new FormComponent( "javax.swing.JTextField" ) {
 							name: "tfTitle"
+							"font": #Font0
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"x": 115
 							"y": 90
-							"width": 210
+							"width": 310
 							"height": 35
 						} )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label2"
 							"text": "Author"
-							"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 1, false )
+							"font": #Font0
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"width": 55
 							"height": 25
@@ -41,8 +44,9 @@ new FormModel {
 						} )
 						add( new FormComponent( "javax.swing.JTextField" ) {
 							name: "tfAuthor"
+							"font": #Font0
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-							"width": 210
+							"width": 310
 							"height": 35
 							"x": 115
 							"y": 140
@@ -50,7 +54,7 @@ new FormModel {
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label3"
 							"text": "Description "
-							"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 1, false )
+							"font": #Font0
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"width": 90
 							"height": 25
@@ -59,8 +63,9 @@ new FormModel {
 						} )
 						add( new FormComponent( "javax.swing.JTextField" ) {
 							name: "tfDes"
+							"font": #Font0
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-							"width": 210
+							"width": 310
 							"height": 85
 							"x": 115
 							"y": 195
@@ -68,7 +73,7 @@ new FormModel {
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label4"
 							"text": "Status"
-							"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 1, false )
+							"font": #Font0
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"width": 90
 							"height": 25
@@ -82,43 +87,39 @@ new FormModel {
 								addElement( "Available" )
 								addElement( "Unavailable" )
 							}
+							"font": #Font0
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"x": 115
 							"y": 300
-							"width": 210
+							"width": 305
 							"height": 40
 						} )
-						add( new FormComponent( "javax.swing.JButton" ) {
-							name: "button1"
-							"text": "Apply"
-							"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/checked.png" )
-							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btApply", true ) )
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
+							name: "panel2"
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "button3"
+								"text": "Modify"
+								"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/edit.png" )
+								"font": &Font1 new java.awt.Font( "Montserrat Black", 0, 12 )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btModify", true ) )
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "button1"
+								"text": "Apply"
+								"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/checked.png" )
+								"font": #Font1
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btApply", true ) )
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "button2"
+								"text": "Clear"
+								"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/cleaning.png" )
+								"font": #Font1
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btClear", true ) )
+							} )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-							"x": 240
-							"y": 355
-							"width": 105
-							"height": 45
-						} )
-						add( new FormComponent( "javax.swing.JButton" ) {
-							name: "button2"
-							"text": "Clear"
-							"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/cleaning.png" )
-							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btClear", true ) )
-						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-							"x": 130
-							"y": 355
-							"width": 105
-							"height": 45
-						} )
-						add( new FormComponent( "javax.swing.JButton" ) {
-							name: "button3"
-							"text": "Modify"
-							"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/edit.png" )
-							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btModify", true ) )
-						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-							"x": 20
-							"y": 355
-							"height": 43
+							"x": 85
+							"y": 375
 						} )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label5"
@@ -130,15 +131,16 @@ new FormModel {
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label6"
 							"text": "eLibrary VKU"
-							"font": new com.jformdesigner.model.SwingDerivedFont( null, 131072, 10, false )
+							"font": new java.awt.Font( "Montserrat Black", 0, 24 )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"x": 135
 							"y": 35
+							"width": 245
 						} )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 						"x": 5
 						"y": 20
-						"width": 370
+						"width": 470
 						"height": 435
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
@@ -151,25 +153,25 @@ new FormModel {
 						"width": 55
 						"height": 30
 					} )
-					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 						name: "panel7"
-						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-							name: "scrollPane1"
-							add( new FormComponent( "javax.swing.JTable" ) {
-								name: "tableBooks"
-								"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 2, false )
-								addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "tableBooksMouseClicked", true ) )
-							} )
-						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-							"x": 0
-							"y": 15
-							"width": 710
-							"height": 425
-						} )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 						"x": 385
 						"y": 15
 						"height": 470
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane1"
+						add( new FormComponent( "javax.swing.JTable" ) {
+							name: "tableBooks"
+							"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 2, false )
+							addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "tableBooksMouseClicked", true ) )
+						} )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+						"height": 445
+						"x": 435
+						"y": 30
+						"width": 620
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": "Management Book"
@@ -216,11 +218,25 @@ new FormModel {
 				}, new FormLayoutConstraints( null ) {
 					"title": "Management Borrow"
 				} )
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 5
-				"y": 5
-				"width": 1105
-				"height": 515
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "Center"
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+				name: "panel4"
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+					name: "panel8"
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button5"
+						"text": "Log out"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "logout", true ) )
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "Center"
+					} )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "East"
+				} )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "North"
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 290, 145 )

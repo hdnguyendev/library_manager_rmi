@@ -75,11 +75,14 @@ new FormModel {
 						name: "okButton"
 						"text": "Borrow"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/checked.png" )
+						"font": &Font1 new java.awt.Font( "Montserrat", 1, 12 )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnBorrow", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "cancelButton"
 						"text": "Cancel"
+						"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/warning.png" )
+						"font": #Font1
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cancel", true ) )
 					} )
 				}, new FormLayoutConstraints( class java.lang.String ) {
