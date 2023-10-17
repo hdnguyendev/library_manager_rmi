@@ -14,7 +14,7 @@ import javax.swing.*;
  * @author nguye
  */
 public class LoginGUI extends JFrame {
-    public static String IP_SERVER = "localhost";
+    public static String IP_SERVER = Config.IP_SERVER;
     UserController controller = new UserController();
 
     public LoginGUI() throws MalformedURLException, NotBoundException, RemoteException {

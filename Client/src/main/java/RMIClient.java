@@ -19,9 +19,8 @@ public class RMIClient {
         }
         try {
             //Xác định RMI máy chủ.
-            new LoginGUI().setVisible(true);
-            LibraryRemote libraryRemote = (LibraryRemote) Naming.lookup("rmi://" + LoginGUI.IP_SERVER +":1234/api");
-
+//            new LoginGUI().setVisible(true);
+            new BookManageGUI();
         } catch (NotBoundException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {

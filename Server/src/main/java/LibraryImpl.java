@@ -1,9 +1,11 @@
 import javax.swing.table.DefaultTableModel;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.*;
+import java.util.Collections;
 import java.util.Vector;
 
 public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
@@ -14,6 +16,8 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     PreparedStatement pst;
     ResultSet rst;
     ResultSetMetaData rstmeta;
+    Vector vTitle = new Vector();
+    Vector vData = new Vector();
 
     public LibraryImpl() throws SQLException, RemoteException, UnknownHostException {
         super();
@@ -168,9 +172,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             String[] title = new String[]{
                     "ID", "Username", "Book Title","Borrowed Date", "Return Date"
             };
-            for (int i = 0; i < title.length; i++) {
-                vTitle.add(title[i]);
-            }
+            Collections.addAll(vTitle, title);
             while (rst.next()) {
                 Vector row = new Vector();
 
@@ -202,9 +204,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             String[] title = new String[]{
                     "Book ID", "Title", "Author","Description", "Status"
             };
-            for (int i = 0; i < title.length; i++) {
-                vTitle.add(title[i]);
-            }
+            Collections.addAll(vTitle, title);
 
             while (rst.next()) {
                 Vector row = new Vector();
@@ -222,5 +222,154 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
         }
 
         return new DefaultTableModel(vData, vTitle);
+    }
+    // Manage
+    @Override
+    public Response getBooks() throws RemoteException {
+
+        try {
+            vTitle.clear();
+            vData.clear();
+
+            String query = "SELECT b.id, b.title, c.name " +
+                    "FROM book b " +
+                    "LEFT JOIN category c ON b.category_id = c.id ";
+
+            rst = stm.executeQuery(query);
+
+            String[] title = new String[]{
+                    "Book ID","Book Title","Category"
+            };
+            Collections.addAll(vTitle, title);
+            while (rst.next()) {
+                Vector row = new Vector();
+
+                row.add(rst.getInt("id"));
+                row.add(rst.getString("title"));
+                row.add(rst.getString("name"));
+                vData.add(row);
+            }
+            rst.close();
+            return new Response(200, new DefaultTableModel(vData, vTitle));
+        } catch (SQLException e) {
+            System.out.println("!!!---Error: " + e);
+            return new Response(100, null);
+
+        }
+    }
+
+    @Override
+    public Response getAuthors() throws RemoteException {
+        try {
+            vTitle.clear();
+            vData.clear();
+
+            String query = "SELECT a.id, a.name " +
+                    "FROM author a ";
+
+            rst = stm.executeQuery(query);
+
+            String[] title = new String[]{
+                    "Author ID","Author Name"
+            };
+            Collections.addAll(vTitle, title);
+            while (rst.next()) {
+                Vector row = new Vector();
+
+                row.add(rst.getInt("id"));
+                row.add(rst.getString("name"));
+                vData.add(row);
+            }
+            rst.close();
+            return new Response(200, new DefaultTableModel(vData, vTitle));
+        } catch (SQLException e) {
+            System.out.println("!!!---Error: " + e);
+            return new Response(100, null);
+
+        }
+    }
+
+    @Override
+    public Response getBooksCopy() throws RemoteException {
+        try {
+            vTitle.clear();
+            vData.clear();
+
+            String query = "SELECT bc.id, b.title, bc.year_published, p.name " +
+                    "FROM book_copy bc " +
+                    "INNER JOIN book b ON bc.book_id = b.id " +
+                    "INNER JOIN published p ON bc.published_id = p.id ";
+
+            rst = stm.executeQuery(query);
+
+            String[] title = new String[]{
+                    "Book Copy ID","Book Title","Year Public","Published Name"
+            };
+            Collections.addAll(vTitle, title);
+            while (rst.next()) {
+                Vector row = new Vector();
+
+                row.add(rst.getInt("id"));
+                row.add(rst.getString("name"));
+                vData.add(row);
+            }
+            rst.close();
+            return new Response(200, new DefaultTableModel(vData, vTitle));
+        } catch (SQLException e) {
+            System.out.println("!!!---Error: " + e);
+            return new Response(100, e.toString()   );
+
+        }
+    }
+
+    @Override
+    public Response getCategories() throws RemoteException {
+        try {
+            vTitle.clear();
+            vData.clear();
+
+            String query = "SELECT c.id, c.name " +
+                    "FROM category c ";
+
+            rst = stm.executeQuery(query);
+
+            String[] title = new String[]{
+                    "Category ID","Category Name"
+            };
+            Collections.addAll(vTitle, title);
+            while (rst.next()) {
+                Vector row = new Vector();
+
+                row.add(rst.getInt("id"));
+                row.add(rst.getString("name"));
+                vData.add(row);
+            }
+            rst.close();
+            return new Response(200, new DefaultTableModel(vData, vTitle));
+        } catch (SQLException e) {
+            System.out.println("!!!---Error: " + e);
+            return new Response(100, null);
+
+        }
+    }
+
+    @Override
+    public Response getNotifications() throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public Response getPublished() throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public Response getHolds() throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public Response getCheckouts() throws RemoteException {
+        return null;
     }
 }

@@ -9,7 +9,7 @@ public class UserController {
     LibraryRemote libraryRemote;
 
     public UserController() throws MalformedURLException, NotBoundException, RemoteException {
-        libraryRemote = (LibraryRemote) Naming.lookup("rmi://" + LoginGUI.IP_SERVER + ":1234/api");
+        libraryRemote = (LibraryRemote) Naming.lookup("rmi://" + LoginGUI.IP_SERVER +":"+ Config.PORT_SERVER +"/api");
     }
 
     public Response login(String username, String pass) throws SQLException, RemoteException {

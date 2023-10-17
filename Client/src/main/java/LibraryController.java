@@ -10,7 +10,7 @@ public class LibraryController {
     LibraryRemote libraryRemote;
 
     public LibraryController() throws MalformedURLException, NotBoundException, RemoteException {
-        libraryRemote = (LibraryRemote) Naming.lookup("rmi://" + LoginGUI.IP_SERVER +":1234/api");
+        libraryRemote = (LibraryRemote) Naming.lookup("rmi://" + LoginGUI.IP_SERVER +":"+ Config.PORT_SERVER +"/api");
     }
 
     public DefaultTableModel getDataTableBooks() throws SQLException, RemoteException {

@@ -9,8 +9,10 @@ new FormModel {
 			"$locationPolicy": 1
 			"title": "eLibrary VKU"
 			"iconImage": new com.jformdesigner.model.SwingIcon( 0, "/images/stack-of-books.png" )
+			"background": new java.awt.Color( 255, 255, 255, 255 )
 			add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
 				name: "tabbedPane1"
+				"font": new java.awt.Font( "JetBrains Mono", 0, 12 )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 					name: "panel1"
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
@@ -25,24 +27,50 @@ new FormModel {
 							add( new FormComponent( "javax.swing.JLabel" ) {
 								name: "label1"
 								"text": "Search"
+								"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/search_32.png" )
+								"font": &Font0 new java.awt.Font( "JetBrains Mono", 0, 12 )
 							} )
 							add( new FormComponent( "javax.swing.JTextField" ) {
 								name: "tfSearch"
-								"preferredSize": new java.awt.Dimension( 200, 36 )
+								"preferredSize": new java.awt.Dimension( 400, 36 )
+								"font": #Font0
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "radioButton1"
+								"text": "Available"
+								"$buttonGroup": new FormReference( "buttonGroup1" )
+								"font": &Font1 new java.awt.Font( "JetBrains Mono", 0, 12 )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButtonAvailable", true ) )
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "radioButton2"
+								"text": "Unavailable"
+								"$buttonGroup": new FormReference( "buttonGroup1" )
+								"font": #Font1
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButtonUnavailable", true ) )
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "button2"
+								"text": "Reset"
+								"font": #Font1
+								"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/reset.png" )
+								"preferredSize": new java.awt.Dimension( 100, 30 )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnReset", true ) )
 							} )
 						}, new FormLayoutConstraints( class java.lang.String ) {
 							"value": "North"
 						} )
 					}, new FormLayoutConstraints( class java.lang.String ) {
-						"value": "West"
+						"value": "North"
 					} )
 					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "scrollPane1"
-						"border": new javax.swing.border.TitledBorder( "List Books" )
+						"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+						"font": new java.awt.Font( "iCiel Pony", 0, 12 )
 						add( new FormComponent( "javax.swing.JTable" ) {
 							name: "tableBooks"
 							"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector, new java.util.Vector, new java.util.Vector, new java.util.Vector )
-							"font": new java.awt.Font( "Montserrat", 0, 14 )
+							"font": new java.awt.Font( "JetBrains Mono", 0, 14 )
 							addEvent( new FormEvent( "java.awt.event.MouseListener", "mousePressed", "tableBooksMousePressed", true ) )
 						} )
 					}, new FormLayoutConstraints( class java.lang.String ) {
@@ -50,16 +78,20 @@ new FormModel {
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": "Borrow Books"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/reading_24.png" )
+					"background": sfield java.awt.Color yellow
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 					name: "panel6"
 				}, new FormLayoutConstraints( null ) {
 					"title": "Profile"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/face-scan.png" )
+					"background": sfield java.awt.Color green
 				} )
 			}, new FormLayoutConstraints( class java.lang.String ) {
 				"value": "Center"
 			} )
-			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
 				name: "panel5"
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 					name: "panel7"
@@ -67,35 +99,45 @@ new FormModel {
 						name: "label2"
 						"text": "eLibrary VKU "
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/stack-of-books.png" )
-						"font": new java.awt.Font( "Montserrat Black", 0, 18 )
+						"font": new java.awt.Font( "iCiel Cadena", 0, 30 )
+						"preferredSize": new java.awt.Dimension( 214, 50 )
 					}, new FormLayoutConstraints( class java.lang.String ) {
-						"value": "Center"
+						"value": "West"
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label3"
 						"text": "Hello, VKUer"
-						"font": new java.awt.Font( "Montserrat", 0, 12 )
+						"font": &Font2 new java.awt.Font( "JetBrains Mono", 0, 12 )
 					}, new FormLayoutConstraints( class java.lang.String ) {
 						"value": "East"
 					} )
-				}, new FormLayoutConstraints( class java.lang.String ) {
-					"value": "Center"
+					add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+						name: "hSpacer1"
+						"preferredSize": new java.awt.Dimension( 500, 10 )
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "Center"
+					} )
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "button1"
 					"text": "Exit"
-					"font": new java.awt.Font( "Montserrat", 1, 12 )
-					"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/enter.png" )
+					"font": #Font2
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/exit.png" )
+					"preferredSize": new java.awt.Dimension( 100, 30 )
+					"minimumSize": new java.awt.Dimension( 136, 10 )
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "logout", true ) )
-				}, new FormLayoutConstraints( class java.lang.String ) {
-					"value": "East"
 				} )
 			}, new FormLayoutConstraints( class java.lang.String ) {
 				"value": "North"
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 35, 85 )
-			"size": new java.awt.Dimension( 1040, 445 )
+			"size": new java.awt.Dimension( 945, 655 )
+		} )
+		add( new FormNonVisual( "javax.swing.ButtonGroup" ) {
+			name: "buttonGroup1"
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 756 )
 		} )
 	}
 }

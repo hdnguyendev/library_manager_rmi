@@ -12,6 +12,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.plaf.*;
 import javax.swing.table.*;
 
 /**
@@ -40,6 +41,7 @@ public class LibraryGUI extends JFrame {
             setHorizontalAlignment(JLabel.CENTER);
         }
     }
+
     class CustomHeaderRenderer extends DefaultTableCellRenderer {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -50,16 +52,21 @@ public class LibraryGUI extends JFrame {
             return label;
         }
     }
+
     class IconCellRenderer extends DefaultTableCellRenderer {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             if (value instanceof String) {
                 String check = (String) value;
-                if (check.equals("Available")){
-                    setIcon(new ImageIcon("/images/checked.png")); // Đường dẫn đến biểu tượng
-                    setText("Available");
-                } else{
-                    setIcon(new ImageIcon("/images/warning.png"));
-                    setText("Unavailable");
+                if (check.equals("Available")) {
+                    setFont(new Font("Montserrat", Font.PLAIN, 14));
+                    setForeground(new Color(0, 255, 0));
+                    setIcon(new ImageIcon(getClass().getResource("/images/checked.png"))); // Đường dẫn đến biểu tượng
+//                    setText("Available");
+                } else {
+                    setFont(new Font("Montserrat", Font.PLAIN, 14));
+                    setForeground(new Color(255, 0, 0));
+                    setIcon(new ImageIcon(getClass().getResource("/images/reading_24.png")));
+//                    setText("Unavailable");
                 }
             }
 
@@ -111,11 +118,13 @@ public class LibraryGUI extends JFrame {
         tableBooks.getTableHeader().setDefaultRenderer(new CustomHeaderRenderer());
 
 
-
-        tableBooks.setRowHeight(25);
+        tableBooks.setRowHeight(50);
         TableColumn indexColumn = tableBooks.getColumnModel().getColumn(0);
+        TableColumn titleColumn = tableBooks.getColumnModel().getColumn(1);
         TableColumn statusColumn = tableBooks.getColumnModel().getColumn(4);
-        indexColumn.setPreferredWidth(20); // Đặt độ rộng cố định
+        indexColumn.setPreferredWidth(50); // Đặt độ rộng cố định
+        titleColumn.setPreferredWidth(300); // Đặt độ rộng cố định
+        statusColumn.setPreferredWidth(50); // Đặt độ rộng cố định
         indexColumn.setCellRenderer(new CenteredTableCellRenderer());
         statusColumn.setCellRenderer(new IconCellRenderer());
     }
@@ -159,7 +168,7 @@ public class LibraryGUI extends JFrame {
             String author = (String) tableBooks.getValueAt(selectedRow, 2);
             String description = (String) tableBooks.getValueAt(selectedRow, 3);
             String available = (String) tableBooks.getValueAt(selectedRow, 4);
-            Book book = new Book(bookId, title, author,description, available.equals("Available"));
+            Book book = new Book(bookId, title, author, description, available.equals("Available"));
             BookDetailGUI dialog = new BookDetailGUI(this, true, book, user);
             dialog.addWindowListener(new WindowAdapter() {
                 @Override
@@ -174,6 +183,38 @@ public class LibraryGUI extends JFrame {
         dispose();
         new LoginGUI().setVisible(true);
     }
+
+    public void search(String str) {
+        if (str.length() == 0) {
+            sorter.setRowFilter(null);
+        } else {
+            sorter.setRowFilter(RowFilter.regexFilter(str));
+        }
+      
+  
+    }
+    private void checkBoxBorrow (ActionEvent e){
+        // TODO add your code here
+    }
+    private void checkBoxAvailable(ActionEvent e) {
+    }
+
+    private void radioButtonUnavailable(ActionEvent e) {
+        // TODO add your code here
+        search("Unavailable");
+        
+    }
+
+    private void radioButtonAvailable(ActionEvent e) {
+        // TODO add your code here
+        search("Available");
+    }
+
+    private void btnReset(ActionEvent e) {
+        // TODO add your code here
+        search("");
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Evaluation license - hdnguyendev
@@ -184,6 +225,9 @@ public class LibraryGUI extends JFrame {
         panel4 = new JPanel();
         label1 = new JLabel();
         tfSearch = new JTextField();
+        radioButton1 = new JRadioButton();
+        radioButton2 = new JRadioButton();
+        button2 = new JButton();
         scrollPane1 = new JScrollPane();
         tableBooks = new JTable();
         panel6 = new JPanel();
@@ -191,25 +235,27 @@ public class LibraryGUI extends JFrame {
         panel7 = new JPanel();
         label2 = new JLabel();
         label3 = new JLabel();
+        hSpacer1 = new JPanel(null);
         button1 = new JButton();
 
         //======== this ========
         setTitle("eLibrary VKU");
         setIconImage(new ImageIcon(getClass().getResource("/images/stack-of-books.png")).getImage());
+        setBackground(Color.white);
         var contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
 
         //======== tabbedPane1 ========
         {
+            tabbedPane1.setFont(new Font("JetBrains Mono", Font.PLAIN, 12));
 
             //======== panel1 ========
             {
-                panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border.
-                EmptyBorder( 0, 0, 0, 0) , "JF\u006frmDes\u0069gner \u0045valua\u0074ion", javax. swing. border. TitledBorder. CENTER, javax. swing
-                . border. TitledBorder. BOTTOM, new java .awt .Font ("D\u0069alog" ,java .awt .Font .BOLD ,12 ),
-                java. awt. Color. red) ,panel1. getBorder( )) ); panel1. addPropertyChangeListener (new java. beans. PropertyChangeListener( )
-                { @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("\u0062order" .equals (e .getPropertyName () ))
-                throw new RuntimeException( ); }} );
+                panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder(
+                0, 0, 0, 0) , "JFor\u006dDesi\u0067ner \u0045valu\u0061tion", javax. swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder
+                . BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ), java. awt. Color.
+                red) ,panel1. getBorder( )) ); panel1. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .
+                beans .PropertyChangeEvent e) {if ("bord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
                 panel1.setLayout(new BorderLayout());
 
                 //======== panel2 ========
@@ -228,23 +274,47 @@ public class LibraryGUI extends JFrame {
 
                         //---- label1 ----
                         label1.setText("Search");
+                        label1.setIcon(new ImageIcon(getClass().getResource("/images/search_32.png")));
+                        label1.setFont(new Font("JetBrains Mono", Font.PLAIN, 12));
                         panel4.add(label1);
 
                         //---- tfSearch ----
-                        tfSearch.setPreferredSize(new Dimension(200, 36));
+                        tfSearch.setPreferredSize(new Dimension(400, 36));
+                        tfSearch.setFont(new Font("JetBrains Mono", Font.PLAIN, 12));
                         panel4.add(tfSearch);
+
+                        //---- radioButton1 ----
+                        radioButton1.setText("Available");
+                        radioButton1.setFont(new Font("JetBrains Mono", Font.PLAIN, 12));
+                        radioButton1.addActionListener(e -> radioButtonAvailable(e));
+                        panel4.add(radioButton1);
+
+                        //---- radioButton2 ----
+                        radioButton2.setText("Unavailable");
+                        radioButton2.setFont(new Font("JetBrains Mono", Font.PLAIN, 12));
+                        radioButton2.addActionListener(e -> radioButtonUnavailable(e));
+                        panel4.add(radioButton2);
+
+                        //---- button2 ----
+                        button2.setText("Reset");
+                        button2.setFont(new Font("JetBrains Mono", Font.PLAIN, 12));
+                        button2.setIcon(new ImageIcon(getClass().getResource("/images/reset.png")));
+                        button2.setPreferredSize(new Dimension(100, 30));
+                        button2.addActionListener(e -> btnReset(e));
+                        panel4.add(button2);
                     }
                     panel2.add(panel4, BorderLayout.NORTH);
                 }
-                panel1.add(panel2, BorderLayout.WEST);
+                panel1.add(panel2, BorderLayout.NORTH);
 
                 //======== scrollPane1 ========
                 {
-                    scrollPane1.setBorder(new TitledBorder("List Books"));
+                    scrollPane1.setBorder(null);
+                    scrollPane1.setFont(new Font("iCiel Pony", Font.PLAIN, 12));
 
                     //---- tableBooks ----
                     tableBooks.setModel(new DefaultTableModel());
-                    tableBooks.setFont(new Font("Montserrat", Font.PLAIN, 14));
+                    tableBooks.setFont(new Font("JetBrains Mono", Font.PLAIN, 14));
                     tableBooks.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mousePressed(MouseEvent e) {
@@ -264,19 +334,21 @@ tableBooksMousePressed(e);} catch (MalformedURLException ex) {
                 }
                 panel1.add(scrollPane1, BorderLayout.CENTER);
             }
-            tabbedPane1.addTab("Borrow Books", panel1);
+            tabbedPane1.addTab("Borrow Books", new ImageIcon(getClass().getResource("/images/reading_24.png")), panel1);
+            tabbedPane1.setBackgroundAt(0, Color.yellow);
 
             //======== panel6 ========
             {
                 panel6.setLayout(new BorderLayout());
             }
-            tabbedPane1.addTab("Profile", panel6);
+            tabbedPane1.addTab("Profile", new ImageIcon(getClass().getResource("/images/face-scan.png")), panel6);
+            tabbedPane1.setBackgroundAt(1, Color.green);
         }
         contentPane.add(tabbedPane1, BorderLayout.CENTER);
 
         //======== panel5 ========
         {
-            panel5.setLayout(new BorderLayout());
+            panel5.setLayout(new FlowLayout());
 
             //======== panel7 ========
             {
@@ -285,20 +357,27 @@ tableBooksMousePressed(e);} catch (MalformedURLException ex) {
                 //---- label2 ----
                 label2.setText("eLibrary VKU ");
                 label2.setIcon(new ImageIcon(getClass().getResource("/images/stack-of-books.png")));
-                label2.setFont(new Font("Montserrat Black", Font.PLAIN, 18));
-                panel7.add(label2, BorderLayout.CENTER);
+                label2.setFont(new Font("iCiel Cadena", Font.PLAIN, 30));
+                label2.setPreferredSize(new Dimension(214, 50));
+                panel7.add(label2, BorderLayout.WEST);
 
                 //---- label3 ----
                 label3.setText("Hello, VKUer");
-                label3.setFont(new Font("Montserrat", Font.PLAIN, 12));
+                label3.setFont(new Font("JetBrains Mono", Font.PLAIN, 12));
                 panel7.add(label3, BorderLayout.EAST);
+
+                //---- hSpacer1 ----
+                hSpacer1.setPreferredSize(new Dimension(500, 10));
+                panel7.add(hSpacer1, BorderLayout.CENTER);
             }
-            panel5.add(panel7, BorderLayout.CENTER);
+            panel5.add(panel7);
 
             //---- button1 ----
             button1.setText("Exit");
-            button1.setFont(new Font("Montserrat", Font.BOLD, 12));
-            button1.setIcon(new ImageIcon(getClass().getResource("/images/enter.png")));
+            button1.setFont(new Font("JetBrains Mono", Font.PLAIN, 12));
+            button1.setIcon(new ImageIcon(getClass().getResource("/images/exit.png")));
+            button1.setPreferredSize(new Dimension(100, 30));
+            button1.setMinimumSize(new Dimension(136, 10));
             button1.addActionListener(e -> {try {
 logout(e);} catch (MalformedURLException ex) {
     throw new RuntimeException(ex);
@@ -307,11 +386,16 @@ logout(e);} catch (MalformedURLException ex) {
 } catch (RemoteException ex) {
     throw new RuntimeException(ex);
 }});
-            panel5.add(button1, BorderLayout.EAST);
+            panel5.add(button1);
         }
         contentPane.add(panel5, BorderLayout.NORTH);
-        setSize(1040, 445);
+        setSize(945, 655);
         setLocationRelativeTo(null);
+
+        //---- buttonGroup1 ----
+        var buttonGroup1 = new ButtonGroup();
+        buttonGroup1.add(radioButton1);
+        buttonGroup1.add(radioButton2);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
@@ -324,6 +408,9 @@ logout(e);} catch (MalformedURLException ex) {
     private JPanel panel4;
     private JLabel label1;
     private JTextField tfSearch;
+    private JRadioButton radioButton1;
+    private JRadioButton radioButton2;
+    private JButton button2;
     private JScrollPane scrollPane1;
     private JTable tableBooks;
     private JPanel panel6;
@@ -331,6 +418,7 @@ logout(e);} catch (MalformedURLException ex) {
     private JPanel panel7;
     private JLabel label2;
     private JLabel label3;
+    private JPanel hSpacer1;
     private JButton button1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
