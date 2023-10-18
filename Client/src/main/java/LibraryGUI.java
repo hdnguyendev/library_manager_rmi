@@ -138,21 +138,21 @@ public class LibraryGUI extends JFrame {
             String title = (String) tableBooks.getValueAt(selectedRow, 1);
             String author = (String) tableBooks.getValueAt(selectedRow, 2);
             String available = (String) tableBooks.getValueAt(selectedRow, 3);
-            Book book = new Book(bookId, title, author, available.equals("Available"));
+//            Book book = new Book(bookId, title, author, available.equals("Available"));
             // Sử dụng thông tin sách được chọn
             System.out.println("Selected Book:");
             System.out.println("Book ID: " + bookId);
             System.out.println("Title: " + title);
             System.out.println("Author: " + author);
             System.out.println("Available: " + available);
-            BookDetailGUI dialog = new BookDetailGUI(this, true, book, user);
+//            BookDetailGUI dialog = new BookDetailGUI(this, true, book, user);
 
-            dialog.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosed(WindowEvent e) {
-                    updateTableBooks();
-                }
-            });
+//            dialog.addWindowListener(new WindowAdapter() {
+//                @Override
+//                public void windowClosed(WindowEvent e) {
+//                    updateTableBooks();
+//                }
+//            });
 
 
         }
@@ -168,14 +168,14 @@ public class LibraryGUI extends JFrame {
             String author = (String) tableBooks.getValueAt(selectedRow, 2);
             String description = (String) tableBooks.getValueAt(selectedRow, 3);
             String available = (String) tableBooks.getValueAt(selectedRow, 4);
-            Book book = new Book(bookId, title, author, description, available.equals("Available"));
-            BookDetailGUI dialog = new BookDetailGUI(this, true, book, user);
-            dialog.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosed(WindowEvent e) {
-                    updateTableBooks();
-                }
-            });
+//            Book book = new Book(bookId, title, author, description, available.equals("Available"));
+//            BookDetailGUI dialog = new BookDetailGUI(this, true, book, user);
+//            dialog.addWindowListener(new WindowAdapter() {
+//                @Override
+//                public void windowClosed(WindowEvent e) {
+//                    updateTableBooks();
+//                }
+//            });
         }
     }
 

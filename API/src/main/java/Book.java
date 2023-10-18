@@ -4,37 +4,15 @@ public class Book implements Serializable {
     private static final long serialVersionUID = 1L;
     private int id;
     private String title;
-    private String author;
-    private String description;
-    private boolean isAvailable;
+    private int category_id;
 
     public Book() {
     }
 
-    public Book(int id) {
-        this.id = id;
-    }
-
-    public Book(String title, String author, String description, boolean isAvailable) {
-        this.title = title;
-        this.author = author;
-        this.description = description;
-        this.isAvailable = isAvailable;
-    }
-
-    public Book(int id, String title, String author, String description, boolean isAvailable) {
+    public Book(int id, String title, int category_id) {
         this.id = id;
         this.title = title;
-        this.author = author;
-        this.description = description;
-        this.isAvailable = isAvailable;
-    }
-
-    public Book(int id, String title, String author, boolean available) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.isAvailable = available;
+        this.category_id = category_id;
     }
 
     public int getId() {
@@ -53,27 +31,11 @@ public class Book implements Serializable {
         this.title = title;
     }
 
-    public String getAuthor() {
-        return author;
+    public int getCategory_id() {
+        return category_id;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
-    public void setAvailable(boolean available) {
-        this.isAvailable = available;
+    public void setCategory_id(int category_id) {
+        this.category_id = category_id;
     }
 }

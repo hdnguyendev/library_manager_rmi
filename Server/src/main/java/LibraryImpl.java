@@ -111,36 +111,36 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
     @Override
     public Response book_addBook(Book book) throws RemoteException {
-        try {
-            String addBook_query = "INSERT INTO book (id, title, author, description, isAvailable) VALUES (?, ?, ?, ?, ?)";
-            pst = conn.prepareStatement(addBook_query);
-            pst.setInt(1, book.getId());
-            pst.setString(2, book.getTitle());
-            pst.setString(3, book.getAuthor());
-            pst.setString(4, book.getDescription());
-            pst.setBoolean(5, book.isAvailable());
-            pst.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            String addBook_query = "INSERT INTO book (id, title, author, description, isAvailable) VALUES (?, ?, ?, ?, ?)";
+//            pst = conn.prepareStatement(addBook_query);
+//            pst.setInt(1, book.getId());
+//            pst.setString(2, book.getTitle());
+//            pst.setString(3, book.getAuthor());
+//            pst.setString(4, book.getDescription());
+//            pst.setBoolean(5, book.isAvailable());
+//            pst.executeUpdate();
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
         return new Response(200, "Insert data successfully!");
 
     }
 
     @Override
     public Response book_updateBook(Book book) throws RemoteException {
-        try {
-            String updateQuery = "UPDATE book SET title = ?, author = ?, description = ?, isAvailable= ? WHERE id = ?";
-            pst = conn.prepareStatement(updateQuery);
-            pst.setString(1, book.getTitle());
-            pst.setString(2, book.getAuthor());
-            pst.setString(3, book.getDescription());
-            pst.setBoolean(4, book.isAvailable());
-            pst.setInt(5, book.getId());
-            pst.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            String updateQuery = "UPDATE book SET title = ?, author = ?, description = ?, isAvailable= ? WHERE id = ?";
+//            pst = conn.prepareStatement(updateQuery);
+//            pst.setString(1, book.getTitle());
+//            pst.setString(2, book.getAuthor());
+//            pst.setString(3, book.getDescription());
+//            pst.setBoolean(4, book.isAvailable());
+//            pst.setInt(5, book.getId());
+//            pst.executeUpdate();
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
         return new Response(200, "Update data successfully!");
     }
 
@@ -170,7 +170,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             vTitle.clear();
             vData.clear();
             String[] title = new String[]{
-                    "ID", "Username", "Book Title","Borrowed Date", "Return Date"
+                    "ID", "Username", "Book Title", "Borrowed Date", "Return Date"
             };
             Collections.addAll(vTitle, title);
             while (rst.next()) {
@@ -202,7 +202,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             vData.clear();
 
             String[] title = new String[]{
-                    "Book ID", "Title", "Author","Description", "Status"
+                    "Book ID", "Title", "Author", "Description", "Status"
             };
             Collections.addAll(vTitle, title);
 
@@ -223,6 +223,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
         return new DefaultTableModel(vData, vTitle);
     }
+
     // Manage
     @Override
     public Response getBooks() throws RemoteException {
@@ -231,14 +232,16 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             vTitle.clear();
             vData.clear();
 
-            String query = "SELECT b.id, b.title, c.name " +
-                    "FROM book b " +
-                    "LEFT JOIN category c ON b.category_id = c.id ";
+            String query = "SELECT book.id, book.title, category.name AS category, author.name AS author " +
+                    "FROM book " +
+                    "INNER JOIN book_author ON book.id = book_author.book_id " +
+                    "INNER JOIN author ON book_author.author_id = author.id " +
+                    "INNER JOIN category ON book.category_id = category.id order by book.id";
 
             rst = stm.executeQuery(query);
 
             String[] title = new String[]{
-                    "Book ID","Book Title","Category"
+                    "Book ID", "Book Title", "Category", "Author"
             };
             Collections.addAll(vTitle, title);
             while (rst.next()) {
@@ -246,7 +249,8 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
                 row.add(rst.getInt("id"));
                 row.add(rst.getString("title"));
-                row.add(rst.getString("name"));
+                row.add(rst.getString("category"));
+                row.add(rst.getString("author"));
                 vData.add(row);
             }
             rst.close();
@@ -270,7 +274,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             rst = stm.executeQuery(query);
 
             String[] title = new String[]{
-                    "Author ID","Author Name"
+                    "Author ID", "Author Name"
             };
             Collections.addAll(vTitle, title);
             while (rst.next()) {
@@ -303,7 +307,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             rst = stm.executeQuery(query);
 
             String[] title = new String[]{
-                    "Book Copy ID","Book Title","Year Public","Published Name"
+                    "Book Copy ID", "Book Title", "Year Public", "Published Name"
             };
             Collections.addAll(vTitle, title);
             while (rst.next()) {
@@ -317,7 +321,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             return new Response(200, new DefaultTableModel(vData, vTitle));
         } catch (SQLException e) {
             System.out.println("!!!---Error: " + e);
-            return new Response(100, e.toString()   );
+            return new Response(100, e.toString());
 
         }
     }
@@ -334,12 +338,11 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             rst = stm.executeQuery(query);
 
             String[] title = new String[]{
-                    "Category ID","Category Name"
+                    "Category ID", "Category Name"
             };
             Collections.addAll(vTitle, title);
             while (rst.next()) {
                 Vector row = new Vector();
-
                 row.add(rst.getInt("id"));
                 row.add(rst.getString("name"));
                 vData.add(row);
@@ -370,6 +373,125 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
     @Override
     public Response getCheckouts() throws RemoteException {
+        return null;
+    }
+
+    // CRUD - Book
+    @Override
+    public Response createBook(Book book, int author_id) throws RemoteException {
+        try {
+            // Thêm sách mới vào bảng book
+            String insertBookQuery = "INSERT INTO book (title, category_id) VALUES (?, ?)";
+            PreparedStatement insertBookStatement = conn.prepareStatement(insertBookQuery, Statement.RETURN_GENERATED_KEYS);
+            insertBookStatement.setString(1, book.getTitle());
+            insertBookStatement.setInt(2, book.getCategory_id());
+            insertBookStatement.executeUpdate();
+
+            // Lấy giá trị id của sách vừa được thêm vào
+            ResultSet generatedKeys = insertBookStatement.getGeneratedKeys();
+            int bookId;
+            if (generatedKeys.next()) {
+                bookId = generatedKeys.getInt(1);
+            } else {
+                return new Response(100, "Failed to get the generated book ID.");
+            }
+
+            // Thêm thông tin tác giả vào bảng book_author
+            String insertBookAuthorQuery = "INSERT INTO book_author (book_id, author_id) VALUES (?, ?)";
+            PreparedStatement insertBookAuthorStatement = conn.prepareStatement(insertBookAuthorQuery);
+            insertBookAuthorStatement.setInt(1, bookId);
+            insertBookAuthorStatement.setInt(2, author_id);
+            insertBookAuthorStatement.executeUpdate();
+
+            return new Response(200, "Created book successfully!");
+        }
+        catch (Exception e){
+            return new Response(100, e.getMessage());
+        }
+    }
+
+    @Override
+    public Response getBook(int id) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public Response updateBook(Book book,int author_id) throws RemoteException {
+        try {
+            // Cập nhật sách theo id
+            String insertBookQuery = "UPDATE book SET title = ?, category_id = ? WHERE id = ?";
+            PreparedStatement insertBookStatement = conn.prepareStatement(insertBookQuery, Statement.RETURN_GENERATED_KEYS);
+            insertBookStatement.setString(1, book.getTitle());
+            insertBookStatement.setInt(2, book.getCategory_id());
+            insertBookStatement.setInt(3, book.getId());
+            insertBookStatement.executeUpdate();
+
+
+            String insertBookAuthorQuery = "UPDATE book_author SET author_id = ? WHERE book_id = ?";
+            PreparedStatement insertBookAuthorStatement = conn.prepareStatement(insertBookAuthorQuery);
+            insertBookAuthorStatement.setInt(1, author_id);
+            insertBookAuthorStatement.setInt(2, book.getId() );
+            insertBookAuthorStatement.executeUpdate();
+
+            return new Response(200, "Updated book successfully!");
+        }
+        catch (Exception e){
+            return new Response(100, e.getMessage());
+        }
+    }
+
+    @Override
+    public Response deleteBook(int id) throws RemoteException {
+        try {
+            // Xóa các bản sao sách từ bảng book_copy
+            String deleteBookCopyQuery = "DELETE FROM book_copy WHERE book_id = ?";
+            PreparedStatement deleteBookCopyStatement = conn.prepareStatement(deleteBookCopyQuery);
+            deleteBookCopyStatement.setInt(1, id);
+            deleteBookCopyStatement.executeUpdate();
+            // Xóa dữ liệu tương ứng trong bảng book_author
+            String deleteBookAuthorQuery = "DELETE FROM book_author WHERE book_id = ?";
+            PreparedStatement deleteBookAuthorStatement = conn.prepareStatement(deleteBookAuthorQuery);
+            deleteBookAuthorStatement.setInt(1, id);
+            deleteBookAuthorStatement.executeUpdate();
+
+            // Xóa sách từ bảng book
+            String deleteBookQuery = "DELETE FROM book WHERE id = ?";
+            PreparedStatement deleteBookStatement = conn.prepareStatement(deleteBookQuery);
+            deleteBookStatement.setInt(1, id);
+            int rowsAffected = deleteBookStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                return new Response(200, "Deleted Book Successfully!" );
+
+            } else {
+                return new Response(100, "Not find book_id " + id);
+
+            }
+
+
+        } catch (SQLException e) {
+            return new Response(100, e.getMessage());
+        }
+    }
+
+    // CRUD Category
+    @Override
+    public Response createCategory(Category category) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public Response getCategory(int id) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public Response updateCategory(Category category) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public Response deleteCategory(int id) throws RemoteException {
         return null;
     }
 }

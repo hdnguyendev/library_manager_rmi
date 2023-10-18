@@ -25,4 +25,19 @@ public interface LibraryRemote extends Remote {
     public Response getHolds() throws RemoteException;
     public Response getCheckouts() throws RemoteException;
     //
+
+    // CRUD Book
+    public Response createBook(Book book,int author_id) throws RemoteException;
+    public Response getBook(int id) throws RemoteException;
+    public Response updateBook(Book book, int author_id) throws RemoteException;
+    public Response deleteBook(int id) throws RemoteException;
+    //
+    // CRUD Category
+    public Response createCategory(Category category) throws RemoteException;
+    public Response getCategory(int id) throws RemoteException;
+    public Response updateCategory(Category category) throws RemoteException;
+    public Response deleteCategory(int id) throws RemoteException;
+    //
+
+
 }
