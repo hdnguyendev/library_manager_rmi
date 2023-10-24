@@ -2,17 +2,9 @@ import javax.swing.table.DefaultTableModel;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public interface LibraryRemote extends Remote {
-    public Response user_login(String username, String pass) throws RemoteException, SQLException;
-    public Response user_logout(String username) throws RemoteException, SQLException;
-    public Response user_borrowBook(int user_id, int book_id) throws RemoteException, SQLException;
-    public Response book_addBook(Book book) throws RemoteException,SQLException;
-    public Response book_updateBook(Book book)throws RemoteException,SQLException;
-    public Response book_deleteBook(Book book)throws RemoteException,SQLException;
-    public DefaultTableModel listBorrowed()throws RemoteException,SQLException;
-    public DefaultTableModel list_books() throws RemoteException, SQLException;
-
 
     // Manage
     // Return DefaultTableModel
@@ -38,6 +30,10 @@ public interface LibraryRemote extends Remote {
     public Response updateCategory(Category category) throws RemoteException;
     public Response deleteCategory(int id) throws RemoteException;
     //
-
+    // Log - Block
+    public int createLog(Log log) throws RemoteException;
+    public void updateLog(Log log) throws RemoteException;
+    public void deleteLog(int id) throws RemoteException;
+    public boolean checkLog(String table_name, int col_id) throws RemoteException;
 
 }

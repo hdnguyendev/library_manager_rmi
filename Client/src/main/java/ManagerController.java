@@ -5,6 +5,8 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,18 +14,21 @@ public class ManagerController {
     LibraryRemote libraryRemote;
 
     public ManagerController() throws MalformedURLException, NotBoundException, RemoteException {
-        libraryRemote = (LibraryRemote) Naming.lookup("rmi://" + LoginGUI.IP_SERVER + ":" + Config.PORT_SERVER + "/api");
+        libraryRemote = (LibraryRemote) Naming.lookup("rmi://" + Config.IP_SERVER + ":" + Config.PORT_SERVER + "/api");
     }
+
     // CRUD - Book
     public Response getBooksController() throws RemoteException {
         Response response = libraryRemote.getBooks();
         return response;
 
     }
+
     public Response createBookController(Book book, int author_id) throws RemoteException, SQLException {
-        Response response = libraryRemote.createBook(book,author_id);
+        Response response = libraryRemote.createBook(book, author_id);
         return response;
     }
+
     public Response deleteBookController(int book_id) throws RemoteException {
         Response res = libraryRemote.deleteBook(book_id);
         return res;
@@ -33,6 +38,24 @@ public class ManagerController {
         Response response = libraryRemote.updateBook(book, authorId);
         return response;
     }
+
+    //
+    public int createLog(Log log) throws RemoteException {
+        return libraryRemote.createLog(log);
+    }
+
+    public void updateLog(Log log) throws RemoteException {
+        libraryRemote.updateLog(log);
+    }
+
+    public void deleteLog(int id) throws RemoteException {
+        libraryRemote.deleteLog(id);
+    }
+    public boolean checkLog(String table_name, int col_id) throws RemoteException {
+        return libraryRemote.checkLog(table_name, col_id);
+    }
+
+    //
     private static List<Category> getTableDataCategory(DefaultTableModel model) {
         List<Category> dataList = new ArrayList<>();
 
@@ -50,6 +73,7 @@ public class ManagerController {
 
         return dataList;
     }
+
     private static List<Author> getTableDataAuthor(DefaultTableModel model) {
         List<Author> dataList = new ArrayList<>();
 

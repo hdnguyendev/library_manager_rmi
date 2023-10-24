@@ -1,101 +1,93 @@
 /*
- * Created by JFormDesigner on Tue Sep 26 21:07:09 ICT 2023
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.plaf.*;
-import javax.swing.table.*;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author nguye
  */
-public class LibraryGUI extends JFrame {
-    User user;
-    TableRowSorter sorter;
-    LibraryController controller = new LibraryController();
+public class LibraryGUI extends javax.swing.JFrame {
+    ManagerController controller;
 
-    public LibraryGUI(User user) throws MalformedURLException, NotBoundException, RemoteException {
-        this.user = user;
-        if (user == null) {
-            System.out.println("User has error data");
-        }
-        initComponents();
-        updateTableBooks();
-
-
-        setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-    }
-
-    class CenteredTableCellRenderer extends DefaultTableCellRenderer {
-        public CenteredTableCellRenderer() {
-            setHorizontalAlignment(JLabel.CENTER);
-        }
-    }
-
-    class CustomHeaderRenderer extends DefaultTableCellRenderer {
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            label.setBackground(Color.BLUE); // Đặt màu nền là màu xanh
-            label.setForeground(Color.WHITE); // Đặt màu chữ là màu trắng
-            label.setFont(label.getFont().deriveFont(Font.BOLD)); // Đặt chữ in đậm
-            label.setHorizontalAlignment(JLabel.CENTER); // Căn giữa tiêu đề
-            return label;
-        }
-    }
-
-    class IconCellRenderer extends DefaultTableCellRenderer {
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            if (value instanceof String) {
-                String check = (String) value;
-                if (check.equals("Available")) {
-                    setFont(new Font("Montserrat", Font.PLAIN, 14));
-                    setForeground(new Color(0, 255, 0));
-                    setIcon(new ImageIcon(getClass().getResource("/images/checked.png"))); // Đường dẫn đến biểu tượng
-//                    setText("Available");
-                } else {
-                    setFont(new Font("Montserrat", Font.PLAIN, 14));
-                    setForeground(new Color(255, 0, 0));
-                    setIcon(new ImageIcon(getClass().getResource("/images/reading_24.png")));
-//                    setText("Unavailable");
-                }
-            }
-
-            setHorizontalAlignment(JLabel.CENTER); // Căn giữa biểu tượng
-            return this;
-        }
-    }
-
-    private void updateTableBooks() {
-
+    {
         try {
-            DefaultTableModel model = controller.getDataTableBooks();
-            tableBooks.setModel(model);
-            sorter = new TableRowSorter<>(model);
-            tableBooks.setRowSorter(sorter);
-            tfSearch.getDocument().addDocumentListener(new DocumentListener() {
+            controller = new ManagerController();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (NotBoundException e) {
+            throw new RuntimeException(e);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    TableRowSorter sorter;
+    Log log;
+    InetAddress ipAddress;
+
+    {
+        try {
+            ipAddress = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    String ip = ipAddress.getHostAddress().isEmpty() ? "Unknown" : ipAddress.getHostAddress();
+    String username = "manage";
+    String table_name;
+    String col_id;
+
+    /**
+     * Creates new form LibraryGUI
+     */
+    public LibraryGUI() {
+        initComponents();
+        // load data
+        showTableBook();
+        showDataComboBoxCategory();
+        showDataComboBoxAuthor();
+        //
+    }
+
+    private synchronized void showTableBook() {
+        try {
+            Response response = controller.getBooksController();
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getStatus());
+            }
+            sorter = new TableRowSorter<>((DefaultTableModel) response.getData());
+            tbl_Book.setRowSorter(sorter);
+            tf_search_Book.getDocument().addDocumentListener(new DocumentListener() {
                 @Override
                 public void insertUpdate(DocumentEvent e) {
-                    search(tfSearch.getText());
+                    search(tf_search_Book.getText());
                 }
 
                 @Override
                 public void removeUpdate(DocumentEvent e) {
-                    search(tfSearch.getText());
+                    search(tf_search_Book.getText());
                 }
 
                 @Override
                 public void changedUpdate(DocumentEvent e) {
-                    search(tfSearch.getText());
+                    search(tf_search_Book.getText());
                 }
 
                 public void search(String str) {
@@ -106,319 +98,486 @@ public class LibraryGUI extends JFrame {
                     }
                 }
             });
-            tableBooks.setDefaultEditor(Object.class, null);
-            scrollPane1.setViewportView(tableBooks);
+
+            tbl_Book.setModel((DefaultTableModel) response.getData());
+            tbl_Book.getTableHeader().setDefaultRenderer(new CustomHeaderRenderer());
+            tbl_Book.setRowHeight(30);
+            tbl_Book.setDefaultEditor(Object.class, null);
+            TableColumn indexColumn = tbl_Book.getColumnModel().getColumn(0);
+            indexColumn.setCellRenderer(new CenteredTableCellRenderer());
+            indexColumn.setMaxWidth(50);
+            jScrollPane1.setViewportView(tbl_Book);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private synchronized void showDataComboBoxCategory() {
+        try {
+            Response response = controller.getDataComboBoxCategories();
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getStatus());
+            }
+            List<Category> categoryList = (List<Category>) response.getData();
+            for (Category i :
+                    categoryList) {
+                cb_category_Book.addItem(i);
+            }
 
         } catch (RemoteException e) {
             e.printStackTrace();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        // modify table
-        tableBooks.getTableHeader().setDefaultRenderer(new CustomHeaderRenderer());
-
-
-        tableBooks.setRowHeight(50);
-        TableColumn indexColumn = tableBooks.getColumnModel().getColumn(0);
-        TableColumn titleColumn = tableBooks.getColumnModel().getColumn(1);
-        TableColumn statusColumn = tableBooks.getColumnModel().getColumn(4);
-        indexColumn.setPreferredWidth(50); // Đặt độ rộng cố định
-        titleColumn.setPreferredWidth(300); // Đặt độ rộng cố định
-        statusColumn.setPreferredWidth(50); // Đặt độ rộng cố định
-        indexColumn.setCellRenderer(new CenteredTableCellRenderer());
-        statusColumn.setCellRenderer(new IconCellRenderer());
-    }
-
-    private void tableBooksMouseClicked(MouseEvent e) throws SQLException, RemoteException, MalformedURLException, NotBoundException {
-        int selectedRow = tableBooks.getSelectedRow();
-
-        if (selectedRow != -1) {
-            // Lấy thông tin từ hàng dữ liệu được chọn
-            int bookId = (int) tableBooks.getValueAt(selectedRow, 0);
-            String title = (String) tableBooks.getValueAt(selectedRow, 1);
-            String author = (String) tableBooks.getValueAt(selectedRow, 2);
-            String available = (String) tableBooks.getValueAt(selectedRow, 3);
-//            Book book = new Book(bookId, title, author, available.equals("Available"));
-            // Sử dụng thông tin sách được chọn
-            System.out.println("Selected Book:");
-            System.out.println("Book ID: " + bookId);
-            System.out.println("Title: " + title);
-            System.out.println("Author: " + author);
-            System.out.println("Available: " + available);
-//            BookDetailGUI dialog = new BookDetailGUI(this, true, book, user);
-
-//            dialog.addWindowListener(new WindowAdapter() {
-//                @Override
-//                public void windowClosed(WindowEvent e) {
-//                    updateTableBooks();
-//                }
-//            });
-
-
         }
     }
 
-    private void tableBooksMousePressed(MouseEvent e) throws MalformedURLException, SQLException, NotBoundException, RemoteException {
-        int selectedRow = tableBooks.getSelectedRow();
+    private synchronized void showDataComboBoxAuthor() {
+        try {
+            Response response = controller.getDataComboBoxAuthors();
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getStatus());
+            }
+            List<Author> authorList = (List<Author>) response.getData();
+            for (Author i : authorList) {
+                cb_author_Book.addItem(i);
+            }
 
-        if (selectedRow != -1) {
-            // Lấy thông tin từ hàng dữ liệu được chọn
-            int bookId = (int) tableBooks.getValueAt(selectedRow, 0);
-            String title = (String) tableBooks.getValueAt(selectedRow, 1);
-            String author = (String) tableBooks.getValueAt(selectedRow, 2);
-            String description = (String) tableBooks.getValueAt(selectedRow, 3);
-            String available = (String) tableBooks.getValueAt(selectedRow, 4);
-//            Book book = new Book(bookId, title, author, description, available.equals("Available"));
-//            BookDetailGUI dialog = new BookDetailGUI(this, true, book, user);
-//            dialog.addWindowListener(new WindowAdapter() {
-//                @Override
-//                public void windowClosed(WindowEvent e) {
-//                    updateTableBooks();
-//                }
-//            });
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
     }
 
-    private void logout(ActionEvent e) throws MalformedURLException, NotBoundException, RemoteException {
-        dispose();
-        new LoginGUI().setVisible(true);
-    }
-
-    public void search(String str) {
-        if (str.length() == 0) {
-            sorter.setRowFilter(null);
-        } else {
-            sorter.setRowFilter(RowFilter.regexFilter(str));
-        }
-      
-  
-    }
-    private void checkBoxBorrow (ActionEvent e){
-        // TODO add your code here
-    }
-    private void checkBoxAvailable(ActionEvent e) {
-    }
-
-    private void radioButtonUnavailable(ActionEvent e) {
-        // TODO add your code here
-        search("Unavailable");
-        
-    }
-
-    private void radioButtonAvailable(ActionEvent e) {
-        // TODO add your code here
-        search("Available");
-    }
-
-    private void btnReset(ActionEvent e) {
-        // TODO add your code here
-        search("");
-    }
-
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
-        // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
-        // Generated using JFormDesigner Evaluation license - hdnguyendev
-        tabbedPane1 = new JTabbedPane();
-        panel1 = new JPanel();
-        panel2 = new JPanel();
-        panel3 = new JPanel();
-        panel4 = new JPanel();
-        label1 = new JLabel();
-        tfSearch = new JTextField();
-        radioButton1 = new JRadioButton();
-        radioButton2 = new JRadioButton();
-        button2 = new JButton();
-        scrollPane1 = new JScrollPane();
-        tableBooks = new JTable();
-        panel6 = new JPanel();
-        panel5 = new JPanel();
-        panel7 = new JPanel();
-        label2 = new JLabel();
-        label3 = new JLabel();
-        hSpacer1 = new JPanel(null);
-        button1 = new JButton();
 
-        //======== this ========
-        setTitle("eLibrary VKU");
-        setIconImage(new ImageIcon(getClass().getResource("/images/stack-of-books.png")).getImage());
-        setBackground(Color.white);
-        var contentPane = getContentPane();
-        contentPane.setLayout(new BorderLayout());
+        jPanel1 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tbl_Book = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        tf_search_Book = new javax.swing.JTextField();
+        btn_create_Book = new javax.swing.JButton();
+        btn_update_Book = new javax.swing.JButton();
+        btn_delete_Book = new javax.swing.JButton();
+        btn_refresh_Book = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        tf_ID_Book = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        tf_title_Book = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        cb_category_Book = new javax.swing.JComboBox();
+        cb_author_Book = new javax.swing.JComboBox();
+        jLabel16 = new javax.swing.JLabel();
 
-        //======== tabbedPane1 ========
-        {
-            tabbedPane1.setFont(new Font("JetBrains Mono", Font.PLAIN, 12));
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("VKU Lib");
 
-            //======== panel1 ========
-            {
-                panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder(
-                0, 0, 0, 0) , "JFor\u006dDesi\u0067ner \u0045valu\u0061tion", javax. swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder
-                . BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ), java. awt. Color.
-                red) ,panel1. getBorder( )) ); panel1. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .
-                beans .PropertyChangeEvent e) {if ("bord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
-                panel1.setLayout(new BorderLayout());
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/exit.png"))); // NOI18N
+        jButton1.setText("Logout");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
-                //======== panel2 ========
-                {
-                    panel2.setLayout(new BorderLayout());
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/banner.png"))); // NOI18N
 
-                    //======== panel3 ========
-                    {
-                        panel3.setLayout(new BorderLayout());
-                    }
-                    panel2.add(panel3, BorderLayout.WEST);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(780, 780, 780)
+                                .addComponent(jButton1))
+                        .addComponent(jLabel1)
+        );
+        jPanel1Layout.setVerticalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(60, 60, 60)
+                                .addComponent(jButton1))
+                        .addComponent(jLabel1)
+        );
 
-                    //======== panel4 ========
-                    {
-                        panel4.setLayout(new FlowLayout());
+        getContentPane().add(jPanel1, java.awt.BorderLayout.NORTH);
 
-                        //---- label1 ----
-                        label1.setText("Search");
-                        label1.setIcon(new ImageIcon(getClass().getResource("/images/search_32.png")));
-                        label1.setFont(new Font("JetBrains Mono", Font.PLAIN, 12));
-                        panel4.add(label1);
-
-                        //---- tfSearch ----
-                        tfSearch.setPreferredSize(new Dimension(400, 36));
-                        tfSearch.setFont(new Font("JetBrains Mono", Font.PLAIN, 12));
-                        panel4.add(tfSearch);
-
-                        //---- radioButton1 ----
-                        radioButton1.setText("Available");
-                        radioButton1.setFont(new Font("JetBrains Mono", Font.PLAIN, 12));
-                        radioButton1.addActionListener(e -> radioButtonAvailable(e));
-                        panel4.add(radioButton1);
-
-                        //---- radioButton2 ----
-                        radioButton2.setText("Unavailable");
-                        radioButton2.setFont(new Font("JetBrains Mono", Font.PLAIN, 12));
-                        radioButton2.addActionListener(e -> radioButtonUnavailable(e));
-                        panel4.add(radioButton2);
-
-                        //---- button2 ----
-                        button2.setText("Reset");
-                        button2.setFont(new Font("JetBrains Mono", Font.PLAIN, 12));
-                        button2.setIcon(new ImageIcon(getClass().getResource("/images/reset.png")));
-                        button2.setPreferredSize(new Dimension(100, 30));
-                        button2.addActionListener(e -> btnReset(e));
-                        panel4.add(button2);
-                    }
-                    panel2.add(panel4, BorderLayout.NORTH);
+        tbl_Book.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null}
+                },
+                new String[]{
+                        "Title 1", "Title 2", "Title 3", "Title 4"
                 }
-                panel1.add(panel2, BorderLayout.NORTH);
-
-                //======== scrollPane1 ========
-                {
-                    scrollPane1.setBorder(null);
-                    scrollPane1.setFont(new Font("iCiel Pony", Font.PLAIN, 12));
-
-                    //---- tableBooks ----
-                    tableBooks.setModel(new DefaultTableModel());
-                    tableBooks.setFont(new Font("JetBrains Mono", Font.PLAIN, 14));
-                    tableBooks.addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mousePressed(MouseEvent e) {
-                            try {
-tableBooksMousePressed(e);} catch (MalformedURLException ex) {
-    throw new RuntimeException(ex);
-} catch (SQLException ex) {
-    throw new RuntimeException(ex);
-} catch (NotBoundException ex) {
-    throw new RuntimeException(ex);
-} catch (RemoteException ex) {
-    throw new RuntimeException(ex);
-}
-                        }
-                    });
-                    scrollPane1.setViewportView(tableBooks);
-                }
-                panel1.add(scrollPane1, BorderLayout.CENTER);
+        ));
+        tbl_Book.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tbl_BookMousePressed(evt);
             }
-            tabbedPane1.addTab("Borrow Books", new ImageIcon(getClass().getResource("/images/reading_24.png")), panel1);
-            tabbedPane1.setBackgroundAt(0, Color.yellow);
+        });
+        jScrollPane1.setViewportView(tbl_Book);
 
-            //======== panel6 ========
-            {
-                panel6.setLayout(new BorderLayout());
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/search_32.png"))); // NOI18N
+        jLabel2.setText("Search");
+
+        btn_create_Book.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
+        btn_create_Book.setText("Create");
+        btn_create_Book.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_create_BookActionPerformed(evt);
             }
-            tabbedPane1.addTab("Profile", new ImageIcon(getClass().getResource("/images/face-scan.png")), panel6);
-            tabbedPane1.setBackgroundAt(1, Color.green);
-        }
-        contentPane.add(tabbedPane1, BorderLayout.CENTER);
+        });
 
-        //======== panel5 ========
-        {
-            panel5.setLayout(new FlowLayout());
-
-            //======== panel7 ========
-            {
-                panel7.setLayout(new BorderLayout());
-
-                //---- label2 ----
-                label2.setText("eLibrary VKU ");
-                label2.setIcon(new ImageIcon(getClass().getResource("/images/stack-of-books.png")));
-                label2.setFont(new Font("iCiel Cadena", Font.PLAIN, 30));
-                label2.setPreferredSize(new Dimension(214, 50));
-                panel7.add(label2, BorderLayout.WEST);
-
-                //---- label3 ----
-                label3.setText("Hello, VKUer");
-                label3.setFont(new Font("JetBrains Mono", Font.PLAIN, 12));
-                panel7.add(label3, BorderLayout.EAST);
-
-                //---- hSpacer1 ----
-                hSpacer1.setPreferredSize(new Dimension(500, 10));
-                panel7.add(hSpacer1, BorderLayout.CENTER);
+        btn_update_Book.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/refresh.png"))); // NOI18N
+        btn_update_Book.setText("Update");
+        btn_update_Book.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_update_BookActionPerformed(evt);
             }
-            panel5.add(panel7);
+        });
 
-            //---- button1 ----
-            button1.setText("Exit");
-            button1.setFont(new Font("JetBrains Mono", Font.PLAIN, 12));
-            button1.setIcon(new ImageIcon(getClass().getResource("/images/exit.png")));
-            button1.setPreferredSize(new Dimension(100, 30));
-            button1.setMinimumSize(new Dimension(136, 10));
-            button1.addActionListener(e -> {try {
-logout(e);} catch (MalformedURLException ex) {
-    throw new RuntimeException(ex);
-} catch (NotBoundException ex) {
-    throw new RuntimeException(ex);
-} catch (RemoteException ex) {
-    throw new RuntimeException(ex);
-}});
-            panel5.add(button1);
-        }
-        contentPane.add(panel5, BorderLayout.NORTH);
-        setSize(945, 655);
-        setLocationRelativeTo(null);
+        btn_delete_Book.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/bin.png"))); // NOI18N
+        btn_delete_Book.setText("Delete");
+        btn_delete_Book.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_delete_BookActionPerformed(evt);
+            }
+        });
 
-        //---- buttonGroup1 ----
-        var buttonGroup1 = new ButtonGroup();
-        buttonGroup1.add(radioButton1);
-        buttonGroup1.add(radioButton2);
-        // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
+        btn_refresh_Book.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/changes.png"))); // NOI18N
+        btn_refresh_Book.setText("Refresh");
+        btn_refresh_Book.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_refresh_BookActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("ID");
+
+        jLabel4.setText("Title");
+
+        jLabel5.setText("Category");
+
+        jLabel6.setText("Author");
+
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/edit.png"))); // NOI18N
+        jLabel16.setText("Information");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(14, 14, 14)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel3Layout.createSequentialGroup()
+                                                .addComponent(jLabel2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(tf_search_Book))
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 599, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(jPanel3Layout.createSequentialGroup()
+                                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                .addComponent(jLabel5)
+                                                                .addComponent(jLabel6)
+                                                                .addComponent(jLabel4)
+                                                                .addComponent(jLabel3))
+                                                        .addGap(18, 18, 18)
+                                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                                .addComponent(tf_ID_Book)
+                                                                .addComponent(tf_title_Book)
+                                                                .addComponent(cb_category_Book, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addComponent(cb_author_Book, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(jPanel3Layout.createSequentialGroup()
+                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(btn_delete_Book, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                                                        .addComponent(btn_create_Book, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
+                                                .addGap(18, 18, 18)
+                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(btn_update_Book, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(btn_refresh_Book, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addGap(17, 17, 17))
+        );
+        jPanel3Layout.setVerticalGroup(
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(13, 13, 13)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel2)
+                                        .addComponent(tf_search_Book, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel3Layout.createSequentialGroup()
+                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(jLabel3)
+                                                        .addComponent(tf_ID_Book, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(18, 18, 18)
+                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(jLabel4)
+                                                        .addComponent(tf_title_Book, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(18, 18, 18)
+                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(jLabel5)
+                                                        .addComponent(cb_category_Book, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(18, 18, 18)
+                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(jLabel6)
+                                                        .addComponent(cb_author_Book, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(btn_create_Book, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(btn_update_Book, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(18, 18, 18)
+                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addComponent(btn_delete_Book, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(btn_refresh_Book, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addContainerGap(18, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Book", jPanel3);
+
+        getContentPane().add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+
+        pack();
+    }// </editor-fold>
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
     }
 
-    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-    // Generated using JFormDesigner Evaluation license - hdnguyendev
-    private JTabbedPane tabbedPane1;
-    private JPanel panel1;
-    private JPanel panel2;
-    private JPanel panel3;
-    private JPanel panel4;
-    private JLabel label1;
-    private JTextField tfSearch;
-    private JRadioButton radioButton1;
-    private JRadioButton radioButton2;
-    private JButton button2;
-    private JScrollPane scrollPane1;
-    private JTable tableBooks;
-    private JPanel panel6;
-    private JPanel panel5;
-    private JPanel panel7;
-    private JLabel label2;
-    private JLabel label3;
-    private JPanel hSpacer1;
-    private JButton button1;
-    // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
+    private void btn_refresh_BookActionPerformed(java.awt.event.ActionEvent evt) {
+        tf_ID_Book.setEditable(true);
+
+        tf_ID_Book.setText("");
+        tf_title_Book.setText("");
+        showTableBook();
+    }
+
+    private void btn_delete_BookActionPerformed(java.awt.event.ActionEvent evt) {
+
+        int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa sách này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+        if (result == JOptionPane.YES_OPTION) {
+
+
+            int book_id = Integer.parseInt(tf_ID_Book.getText());
+
+            try {
+                Response res = controller.deleteBookController(book_id);
+                if (res.getStatus() == 100) {
+                    JOptionPane.showMessageDialog(this, res.getData());
+                } else {
+                    showTableBook();
+                    JOptionPane.showMessageDialog(this, res.getData());
+                }
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        btn_refresh_BookActionPerformed(null);
+    }
+
+    private void btn_update_BookActionPerformed(java.awt.event.ActionEvent evt) {
+        Book book = new Book();
+        int book_id = Integer.parseInt(tf_ID_Book.getText());
+        String book_title = tf_title_Book.getText();
+        Category category = (Category) cb_category_Book.getSelectedItem();
+        int category_id = category.getId();
+        Author author = (Author) cb_author_Book.getSelectedItem();
+        int author_id = author.getId();
+
+        book.setId(book_id);
+        book.setTitle(book_title);
+        book.setCategory_id(category_id);
+
+        try {
+            Response response = controller.updateBookController(book, author_id);
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            } else {
+                showTableBook();
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+
+        } catch (RemoteException ex) {
+            throw new RuntimeException(ex);
+        }
+        btn_refresh_BookActionPerformed(null);
+    }
+
+    private void btn_create_BookActionPerformed(java.awt.event.ActionEvent evt) {
+        Book book = new Book();
+        String book_title = tf_title_Book.getText();
+        Category category = (Category) cb_category_Book.getSelectedItem();
+        int category_id = category.getId();
+        Author author = (Author) cb_author_Book.getSelectedItem();
+        int author_id = author.getId();
+
+        book.setTitle(book_title);
+        book.setCategory_id(category_id);
+
+        try {
+            Response response = controller.createBookController(book, author_id);
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            } else {
+                showTableBook();
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+
+        } catch (RemoteException ex) {
+            throw new RuntimeException(ex);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        btn_refresh_BookActionPerformed(null);
+    }
+
+    private void tbl_BookMousePressed(java.awt.event.MouseEvent evt) {
+        int selectedRow = tbl_Book.getSelectedRow();
+        tf_ID_Book.setEditable(false);
+        if (selectedRow != -1) {
+            table_name = "book";
+            // Lấy thông tin từ hàng dữ liệu được chọn
+            int bookId = (int) tbl_Book.getValueAt(selectedRow, 0);
+            String title = (String) tbl_Book.getValueAt(selectedRow, 1);
+            String category = (String) tbl_Book.getValueAt(selectedRow, 2);
+            String author = (String) tbl_Book.getValueAt(selectedRow, 3);
+            // Set vào tf
+            tf_ID_Book.setText(String.valueOf(bookId));
+            tf_title_Book.setText(title);
+
+            ComboBoxModel<Category> cb_model_category = cb_category_Book.getModel();
+            for (int i = 0; i < cb_model_category.getSize(); i++) {
+                if (cb_model_category.getElementAt(i).toString().equals(category)) {
+                    cb_model_category.setSelectedItem(cb_model_category.getElementAt(i));
+                    break;
+                }
+            }
+            ComboBoxModel<Author> cb_model_author = cb_author_Book.getModel();
+            for (int i = 0; i < cb_model_author.getSize(); i++) {
+                if (cb_model_author.getElementAt(i).toString().equals(author)) {
+                    cb_model_author.setSelectedItem(cb_model_author.getElementAt(i));
+                    break;
+                }
+            }
+            Date date = new Date();
+            Timestamp time_now = new Timestamp(date.getTime());
+            if (log == null) {
+                log = new Log(ip, username, table_name, bookId, time_now);
+                try {
+                    log.setId(controller.createLog(log));
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } else
+                // TH: Click vào bảng khác
+                if (log.getTable_name() != table_name) {
+
+                    try {
+                        controller.deleteLog(log.getId());
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    // Lấy thời gian hiện tại
+
+                    log = new Log(ip, username, table_name, bookId, time_now);
+                    try {
+                        log.setId(controller.createLog(log));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                } else
+                    // TH: Click vào cùng bảng
+                    if (log.getTable_name().equals(table_name)) {
+                        log.setCol_id(bookId);
+                        try {
+                            controller.updateLog(log);
+                        } catch (RemoteException ex) {
+                            throw new RuntimeException(ex);
+                        }
+
+                    }
+            System.out.println(" LOG: " + log.toString());
+
+        }
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(LibraryGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(LibraryGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(LibraryGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(LibraryGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new LibraryGUI().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify
+    private javax.swing.JButton btn_create_Book;
+    private javax.swing.JButton btn_delete_Book;
+    private javax.swing.JButton btn_refresh_Book;
+    private javax.swing.JButton btn_update_Book;
+    private javax.swing.JComboBox cb_author_Book;
+    private javax.swing.JComboBox cb_category_Book;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable tbl_Book;
+    private javax.swing.JTextField tf_ID_Book;
+    private javax.swing.JTextField tf_search_Book;
+    private javax.swing.JTextField tf_title_Book;
+    // End of variables declaration
 }

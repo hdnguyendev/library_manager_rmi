@@ -1,9 +1,13 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -23,17 +27,27 @@ import javax.swing.table.TableRowSorter;
 public class BookManageGUI extends JFrame {
     ManagerController controller = new ManagerController();
     TableRowSorter sorter;
+    Log log;
+    InetAddress ipAddress;
+
+    {
+        try {
+            ipAddress = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    String ip = ipAddress.getHostAddress().isEmpty() ? "Unknown" : ipAddress.getHostAddress();
+    String username = "manage";
+    String table_name;
+    String col_id;
 
     public static void main(String[] args) throws MalformedURLException, NotBoundException, RemoteException {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (UnsupportedLookAndFeelException e) {
+        } catch (ClassNotFoundException | IllegalAccessException | UnsupportedLookAndFeelException |
+                 InstantiationException e) {
             e.printStackTrace();
         }
         new BookManageGUI();
@@ -46,7 +60,7 @@ public class BookManageGUI extends JFrame {
         showTableBook();
         showDataComboBoxCategory();
         showDataComboBoxAuthor();
-
+        //
 
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -96,6 +110,8 @@ public class BookManageGUI extends JFrame {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+
+
     }
 
     private synchronized void showDataComboBoxCategory() {
@@ -132,14 +148,24 @@ public class BookManageGUI extends JFrame {
     }
 
     private void table_BookMousePressed(MouseEvent e) {
+
         int selectedRow = table_Book.getSelectedRow();
         tf_ID.setEditable(false);
         if (selectedRow != -1) {
+            table_name = "book";
+
             // Lấy thông tin từ hàng dữ liệu được chọn
             int bookId = (int) table_Book.getValueAt(selectedRow, 0);
             String title = (String) table_Book.getValueAt(selectedRow, 1);
             String category = (String) table_Book.getValueAt(selectedRow, 2);
             String author = (String) table_Book.getValueAt(selectedRow, 3);
+
+            // check block
+            if (checkBlock(table_name, bookId)) {
+                JOptionPane.showMessageDialog(this, "Bạn không thể thao tác với bản ghi này! Có client khác đang sử dụng bản ghi này!");
+                return;
+            }
+
             // Set vào tf
             tf_ID.setText(String.valueOf(bookId));
             tf_title.setText(title);
@@ -158,6 +184,46 @@ public class BookManageGUI extends JFrame {
                     break;
                 }
             }
+            Date date = new Date();
+            Timestamp time_now = new Timestamp(date.getTime());
+            if (log == null) {
+                log = new Log(ip, username, table_name, bookId, time_now);
+                try {
+                    log.setId(controller.createLog(log));
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } else
+                // TH: Click vào bảng khác
+                if (log.getTable_name() != table_name) {
+
+                    try {
+                        controller.deleteLog(log.getId());
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    // Lấy thời gian hiện tại
+
+                    log = new Log(ip, username, table_name, bookId, time_now);
+                    try {
+                        log.setId(controller.createLog(log));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                } else
+                    // TH: Click vào cùng bảng
+                    if (log.getTable_name().equals(table_name)) {
+                    log.setCol_id(bookId);
+                    try {
+                        controller.updateLog(log);
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                }
+            System.out.println(" LOG: " + log.toString());
+
         }
     }
 
@@ -188,7 +254,6 @@ public class BookManageGUI extends JFrame {
             throw new RuntimeException(ex);
         }
         reset_book(null);
-
 
 
     }
@@ -255,7 +320,13 @@ public class BookManageGUI extends JFrame {
         reset_book(null);
     }
 
-
+    private boolean checkBlock(String table_name, int col_id) {
+        try {
+            return controller.checkLog(table_name, col_id);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Evaluation license - hdnguyendev
