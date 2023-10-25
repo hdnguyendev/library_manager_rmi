@@ -162,7 +162,7 @@ public class BookManageGUI extends JFrame {
 
             // check block
             if (checkBlock(table_name, bookId)) {
-                JOptionPane.showMessageDialog(this, "Bạn không thể thao tác với bản ghi này! Có client khác đang sử dụng bản ghi này!");
+                JOptionPane.showMessageDialog(this, "Bạn không thể thao tác với bản ghi này! Có người dùng khác đang sử dụng bản ghi này!","Warning",JOptionPane.WARNING_MESSAGE);
                 return;
             }
 

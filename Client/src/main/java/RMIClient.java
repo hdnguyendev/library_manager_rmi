@@ -17,17 +17,9 @@ public class RMIClient {
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-        try {
-            //Xác định RMI máy chủ.
+        //Xác định RMI máy chủ.
 //            new LoginGUI().setVisible(true);
-            new BookManageGUI();
-        } catch (NotBoundException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        new LibraryGUI().setVisible(true);
 
     }
 

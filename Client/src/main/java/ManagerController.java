@@ -13,8 +13,19 @@ import java.util.List;
 public class ManagerController {
     LibraryRemote libraryRemote;
 
-    public ManagerController() throws MalformedURLException, NotBoundException, RemoteException {
-        libraryRemote = (LibraryRemote) Naming.lookup("rmi://" + Config.IP_SERVER + ":" + Config.PORT_SERVER + "/api");
+    public ManagerController() {
+        try {
+            libraryRemote = (LibraryRemote) Naming.lookup("rmi://" + Config.IP_SERVER + ":" + Config.PORT_SERVER + "/api");
+        } catch (NotBoundException e) {
+            JOptionPane.showMessageDialog(null, "Error to Connect with Server", "Error", JOptionPane.WARNING_MESSAGE);
+            throw new RuntimeException(e);
+        } catch (MalformedURLException e) {
+            JOptionPane.showMessageDialog(null, "Error to Connect with Server", "Error", JOptionPane.WARNING_MESSAGE);
+            throw new RuntimeException(e);
+        } catch (RemoteException e) {
+            JOptionPane.showMessageDialog(null, "Error to Connect with Server", "Error", JOptionPane.WARNING_MESSAGE);
+            throw new RuntimeException(e);
+        }
     }
 
     // CRUD - Book
@@ -51,6 +62,7 @@ public class ManagerController {
     public void deleteLog(int id) throws RemoteException {
         libraryRemote.deleteLog(id);
     }
+
     public boolean checkLog(String table_name, int col_id) throws RemoteException {
         return libraryRemote.checkLog(table_name, col_id);
     }
