@@ -377,7 +377,6 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -494,7 +493,6 @@ public class LibraryGUI extends javax.swing.JFrame {
         jLabel37 = new javax.swing.JLabel();
         cb_book_Checkout = new javax.swing.JComboBox();
         cb_patron_Checkout = new javax.swing.JComboBox();
-        jLabel47 = new javax.swing.JLabel();
         tf_end_Checkout = new javax.swing.JTextField();
         jLabel48 = new javax.swing.JLabel();
         tf_ID_Checkout = new javax.swing.JTextField();
@@ -504,6 +502,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         jLabel51 = new javax.swing.JLabel();
         checkBox_Checkout = new javax.swing.JCheckBox();
         jLabel52 = new javax.swing.JLabel();
+        jLabel47 = new javax.swing.JLabel();
         panel_Patron = new javax.swing.JPanel();
         sp_Patron = new javax.swing.JScrollPane();
         tbl_Patron = new javax.swing.JTable();
@@ -559,17 +558,6 @@ public class LibraryGUI extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.NORTH);
 
-        tbl_Book.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null}
-                },
-                new String [] {
-                        "Title 1", "Title 2", "Title 3", "Title 4"
-                }
-        ));
         tbl_Book.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 tbl_BookMousePressed(evt);
@@ -635,7 +623,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                 .addComponent(jLabel2)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(tf_search_Book))
-                                        .addComponent(sp_Book, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE))
+                                        .addComponent(sp_Book, javax.swing.GroupLayout.DEFAULT_SIZE, 791, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
                                 .addGroup(panel_BookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addGroup(panel_BookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -688,7 +676,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                 .addGroup(panel_BookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                         .addComponent(jLabel6)
                                                         .addComponent(cb_author_Book, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(151, 151, 151)
+                                                .addGap(19, 19, 19)
                                                 .addGroup(panel_BookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(btn_create_Book, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(btn_update_Book, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -697,22 +685,11 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                         .addComponent(btn_delete_Book, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(btn_refresh_Book, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addComponent(sp_Book, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(39, Short.MAX_VALUE))
+                                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         main_panel.addTab("Book", panel_Book);
 
-        tbl_Author.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null}
-                },
-                new String [] {
-                        "Title 1", "Title 2", "Title 3", "Title 4"
-                }
-        ));
         tbl_Author.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 tbl_AuthorMousePressed(evt);
@@ -774,7 +751,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                 .addComponent(jLabel7)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(tf_search_Author))
-                                        .addComponent(sp_Author, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE))
+                                        .addComponent(sp_Author, javax.swing.GroupLayout.DEFAULT_SIZE, 791, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
                                 .addGroup(panel_AuthorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addGroup(panel_AuthorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -815,7 +792,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                 .addGroup(panel_AuthorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                         .addComponent(jLabel9)
                                                         .addComponent(tf_name_Author, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(225, 225, 225)
+                                                .addGap(21, 21, 21)
                                                 .addGroup(panel_AuthorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(btn_create_Author, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(btn_update_Author, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -824,22 +801,11 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                         .addComponent(btn_delete_Author, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(btn_refresh_Author, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addComponent(sp_Author, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(44, Short.MAX_VALUE))
+                                .addContainerGap(55, Short.MAX_VALUE))
         );
 
         main_panel.addTab("Author", panel_Author);
 
-        tbl_Category.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null}
-                },
-                new String [] {
-                        "Title 1", "Title 2", "Title 3", "Title 4"
-                }
-        ));
         tbl_Category.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 tbl_CategoryMousePressed(evt);
@@ -901,7 +867,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                 .addComponent(jLabel10)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(tf_search_Category))
-                                        .addComponent(sp_Category, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE))
+                                        .addComponent(sp_Category, javax.swing.GroupLayout.DEFAULT_SIZE, 791, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
                                 .addGroup(panel_CategoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addGroup(panel_CategoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -942,7 +908,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                 .addGroup(panel_CategoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                         .addComponent(jLabel12)
                                                         .addComponent(tf_name_Category, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(225, 225, 225)
+                                                .addGap(18, 18, 18)
                                                 .addGroup(panel_CategoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(btn_create_Category, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(btn_update_Category, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -951,22 +917,11 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                         .addComponent(btn_delete_Category, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(btn_refresh_Category, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addComponent(sp_Category, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(44, Short.MAX_VALUE))
+                                .addContainerGap(55, Short.MAX_VALUE))
         );
 
         main_panel.addTab("Category", panel_Category);
 
-        tbl_Published.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null}
-                },
-                new String [] {
-                        "Title 1", "Title 2", "Title 3", "Title 4"
-                }
-        ));
         tbl_Published.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 tbl_PublishedMousePressed(evt);
@@ -1028,7 +983,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                 .addComponent(jLabel20)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(tf_search_Published))
-                                        .addComponent(sp_Published, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE))
+                                        .addComponent(sp_Published, javax.swing.GroupLayout.DEFAULT_SIZE, 791, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
                                 .addGroup(panel_PublishedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addGroup(panel_PublishedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1069,7 +1024,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                 .addGroup(panel_PublishedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                         .addComponent(jLabel22)
                                                         .addComponent(tf_name_Published, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(234, 234, 234)
+                                                .addGap(18, 18, 18)
                                                 .addGroup(panel_PublishedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(btn_create_Published, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(btn_update_Published, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1078,22 +1033,11 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                         .addComponent(btn_delete_Published, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(btn_refresh_Published, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addComponent(sp_Published, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(36, Short.MAX_VALUE))
+                                .addContainerGap(48, Short.MAX_VALUE))
         );
 
         main_panel.addTab("Published", panel_Published);
 
-        tbl_BookCopy.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null}
-                },
-                new String [] {
-                        "Title 1", "Title 2", "Title 3", "Title 4"
-                }
-        ));
         tbl_BookCopy.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 tbl_BookCopyMousePressed(evt);
@@ -1162,8 +1106,8 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                 .addComponent(jLabel13)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(tf_search_BookCopy))
-                                        .addComponent(sp_BookCopy, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE))
-                                .addGap(18, 18, 18)
+                                        .addComponent(sp_BookCopy, javax.swing.GroupLayout.DEFAULT_SIZE, 761, Short.MAX_VALUE))
+                                .addGap(21, 21, 21)
                                 .addGroup(panel_BookCopyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addGroup(panel_BookCopyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1220,7 +1164,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                 .addGroup(panel_BookCopyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                         .addComponent(jLabel25)
                                                         .addComponent(cb_published_BookCopy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGap(24, 24, 24)
                                                 .addGroup(panel_BookCopyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(btn_create_BookCopy, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(btn_update_BookCopy, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1229,22 +1173,11 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                         .addComponent(btn_delete_BookCopy, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(btn_refresh_BookCopy, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addComponent(sp_BookCopy, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(16, 16, 16))
+                                .addContainerGap())
         );
 
         main_panel.addTab("Book Copy", panel_BookCopy);
 
-        tbl_Hold.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null}
-                },
-                new String [] {
-                        "Title 1", "Title 2", "Title 3", "Title 4"
-                }
-        ));
         tbl_Hold.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 tbl_HoldMousePressed(evt);
@@ -1312,7 +1245,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                 .addComponent(jLabel26)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(tf_search_Hold))
-                                        .addComponent(sp_Hold, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE))
+                                        .addComponent(sp_Hold, javax.swing.GroupLayout.DEFAULT_SIZE, 789, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
                                 .addGroup(panel_HoldLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(panel_HoldLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -1371,7 +1304,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                 .addGroup(panel_HoldLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                         .addComponent(jLabel30)
                                                         .addComponent(cb_patron_Hold, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGap(99, 99, 99)
                                                 .addGroup(panel_HoldLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(btn_create_Hold, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(btn_update_Hold, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1384,17 +1317,6 @@ public class LibraryGUI extends javax.swing.JFrame {
 
         main_panel.addTab("Hold", panel_Hold);
 
-        tbl_Checkout.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null}
-                },
-                new String [] {
-                        "Title 1", "Title 2", "Title 3", "Title 4"
-                }
-        ));
         tbl_Checkout.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 tbl_CheckoutMousePressed(evt);
@@ -1441,8 +1363,6 @@ public class LibraryGUI extends javax.swing.JFrame {
         jLabel37.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/edit.png"))); // NOI18N
         jLabel37.setText("Information");
 
-        jLabel47.setText("Time End");
-
         jLabel48.setText("ID");
 
         jLabel49.setText("Time Start");
@@ -1454,6 +1374,8 @@ public class LibraryGUI extends javax.swing.JFrame {
         checkBox_Checkout.setText("Returned");
 
         jLabel52.setText("Status");
+
+        jLabel47.setText("Time End");
 
         javax.swing.GroupLayout panel_CheckoutLayout = new javax.swing.GroupLayout(panel_Checkout);
         panel_Checkout.setLayout(panel_CheckoutLayout);
@@ -1468,8 +1390,8 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                                 .addComponent(jLabel32)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(tf_search_Checkout))
-                                                        .addComponent(sp_Checkout))
-                                                .addGap(21, 21, 21)
+                                                        .addComponent(sp_Checkout, javax.swing.GroupLayout.DEFAULT_SIZE, 781, Short.MAX_VALUE))
+                                                .addGap(27, 27, 27)
                                                 .addGroup(panel_CheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                                         .addComponent(jLabel37, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addGroup(panel_CheckoutLayout.createSequentialGroup()
@@ -1482,16 +1404,18 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                                         .addComponent(btn_refresh_Checkout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_CheckoutLayout.createSequentialGroup()
                                                 .addGroup(panel_CheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addGroup(panel_CheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                .addComponent(jLabel50)
-                                                                .addComponent(jLabel51)
-                                                                .addComponent(jLabel49)
-                                                                .addComponent(jLabel48)
-                                                                .addComponent(jLabel52))
+                                                        .addGroup(panel_CheckoutLayout.createSequentialGroup()
+                                                                .addGap(6, 6, 6)
+                                                                .addGroup(panel_CheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(jLabel50)
+                                                                        .addComponent(jLabel51)
+                                                                        .addComponent(jLabel49)
+                                                                        .addComponent(jLabel48)
+                                                                        .addComponent(jLabel52)))
                                                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_CheckoutLayout.createSequentialGroup()
-                                                                .addGap(18, 18, 18)
-                                                                .addComponent(jLabel47, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addGap(5, 5, 5)
+                                                                .addComponent(jLabel47)))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addGroup(panel_CheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(checkBox_Checkout)
                                                         .addGroup(panel_CheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -1500,7 +1424,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                                 .addComponent(cb_book_Checkout, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                                 .addComponent(cb_patron_Checkout, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addComponent(tf_end_Checkout, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                                .addGap(17, 17, 17))
+                                .addGap(18, 18, 18))
         );
         panel_CheckoutLayout.setVerticalGroup(
                 panel_CheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1522,8 +1446,8 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                         .addComponent(tf_start_Checkout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                 .addGap(18, 18, 18)
                                                 .addGroup(panel_CheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(jLabel47)
-                                                        .addComponent(tf_end_Checkout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(tf_end_Checkout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(jLabel47))
                                                 .addGap(18, 18, 18)
                                                 .addGroup(panel_CheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                         .addComponent(jLabel50)
@@ -1536,7 +1460,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                 .addGroup(panel_CheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                         .addComponent(jLabel52)
                                                         .addComponent(checkBox_Checkout))
-                                                .addGap(62, 62, 62)
+                                                .addGap(59, 59, 59)
                                                 .addGroup(panel_CheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(btn_create_Checkout, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(btn_update_Checkout, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1549,17 +1473,6 @@ public class LibraryGUI extends javax.swing.JFrame {
 
         main_panel.addTab("Checkout", panel_Checkout);
 
-        tbl_Patron.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null}
-                },
-                new String [] {
-                        "Title 1", "Title 2", "Title 3", "Title 4"
-                }
-        ));
         tbl_Patron.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 tbl_PatronMousePressed(evt);
@@ -1631,7 +1544,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                 .addComponent(jLabel38)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(tf_search_Patron))
-                                        .addComponent(sp_Patron, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE))
+                                        .addComponent(sp_Patron, javax.swing.GroupLayout.DEFAULT_SIZE, 782, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
                                 .addGroup(panel_PatronLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addGroup(panel_PatronLayout.createSequentialGroup()
@@ -1707,7 +1620,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                                                         .addComponent(btn_delete_Patron, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(btn_refresh_Patron, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addComponent(sp_Patron, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(42, Short.MAX_VALUE))
+                                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         main_panel.addTab("Patron Account", panel_Patron);
@@ -1715,7 +1628,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         getContentPane().add(main_panel, java.awt.BorderLayout.CENTER);
 
         pack();
-    }// </editor-fold>         // <editor-fold defaultstate="collapsed" desc="Generated Code">
+    }// </editor-fold>
 
     private void btn_LogoutActionPerformed(java.awt.event.ActionEvent evt) {
         System.exit(0);

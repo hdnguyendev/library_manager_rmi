@@ -189,7 +189,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             vTitle.clear();
             vData.clear();
 
-            String query = "SELECT h.id, pa.email, pa.first_name + \' \' + pa.last_name as fullname, b.title , h.start_time, h.end_time " +
+            String query = "SELECT h.id, pa.email, CONCAT(pa.first_name, ' ', pa.last_name) as fullname, b.title , h.start_time, h.end_time " +
                     "FROM hold as h " +
                     "INNER JOIN patron_account as pa ON pa.id = h.patron_id " +
                     "INNER JOIN book_copy as bc ON bc.id = h.book_copy_id "+
