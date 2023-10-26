@@ -374,6 +374,24 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
         }
     }
 
+    // CRUD Published
+    @Override
+    public Response createPublished(Published published) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response getPublished(int id) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response updatePublished(Published published) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response deletePublished(int id) throws RemoteException {
+        return null;
+    }
+
     // CRUD - Log
     @Override
     public int createLog(Log log) throws RemoteException {

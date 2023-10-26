@@ -36,6 +36,12 @@ public interface LibraryRemote extends Remote {
     public Response updateCategory(Category category) throws RemoteException;
     public Response deleteCategory(int id) throws RemoteException;
     //
+    // CRUD Published
+    public Response createPublished(Published published) throws RemoteException;
+    public Response getPublished(int id) throws RemoteException;
+    public Response updatePublished(Published published) throws RemoteException;
+    public Response deletePublished(int id) throws RemoteException;
+    //
     // Log - Block
     public int createLog(Log log) throws RemoteException;
     public void updateLog(Log log) throws RemoteException;
