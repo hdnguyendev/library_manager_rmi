@@ -15,9 +15,9 @@ public class RMIServer {
             LibraryImpl server = new LibraryImpl();
             LocateRegistry.createRegistry(Config.PORT_SERVER);
             // Đăng ký đối tượng này với rmiregistry
-           Naming.rebind("rmi://" + Config.IP_SERVER +":"+Config.PORT_SERVER+"/api", server);
+            Naming.rebind("rmi://" + Config.IP_SERVER + ":" + Config.PORT_SERVER + "/api", server);
             System.out.println(">>>>>INFO: RMI Server started!!!!!!!!");
-            System.out.println("rmi://" + Config.IP_SERVER +":"+Config.PORT_SERVER+"/api");
+            System.out.println("rmi://" + Config.IP_SERVER + ":" + Config.PORT_SERVER + "/api");
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (UnknownHostException e) {

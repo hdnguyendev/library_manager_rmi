@@ -5,6 +5,9 @@ public class Author implements Serializable {
     private int id;
     private String name;
 
+    public Author() {
+    }
+
     public Author(Object[] data) {
         this.id = (int) data[0];
         this.name = (String) data[1];
@@ -25,6 +28,10 @@ public class Author implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

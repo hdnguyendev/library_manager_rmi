@@ -5,6 +5,8 @@ public class Category implements Serializable {
     private int id;
     private String name;
 
+    public Category() {
+    }
 
     public Category(Object[] data) {
         this.id = (int) data[0];

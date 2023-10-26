@@ -24,6 +24,12 @@ public interface LibraryRemote extends Remote {
     public Response updateBook(Book book, int author_id) throws RemoteException;
     public Response deleteBook(int id) throws RemoteException;
     //
+    // CRUD Author
+    public Response createAuthor(Author author) throws RemoteException;
+    public Response getAuthor(int id) throws RemoteException;
+    public Response updateAuthor(Author author) throws RemoteException;
+    public Response deleteAuthor(int id) throws RemoteException;
+    //
     // CRUD Category
     public Response createCategory(Category category) throws RemoteException;
     public Response getCategory(int id) throws RemoteException;

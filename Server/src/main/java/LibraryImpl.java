@@ -60,7 +60,6 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
         }
     }
-
     @Override
     public Response getAuthors() throws RemoteException {
         try {
@@ -91,7 +90,6 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
         }
     }
-
     @Override
     public Response getBooksCopy() throws RemoteException {
         try {
@@ -124,7 +122,6 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
         }
     }
-
     @Override
     public Response getCategories() throws RemoteException {
         try {
@@ -154,22 +151,18 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
         }
     }
-
     @Override
     public Response getNotifications() throws RemoteException {
         return null;
     }
-
     @Override
     public Response getPublished() throws RemoteException {
         return null;
     }
-
     @Override
     public Response getHolds() throws RemoteException {
         return null;
     }
-
     @Override
     public Response getCheckouts() throws RemoteException {
         return null;
@@ -202,18 +195,16 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             insertBookAuthorStatement.setInt(2, author_id);
             insertBookAuthorStatement.executeUpdate();
 
-            return new Response(200, "Created book successfully!");
+            return new Response(200, "Created new book successfully!");
         }
         catch (Exception e){
             return new Response(100, e.getMessage());
         }
     }
-
     @Override
     public Response getBook(int id) throws RemoteException {
         return null;
     }
-
     @Override
     public Response updateBook(Book book,int author_id) throws RemoteException {
         try {
@@ -238,7 +229,6 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             return new Response(100, e.getMessage());
         }
     }
-
     @Override
     public Response deleteBook(int id) throws RemoteException {
         try {
@@ -273,26 +263,117 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
         }
     }
 
+    // CRUD Author
+    @Override
+    public Response createAuthor(Author author) throws RemoteException {
+        try {
+            String insertAuthorQuery = "INSERT INTO author (name) VALUES (?)";
+            PreparedStatement insertAuthorStatement = conn.prepareStatement(insertAuthorQuery, Statement.RETURN_GENERATED_KEYS);
+            insertAuthorStatement.setString(1, author.getName());
+            insertAuthorStatement.executeUpdate();
+
+            return new Response(200, "Created new author successfully!");
+        }
+        catch (Exception e){
+            return new Response(100, e.getMessage());
+        }
+    }
+    @Override
+    public Response getAuthor(int id) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response updateAuthor(Author author) throws RemoteException {
+        try {
+            String updateAuthorQuery = "UPDATE author SET name = ? WHERE id = ?";
+            PreparedStatement updateAuthorStatement = conn.prepareStatement(updateAuthorQuery);
+            updateAuthorStatement.setString(1, author.getName());
+            updateAuthorStatement.setInt(2, author.getId());
+            updateAuthorStatement.executeUpdate();
+            return new Response(200, "Updated author successfully!");
+        }
+        catch (Exception e){
+            return new Response(100, e.getMessage());
+        }
+    }
+    @Override
+    public Response deleteAuthor(int id) throws RemoteException {
+        try {
+
+            String deleteAuthorQuery = "DELETE FROM author WHERE id = ?";
+            PreparedStatement deleteAuthorStatement = conn.prepareStatement(deleteAuthorQuery);
+            deleteAuthorStatement.setInt(1, id);
+            int rowsAffected = deleteAuthorStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                return new Response(200, "Deleted author Successfully!" );
+
+            } else {
+                return new Response(100, "Not find author_id " + id);
+
+            }
+
+
+        } catch (SQLException e) {
+            return new Response(100, e.getMessage());
+        }
+    }
+
     // CRUD Category
     @Override
     public Response createCategory(Category category) throws RemoteException {
-        return null;
-    }
+        try {
+            String createCategoryQuery = "INSERT INTO category(name) VALUE (?)";
+            PreparedStatement createCategoryStatement = conn.prepareStatement(createCategoryQuery);
+            createCategoryStatement.setString(1, category.getName());
+            createCategoryStatement.executeUpdate();
 
+            return new Response(200, "Created new Category successfully!");
+        } catch (Exception e) {
+            return new Response(100, e.getMessage());
+        }
+    }
     @Override
     public Response getCategory(int id) throws RemoteException {
         return null;
     }
-
     @Override
     public Response updateCategory(Category category) throws RemoteException {
-        return null;
-    }
+        try {
+            String updateCategoryQuery = "UPDATE category SET name = ? WHERE id = ?";
+            PreparedStatement updateCategoryStatement = conn.prepareStatement(updateCategoryQuery);
+            updateCategoryStatement.setString(1, category.getName());
+            updateCategoryStatement.setInt(2, category.getId());
+            updateCategoryStatement.executeUpdate();
 
+            return new Response(200, "Updated Category successfully!");
+        } catch (Exception e) {
+            return new Response(100, e.getMessage());
+        }
+    }
     @Override
     public Response deleteCategory(int id) throws RemoteException {
-        return null;
+        try {
+
+            String deleteCategoryQuery = "DELETE FROM category WHERE id = ?";
+            PreparedStatement deleteCategoryStatement = conn.prepareStatement(deleteCategoryQuery);
+            deleteCategoryStatement.setInt(1, id);
+            int rowsAffected = deleteCategoryStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                return new Response(200, "Deleted category Successfully!" );
+
+            } else {
+                return new Response(100, "Not find author_id " + id);
+
+            }
+
+
+        } catch (SQLException e) {
+            return new Response(100, e.getMessage());
+        }
     }
+
     // CRUD - Log
     @Override
     public int createLog(Log log) throws RemoteException {
@@ -320,7 +401,6 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             return -1;
         }
     }
-
     @Override
     public void updateLog(Log log) throws RemoteException {
         try {
@@ -338,7 +418,6 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             System.out.println(e.getMessage());
         }
     }
-
     @Override
     public void deleteLog(int id) throws RemoteException {
         try {
@@ -351,7 +430,6 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             System.out.println(e.getMessage());
         }
     }
-
     @Override
     public boolean checkLog(String table_name, int col_id) throws RemoteException {
         try {

@@ -48,6 +48,8 @@ public class LibraryGUI extends javax.swing.JFrame {
         initComponents();
         // load data
         showTableBook();
+        showTableAuthor();
+        showTableCategory();
         showDataComboBoxCategory();
         showDataComboBoxAuthor();
         //
@@ -92,8 +94,104 @@ public class LibraryGUI extends javax.swing.JFrame {
             tbl_Book.setDefaultEditor(Object.class, null);
             TableColumn indexColumn = tbl_Book.getColumnModel().getColumn(0);
             indexColumn.setCellRenderer(new CenteredTableCellRenderer());
-            indexColumn.setMaxWidth(50);
+            indexColumn.setMaxWidth(80);
             jScrollPane1.setViewportView(tbl_Book);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private synchronized void showTableAuthor() {
+        try {
+            Response response = controller.getAuthorsController();
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getStatus());
+            }
+            sorter = new TableRowSorter<>((DefaultTableModel) response.getData());
+            tbl_Author.setRowSorter(sorter);
+            tf_search_Author.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    search(tf_search_Author.getText());
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    search(tf_search_Author.getText());
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    search(tf_search_Author.getText());
+                }
+
+                public void search(String str) {
+                    if (str.length() == 0) {
+                        sorter.setRowFilter(null);
+                    } else {
+                        sorter.setRowFilter(RowFilter.regexFilter(str));
+                    }
+                }
+            });
+
+            tbl_Author.setModel((DefaultTableModel) response.getData());
+            tbl_Author.getTableHeader().setDefaultRenderer(new CustomHeaderRenderer());
+            tbl_Author.setRowHeight(30);
+            tbl_Author.setDefaultEditor(Object.class, null);
+            TableColumn indexColumn = tbl_Author.getColumnModel().getColumn(0);
+            indexColumn.setCellRenderer(new CenteredTableCellRenderer());
+            indexColumn.setMaxWidth(80);
+            jScrollPane2.setViewportView(tbl_Author);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private synchronized void showTableCategory() {
+        try {
+            Response response = controller.getCategoriesController();
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getStatus());
+            }
+            sorter = new TableRowSorter<>((DefaultTableModel) response.getData());
+            tbl_Category.setRowSorter(sorter);
+            tf_search_Category.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    search(tf_search_Category.getText());
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    search(tf_search_Category.getText());
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    search(tf_search_Category.getText());
+                }
+
+                public void search(String str) {
+                    if (str.length() == 0) {
+                        sorter.setRowFilter(null);
+                    } else {
+                        sorter.setRowFilter(RowFilter.regexFilter(str));
+                    }
+                }
+            });
+
+            tbl_Category.setModel((DefaultTableModel) response.getData());
+            tbl_Category.getTableHeader().setDefaultRenderer(new CustomHeaderRenderer());
+            tbl_Category.setRowHeight(30);
+            tbl_Category.setDefaultEditor(Object.class, null);
+            TableColumn indexColumn = tbl_Category.getColumnModel().getColumn(0);
+            indexColumn.setCellRenderer(new CenteredTableCellRenderer());
+            indexColumn.setMaxWidth(80);
+            jScrollPane3.setViewportView(tbl_Category);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -107,6 +205,7 @@ public class LibraryGUI extends javax.swing.JFrame {
             if (response.getStatus() == 100) {
                 JOptionPane.showMessageDialog(this, response.getStatus());
             }
+            cb_category_Book.removeAllItems();
             List<Category> categoryList = (List<Category>) response.getData();
             for (Category i :
                     categoryList) {
@@ -124,6 +223,7 @@ public class LibraryGUI extends javax.swing.JFrame {
             if (response.getStatus() == 100) {
                 JOptionPane.showMessageDialog(this, response.getStatus());
             }
+            cb_author_Book.removeAllItems();
             List<Author> authorList = (List<Author>) response.getData();
             for (Author i : authorList) {
                 cb_author_Book.addItem(i);
@@ -323,13 +423,13 @@ public class LibraryGUI extends javax.swing.JFrame {
         getContentPane().add(jPanel1, java.awt.BorderLayout.NORTH);
 
         tbl_Book.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
                         {null, null, null, null},
                         {null, null, null, null},
                         {null, null, null, null},
                         {null, null, null, null}
                 },
-                new String [] {
+                new String[]{
                         "Title 1", "Title 2", "Title 3", "Title 4"
                 }
         ));
@@ -466,13 +566,13 @@ public class LibraryGUI extends javax.swing.JFrame {
         main_panel.addTab("Book", panel_Book);
 
         tbl_Author.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
                         {null, null, null, null},
                         {null, null, null, null},
                         {null, null, null, null},
                         {null, null, null, null}
                 },
-                new String [] {
+                new String[]{
                         "Title 1", "Title 2", "Title 3", "Title 4"
                 }
         ));
@@ -593,13 +693,13 @@ public class LibraryGUI extends javax.swing.JFrame {
         main_panel.addTab("Author", panel_Author);
 
         tbl_Category.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
                         {null, null, null, null},
                         {null, null, null, null},
                         {null, null, null, null},
                         {null, null, null, null}
                 },
-                new String [] {
+                new String[]{
                         "Title 1", "Title 2", "Title 3", "Title 4"
                 }
         ));
@@ -720,13 +820,13 @@ public class LibraryGUI extends javax.swing.JFrame {
         main_panel.addTab("Category", panel_Category);
 
         tbl_Published.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
                         {null, null, null, null},
                         {null, null, null, null},
                         {null, null, null, null},
                         {null, null, null, null}
                 },
-                new String [] {
+                new String[]{
                         "Title 1", "Title 2", "Title 3", "Title 4"
                 }
         ));
@@ -847,13 +947,13 @@ public class LibraryGUI extends javax.swing.JFrame {
         main_panel.addTab("Published", panel_Published);
 
         tbl_BookCopy.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
                         {null, null, null, null},
                         {null, null, null, null},
                         {null, null, null, null},
                         {null, null, null, null}
                 },
-                new String [] {
+                new String[]{
                         "Title 1", "Title 2", "Title 3", "Title 4"
                 }
         ));
@@ -996,13 +1096,13 @@ public class LibraryGUI extends javax.swing.JFrame {
         main_panel.addTab("Book Copy", panel_BookCopy);
 
         tbl_Hold.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
                         {null, null, null, null},
                         {null, null, null, null},
                         {null, null, null, null},
                         {null, null, null, null}
                 },
-                new String [] {
+                new String[]{
                         "Title 1", "Title 2", "Title 3", "Title 4"
                 }
         ));
@@ -1151,13 +1251,13 @@ public class LibraryGUI extends javax.swing.JFrame {
         main_panel.addTab("Hold", panel_Hold);
 
         tbl_Checkout.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
                         {null, null, null, null},
                         {null, null, null, null},
                         {null, null, null, null},
                         {null, null, null, null}
                 },
-                new String [] {
+                new String[]{
                         "Title 1", "Title 2", "Title 3", "Title 4"
                 }
         ));
@@ -1316,13 +1416,13 @@ public class LibraryGUI extends javax.swing.JFrame {
         main_panel.addTab("Checkout", panel_Checkout);
 
         tbl_Patron.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
                         {null, null, null, null},
                         {null, null, null, null},
                         {null, null, null, null},
                         {null, null, null, null}
                 },
-                new String [] {
+                new String[]{
                         "Title 1", "Title 2", "Title 3", "Title 4"
                 }
         ));
@@ -1482,153 +1582,102 @@ public class LibraryGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>
+    // ==================================================================================================================
+    // Common
 
     private void btn_LogoutActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        System.exit(0);
     }
+    // ==================================================================================================================
+    // Block
 
-    private void btn_refresh_PatronActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+    private boolean checkBlock(String table_name, int col_id) {
+        try {
+            return controller.checkLog(table_name, col_id);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
+    // ==================================================================================================================
+    // Book - done
 
-    private void btn_delete_PatronActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void tbl_BookMousePressed(java.awt.event.MouseEvent evt) {
+        int selectedRow = tbl_Book.getSelectedRow();
+        tf_ID_Book.setEditable(false);
+        if (selectedRow != -1) {
+            table_name = "book";
+            // Lấy thông tin từ hàng dữ liệu được chọn
+            int bookId = (int) tbl_Book.getValueAt(selectedRow, 0);
+            String title = (String) tbl_Book.getValueAt(selectedRow, 1);
+            String category = (String) tbl_Book.getValueAt(selectedRow, 2);
+            String author = (String) tbl_Book.getValueAt(selectedRow, 3);
 
-    private void btn_update_PatronActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
 
-    private void btn_create_PatronActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+            // check block
+            if (checkBlock(table_name, bookId)) {
+                JOptionPane.showMessageDialog(this, "Bạn không thể thao tác với bản ghi này! Có người dùng khác đang sử dụng bản ghi này!", "Warning", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-    private void tbl_PatronMousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
+            // Set vào tf
+            tf_ID_Book.setText(String.valueOf(bookId));
+            tf_title_Book.setText(title);
 
-    private void btn_refresh_HoldActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+            ComboBoxModel<Category> cb_model_category = cb_category_Book.getModel();
+            for (int i = 0; i < cb_model_category.getSize(); i++) {
+                if (cb_model_category.getElementAt(i).toString().equals(category)) {
+                    cb_model_category.setSelectedItem(cb_model_category.getElementAt(i));
+                    break;
+                }
+            }
+            ComboBoxModel<Author> cb_model_author = cb_author_Book.getModel();
+            for (int i = 0; i < cb_model_author.getSize(); i++) {
+                if (cb_model_author.getElementAt(i).toString().equals(author)) {
+                    cb_model_author.setSelectedItem(cb_model_author.getElementAt(i));
+                    break;
+                }
+            }
+            Date date = new Date();
+            Timestamp time_now = new Timestamp(date.getTime());
+            if (log == null) {
+                log = new Log(ip, username, table_name, bookId, time_now);
+                try {
+                    log.setId(controller.createLog(log));
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } else
+                // TH: Click vào bảng khác
+                if (log.getTable_name() != table_name) {
 
-    private void btn_delete_HoldActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+                    try {
+                        controller.deleteLog(log.getId());
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    // Lấy thời gian hiện tại
 
-    private void btn_update_HoldActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+                    log = new Log(ip, username, table_name, bookId, time_now);
+                    try {
+                        log.setId(controller.createLog(log));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
 
-    private void tbl_HoldMousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
+                } else
+                    // TH: Click vào cùng bảng
+                    if (log.getTable_name().equals(table_name)) {
+                        log.setCol_id(bookId);
+                        try {
+                            controller.updateLog(log);
+                        } catch (RemoteException ex) {
+                            throw new RuntimeException(ex);
+                        }
 
-    private void tbl_BookCopyMousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
+                    }
+            System.out.println(" LOG: " + log.toString());
 
-    private void btn_refresh_PublishedActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_delete_PublishedActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_update_PublishedActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_create_PublishedActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void tbl_PublishedMousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_refresh_CategoryActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_delete_CategoryActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_update_CategoryActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_create_CategoryActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void tbl_CategoryMousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_refresh_AuthorActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_delete_AuthorActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_update_AuthorActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_create_AuthorActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void tbl_AuthorMousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void tbl_CheckoutMousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_create_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_update_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_delete_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_refresh_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_create_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_delete_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_update_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_refresh_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_create_HoldActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        }
     }
 
     private void btn_refresh_BookActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1637,6 +1686,8 @@ public class LibraryGUI extends javax.swing.JFrame {
         tf_ID_Book.setText("");
         tf_title_Book.setText("");
         showTableBook();
+        showDataComboBoxAuthor();
+        showDataComboBoxCategory();
     }
 
     private void btn_delete_BookActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1717,53 +1768,33 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
         btn_refresh_BookActionPerformed(null);
     }
-    private boolean checkBlock(String table_name, int col_id) {
-        try {
-            return controller.checkLog(table_name, col_id);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    private void tbl_BookMousePressed(java.awt.event.MouseEvent evt) {
-        int selectedRow = tbl_Book.getSelectedRow();
-        tf_ID_Book.setEditable(false);
+    // ==================================================================================================================
+    // Author
+
+    private void tbl_AuthorMousePressed(java.awt.event.MouseEvent evt) {
+        int selectedRow = tbl_Author.getSelectedRow();
+        tf_ID_Author.setEditable(false);
         if (selectedRow != -1) {
-            table_name = "book";
+            table_name = "author";
             // Lấy thông tin từ hàng dữ liệu được chọn
-            int bookId = (int) tbl_Book.getValueAt(selectedRow, 0);
-            String title = (String) tbl_Book.getValueAt(selectedRow, 1);
-            String category = (String) tbl_Book.getValueAt(selectedRow, 2);
-            String author = (String) tbl_Book.getValueAt(selectedRow, 3);
+            int author_id = (int) tbl_Author.getValueAt(selectedRow, 0);
+            String name = (String) tbl_Author.getValueAt(selectedRow, 1);
 
 
             // check block
-            if (checkBlock(table_name, bookId)) {
-                JOptionPane.showMessageDialog(this, "Bạn không thể thao tác với bản ghi này! Có người dùng khác đang sử dụng bản ghi này!","Warning",JOptionPane.WARNING_MESSAGE);
+            if (checkBlock(table_name, author_id)) {
+                JOptionPane.showMessageDialog(this, "Bạn không thể thao tác với bản ghi này! Có người dùng khác đang sử dụng bản ghi này!", "Warning", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             // Set vào tf
-            tf_ID_Book.setText(String.valueOf(bookId));
-            tf_title_Book.setText(title);
+            tf_ID_Author.setText(String.valueOf(author_id));
+            tf_name_Author.setText(name);
 
-            ComboBoxModel<Category> cb_model_category = cb_category_Book.getModel();
-            for (int i = 0; i < cb_model_category.getSize(); i++) {
-                if (cb_model_category.getElementAt(i).toString().equals(category)) {
-                    cb_model_category.setSelectedItem(cb_model_category.getElementAt(i));
-                    break;
-                }
-            }
-            ComboBoxModel<Author> cb_model_author = cb_author_Book.getModel();
-            for (int i = 0; i < cb_model_author.getSize(); i++) {
-                if (cb_model_author.getElementAt(i).toString().equals(author)) {
-                    cb_model_author.setSelectedItem(cb_model_author.getElementAt(i));
-                    break;
-                }
-            }
             Date date = new Date();
             Timestamp time_now = new Timestamp(date.getTime());
             if (log == null) {
-                log = new Log(ip, username, table_name, bookId, time_now);
+                log = new Log(ip, username, table_name, author_id, time_now);
                 try {
                     log.setId(controller.createLog(log));
                 } catch (RemoteException ex) {
@@ -1780,7 +1811,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                     }
                     // Lấy thời gian hiện tại
 
-                    log = new Log(ip, username, table_name, bookId, time_now);
+                    log = new Log(ip, username, table_name, author_id, time_now);
                     try {
                         log.setId(controller.createLog(log));
                     } catch (RemoteException ex) {
@@ -1790,7 +1821,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                 } else
                     // TH: Click vào cùng bảng
                     if (log.getTable_name().equals(table_name)) {
-                        log.setCol_id(bookId);
+                        log.setCol_id(author_id);
                         try {
                             controller.updateLog(log);
                         } catch (RemoteException ex) {
@@ -1802,6 +1833,331 @@ public class LibraryGUI extends javax.swing.JFrame {
 
         }
     }
+
+    private void btn_refresh_AuthorActionPerformed(java.awt.event.ActionEvent evt) {
+        tf_ID_Author.setEditable(true);
+
+        tf_ID_Author.setText("");
+        tf_name_Author.setText("");
+        showTableAuthor();
+    }
+
+    private void btn_delete_AuthorActionPerformed(java.awt.event.ActionEvent evt) {
+        int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+        if (result == JOptionPane.YES_OPTION) {
+
+
+            int author_id = Integer.parseInt(tf_ID_Author.getText());
+
+            try {
+                Response res = controller.deleteAuthorController(author_id);
+                if (res.getStatus() == 100) {
+                    JOptionPane.showMessageDialog(this, res.getData());
+                } else {
+                    showTableBook();
+                    JOptionPane.showMessageDialog(this, res.getData());
+                }
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        btn_refresh_BookActionPerformed(null);
+    }
+
+    private void btn_update_AuthorActionPerformed(java.awt.event.ActionEvent evt) {
+        Author author = new Author();
+        if (tf_ID_Author.getText() != null) {
+            int author_id = Integer.parseInt(tf_ID_Author.getText());
+            author.setId(author_id);
+        }
+        String author_name = tf_name_Author.getText();
+        author.setName(author_name);
+
+        try {
+            Response response = controller.updateAuthorController(author);
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            } else {
+                showTableAuthor();
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+
+        } catch (RemoteException ex) {
+            throw new RuntimeException(ex);
+        }
+        btn_refresh_BookActionPerformed(null);
+    }
+
+    private void btn_create_AuthorActionPerformed(java.awt.event.ActionEvent evt) {
+        Author author = new Author();
+        if (!tf_ID_Author.getText().isEmpty()) {
+            int author_id = Integer.parseInt(tf_ID_Author.getText());
+            author.setId(author_id);
+        }
+        String name = tf_name_Author.getText();
+        author.setName(name);
+
+        try {
+            Response response = controller.createAuthorController(author);
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            } else {
+                showTableAuthor();
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        btn_refresh_AuthorActionPerformed(null);
+    }
+    // ==================================================================================================================
+    // Category
+
+    private void tbl_CategoryMousePressed(java.awt.event.MouseEvent evt) {
+        int selectedRow = tbl_Category.getSelectedRow();
+        tf_ID_Category.setEditable(false);
+        if (selectedRow != -1) {
+            table_name = "category";
+            // Lấy thông tin từ hàng dữ liệu được chọn
+            int category_id = (int) tbl_Category.getValueAt(selectedRow, 0);
+            String name = (String) tbl_Category.getValueAt(selectedRow, 1);
+
+
+            // check block
+            if (checkBlock(table_name, category_id)) {
+                JOptionPane.showMessageDialog(this, "Bạn không thể thao tác với bản ghi này! Có người dùng khác đang sử dụng bản ghi này!", "Warning", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Set vào tf
+            tf_ID_Category.setText(String.valueOf(category_id));
+            tf_name_Category.setText(name);
+
+            Date date = new Date();
+            Timestamp time_now = new Timestamp(date.getTime());
+            if (log == null) {
+                log = new Log(ip, username, table_name, category_id, time_now);
+                try {
+                    log.setId(controller.createLog(log));
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } else
+                // TH: Click vào bảng khác
+                if (log.getTable_name() != table_name) {
+
+                    try {
+                        controller.deleteLog(log.getId());
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    // Lấy thời gian hiện tại
+
+                    log = new Log(ip, username, table_name, category_id, time_now);
+                    try {
+                        log.setId(controller.createLog(log));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                } else
+                    // TH: Click vào cùng bảng
+                    if (log.getTable_name().equals(table_name)) {
+                        log.setCol_id(category_id);
+                        try {
+                            controller.updateLog(log);
+                        } catch (RemoteException ex) {
+                            throw new RuntimeException(ex);
+                        }
+
+                    }
+            System.out.println(" LOG: " + log.toString());
+
+        }
+    }
+
+    private void btn_refresh_CategoryActionPerformed(java.awt.event.ActionEvent evt) {
+        tf_ID_Category.setEditable(true);
+
+        tf_ID_Category.setText("");
+        tf_name_Category.setText("");
+        showTableCategory();
+    }
+
+    private void btn_delete_CategoryActionPerformed(java.awt.event.ActionEvent evt) {
+        int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+        if (result == JOptionPane.YES_OPTION) {
+
+
+            int category_id = Integer.parseInt(tf_ID_Category.getText());
+
+            try {
+                Response res = controller.deleteAuthorController(category_id);
+                if (res.getStatus() == 100) {
+                    JOptionPane.showMessageDialog(this, res.getData());
+                } else {
+                    showTableCategory();
+                    JOptionPane.showMessageDialog(this, res.getData());
+                }
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        btn_refresh_CategoryActionPerformed(null);
+    }
+
+    private void btn_update_CategoryActionPerformed(java.awt.event.ActionEvent evt) {
+        Category category = new Category();
+        if (tf_ID_Category.getText() != null) {
+            int category_id = Integer.parseInt(tf_ID_Category.getText());
+            category.setId(category_id);
+        }
+        String category_name = tf_name_Category.getText();
+        category.setName(category_name);
+
+        try {
+            Response response = controller.updateCategoryController(category);
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            } else {
+                showTableCategory();
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+
+        } catch (RemoteException ex) {
+            throw new RuntimeException(ex);
+        }
+        btn_refresh_BookActionPerformed(null);
+    }
+
+    private void btn_create_CategoryActionPerformed(java.awt.event.ActionEvent evt) {
+        Category category = new Category();
+        if (!tf_ID_Category.getText().isEmpty()) {
+            int category_id = Integer.parseInt(tf_ID_Category.getText());
+            category.setId(category_id);
+        }
+        String name = tf_name_Category.getText();
+        category.setName(name);
+
+        try {
+            Response response = controller.createCategoryController(category);
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            } else {
+                showTableCategory();
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        btn_refresh_CategoryActionPerformed(null);
+    }
+    // ==================================================================================================================
+    //
+
+    private void btn_refresh_PatronActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_delete_PatronActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_update_PatronActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_create_PatronActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void tbl_PatronMousePressed(java.awt.event.MouseEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_refresh_HoldActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_delete_HoldActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_update_HoldActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void tbl_HoldMousePressed(java.awt.event.MouseEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void tbl_BookCopyMousePressed(java.awt.event.MouseEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_refresh_PublishedActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_delete_PublishedActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_update_PublishedActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_create_PublishedActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void tbl_PublishedMousePressed(java.awt.event.MouseEvent evt) {
+        // TODO add your handling code here:
+    }
+
+
+    private void tbl_CheckoutMousePressed(java.awt.event.MouseEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_create_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_update_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_delete_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_refresh_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_create_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_delete_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_update_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_refresh_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_create_HoldActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
 
     /**
      * @param args the command line arguments

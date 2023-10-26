@@ -34,23 +34,54 @@ public class ManagerController {
         return response;
 
     }
-
     public Response createBookController(Book book, int author_id) throws RemoteException, SQLException {
         Response response = libraryRemote.createBook(book, author_id);
         return response;
     }
-
     public Response deleteBookController(int book_id) throws RemoteException {
         Response res = libraryRemote.deleteBook(book_id);
         return res;
     }
-
     public Response updateBookController(Book book, int authorId) throws RemoteException {
         Response response = libraryRemote.updateBook(book, authorId);
         return response;
     }
 
     //
+
+    // CRUD - Author
+    public Response getAuthorsController() throws RemoteException {
+        return libraryRemote.getAuthors();
+    }
+    public Response createAuthorController(Author author) throws RemoteException {
+        return libraryRemote.createAuthor(author);
+    }
+    public Response updateAuthorController(Author author) throws RemoteException {
+        return libraryRemote.updateAuthor(author);
+    }
+    public Response deleteAuthorController(int authorId) throws RemoteException {
+        return libraryRemote.deleteAuthor(authorId);
+    }
+
+    //
+
+    // CRUD - Category
+    public Response getCategoriesController() throws RemoteException {
+        return libraryRemote.getCategories();
+    }
+    public Response createCategoryController(Category category) throws RemoteException {
+        return libraryRemote.createCategory(category);
+    }
+    public Response updateCategoryController(Category category) throws RemoteException {
+        return libraryRemote.updateCategory(category);
+    }
+    public Response deleteCategoryController(int categoryId) throws RemoteException {
+        return libraryRemote.deleteCategory(categoryId);
+    }
+
+    //
+
+    // Log
     public int createLog(Log log) throws RemoteException {
         return libraryRemote.createLog(log);
     }
@@ -67,7 +98,7 @@ public class ManagerController {
         return libraryRemote.checkLog(table_name, col_id);
     }
 
-    //
+    // Common
     private static List<Category> getTableDataCategory(DefaultTableModel model) {
         List<Category> dataList = new ArrayList<>();
 
