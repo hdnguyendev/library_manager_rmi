@@ -79,8 +79,18 @@ public class ManagerController {
         return libraryRemote.deleteCategory(categoryId);
     }
 
-    //
-
+    // CRUD - Published
+    public Response getPublishedController() throws RemoteException {
+        return libraryRemote.getPublished();
+    }
+    // CRUD - Book Copy
+    public Response getBooksCopyController() throws RemoteException {
+        return libraryRemote.getBooksCopy();
+    }
+    // CRUD - Hold
+    public Response getHoldsController() throws RemoteException {
+        return libraryRemote.getHolds();
+    }
     // Log
     public int createLog(Log log) throws RemoteException {
         return libraryRemote.createLog(log);
@@ -160,6 +170,7 @@ public class ManagerController {
         return new Response(200, authorsList);
 
     }
+
 
 
 }

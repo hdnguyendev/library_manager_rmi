@@ -91,38 +91,6 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
         }
     }
     @Override
-    public Response getBooksCopy() throws RemoteException {
-        try {
-            vTitle.clear();
-            vData.clear();
-
-            String query = "SELECT bc.id, b.title, bc.year_published, p.name " +
-                    "FROM book_copy bc " +
-                    "INNER JOIN book b ON bc.book_id = b.id " +
-                    "INNER JOIN published p ON bc.published_id = p.id ";
-
-            rst = stm.executeQuery(query);
-
-            String[] title = new String[]{
-                    "Book Copy ID", "Book Title", "Year Public", "Published Name"
-            };
-            Collections.addAll(vTitle, title);
-            while (rst.next()) {
-                Vector row = new Vector();
-
-                row.add(rst.getInt("id"));
-                row.add(rst.getString("name"));
-                vData.add(row);
-            }
-            rst.close();
-            return new Response(200, new DefaultTableModel(vData, vTitle));
-        } catch (SQLException e) {
-            System.out.println("!!!---Error: " + e);
-            return new Response(100, e.toString());
-
-        }
-    }
-    @Override
     public Response getCategories() throws RemoteException {
         try {
             vTitle.clear();
@@ -152,19 +120,112 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
         }
     }
     @Override
-    public Response getNotifications() throws RemoteException {
-        return null;
+    public Response getPublished() throws RemoteException {
+        try {
+            vTitle.clear();
+            vData.clear();
+
+            String query = "SELECT p.id, p.name " +
+                    "FROM published p ";
+
+            rst = stm.executeQuery(query);
+
+            String[] title = new String[]{
+                    "Published ID", "Published Name"
+            };
+            Collections.addAll(vTitle, title);
+            while (rst.next()) {
+                Vector row = new Vector();
+
+                row.add(rst.getInt("id"));
+                row.add(rst.getString("name"));
+                vData.add(row);
+            }
+            rst.close();
+            return new Response(200, new DefaultTableModel(vData, vTitle));
+        } catch (SQLException e) {
+            System.out.println("!!!---Error: " + e);
+            return new Response(100, null);
+
+        }
     }
     @Override
-    public Response getPublished() throws RemoteException {
-        return null;
+    public Response getBooksCopy() throws RemoteException {
+        try {
+            vTitle.clear();
+            vData.clear();
+
+            String query = "SELECT bc.id, b.title, bc.year_published, p.name " +
+                    "FROM book_copy bc " +
+                    "INNER JOIN book b ON bc.book_id = b.id " +
+                    "INNER JOIN published p ON bc.published_id = p.id ";
+
+            rst = stm.executeQuery(query);
+
+            String[] title = new String[]{
+                    "Book Copy ID", "Book Title", "Year Public", "Published Name"
+            };
+            Collections.addAll(vTitle, title);
+            while (rst.next()) {
+                Vector row = new Vector();
+
+                row.add(rst.getInt("id"));
+                row.add(rst.getString("title"));
+                row.add(rst.getInt("year_published"));
+                row.add(rst.getString("name"));
+                vData.add(row);
+            }
+            rst.close();
+            return new Response(200, new DefaultTableModel(vData, vTitle));
+        } catch (SQLException e) {
+            System.out.println("!!!---Error: " + e);
+            return new Response(100, e.toString());
+
+        }
     }
     @Override
     public Response getHolds() throws RemoteException {
-        return null;
+        try {
+            vTitle.clear();
+            vData.clear();
+
+            String query = "SELECT h.id, pa.email, pa.first_name + \' \' + pa.last_name as fullname, b.title , h.start_time, h.end_time " +
+                    "FROM hold as h " +
+                    "INNER JOIN patron_account as pa ON pa.id = h.patron_id " +
+                    "INNER JOIN book_copy as bc ON bc.id = h.book_copy_id "+
+                    "INNER JOIN book as b ON b.id = bc.book_id";
+
+            rst = stm.executeQuery(query);
+
+            String[] title = new String[]{
+                    "Hold ID", "Patron Email", "Patron Name", "Book Title", "Time start", "Time end"
+            };
+            Collections.addAll(vTitle, title);
+            while (rst.next()) {
+                Vector row = new Vector();
+
+                row.add(rst.getInt("id"));
+                row.add(rst.getString("email"));
+                row.add(rst.getString("fullname"));
+                row.add(rst.getString("title"));
+                row.add(rst.getTimestamp("start_time"));
+                row.add(rst.getTimestamp("end_time"));
+                vData.add(row);
+            }
+            rst.close();
+            return new Response(200, new DefaultTableModel(vData, vTitle));
+        } catch (SQLException e) {
+            System.out.println("!!!---Error: " + e);
+            return new Response(100, null);
+
+        }
     }
     @Override
     public Response getCheckouts() throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response getNotifications() throws RemoteException {
         return null;
     }
 
@@ -389,6 +450,96 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
     @Override
     public Response deletePublished(int id) throws RemoteException {
+        return null;
+    }
+
+    // CRUD Patron
+    @Override
+    public Response createPatron(Patron patron) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response getPatron(int id) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response updatePatron(Patron patron) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response deletePatron(int id) throws RemoteException {
+        return null;
+    }
+
+    // CRUD BookCopy
+    @Override
+    public Response createBookCopy(BookCopy bookCopy) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response getBookCopy(int id) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response updateBookCopy(BookCopy bookCopy) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response deleteBookCopy(int id) throws RemoteException {
+        return null;
+    }
+
+    // CRUD Hold
+    @Override
+    public Response createHold(Hold hold) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response getHold(int id) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response updateHold(Hold hold) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response deleteHold(int id) throws RemoteException {
+        return null;
+    }
+
+    // CRUD Checkout
+    @Override
+    public Response createCheckout(Checkout checkout) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response getCheckout(int id) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response updateCheckout(Checkout checkout) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response deleteCheckout(int id) throws RemoteException {
+        return null;
+    }
+
+    // CRUD Notification
+    @Override
+    public Response createNotification(Notification notification) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response getNotification(int id) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response updateNotification(Notification notification) throws RemoteException {
+        return null;
+    }
+    @Override
+    public Response deleteNotification(int id) throws RemoteException {
         return null;
     }
 
