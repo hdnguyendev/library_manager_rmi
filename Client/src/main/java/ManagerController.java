@@ -91,6 +91,14 @@ public class ManagerController {
     public Response getHoldsController() throws RemoteException {
         return libraryRemote.getHolds();
     }
+    // CRUD - Checkout
+    public Response getCheckoutsController() throws RemoteException {
+        return libraryRemote.getCheckouts();
+    }
+    // CRUD - Notification
+    public Response getNotificationsController() throws RemoteException {
+        return libraryRemote.getNotifications();
+    }
     // Log
     public int createLog(Log log) throws RemoteException {
         return libraryRemote.createLog(log);

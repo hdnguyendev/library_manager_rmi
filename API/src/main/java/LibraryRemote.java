@@ -1,8 +1,5 @@
-import javax.swing.table.DefaultTableModel;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
-import java.sql.Timestamp;
 
 public interface LibraryRemote extends Remote {
 

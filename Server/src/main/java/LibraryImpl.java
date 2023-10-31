@@ -60,6 +60,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
         }
     }
+
     @Override
     public Response getAuthors() throws RemoteException {
         try {
@@ -90,6 +91,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
         }
     }
+
     @Override
     public Response getCategories() throws RemoteException {
         try {
@@ -119,6 +121,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
         }
     }
+
     @Override
     public Response getPublished() throws RemoteException {
         try {
@@ -149,6 +152,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
         }
     }
+
     @Override
     public Response getBooksCopy() throws RemoteException {
         try {
@@ -183,6 +187,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
         }
     }
+
     @Override
     public Response getHolds() throws RemoteException {
         try {
@@ -192,7 +197,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             String query = "SELECT h.id, pa.email, CONCAT(pa.first_name, ' ', pa.last_name) as fullname, b.title , h.start_time, h.end_time " +
                     "FROM hold as h " +
                     "INNER JOIN patron_account as pa ON pa.id = h.patron_id " +
-                    "INNER JOIN book_copy as bc ON bc.id = h.book_copy_id "+
+                    "INNER JOIN book_copy as bc ON bc.id = h.book_copy_id " +
                     "INNER JOIN book as b ON b.id = bc.book_id";
 
             rst = stm.executeQuery(query);
@@ -220,13 +225,78 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
         }
     }
+
     @Override
     public Response getCheckouts() throws RemoteException {
-        return null;
+        try {
+            vTitle.clear();
+            vData.clear();
+
+            String query = "SELECT c.id,c.is_returned, pa.email, CONCAT(pa.first_name, ' ', pa.last_name) as fullname, b.title , c.start_time, c.end_time " +
+                    "FROM checkout as c " +
+                    "INNER JOIN patron_account as pa ON pa.id = c.patron_id " +
+                    "INNER JOIN book_copy as bc ON bc.id = c.book_copy_id " +
+                    "INNER JOIN book as b ON b.id = bc.book_id";
+
+            rst = stm.executeQuery(query);
+
+            String[] title = new String[]{
+                    "Checkout ID", "Is Returned", "Patron Email", "Patron Name", "Book Title", "Time start", "Time end"
+            };
+            Collections.addAll(vTitle, title);
+            while (rst.next()) {
+                Vector row = new Vector();
+
+                row.add(rst.getInt("id"));
+                row.add(rst.getBoolean("is_returned" ) ? "Yes" : "No");
+                row.add(rst.getString("email"));
+                row.add(rst.getString("fullname"));
+                row.add(rst.getString("title"));
+                row.add(rst.getTimestamp("start_time"));
+                row.add(rst.getTimestamp("end_time"));
+                vData.add(row);
+            }
+            rst.close();
+            return new Response(200, new DefaultTableModel(vData, vTitle));
+        } catch (SQLException e) {
+            System.out.println("!!!---Error: " + e);
+            return new Response(100, null);
+
+        }
     }
+
     @Override
     public Response getNotifications() throws RemoteException {
-        return null;
+        try {
+            vTitle.clear();
+            vData.clear();
+
+            String query = "SELECT n.id, n.sent_at, n.message, pa.email " +
+                    "FROM notification as n " +
+                    "INNER JOIN patron_account as pa ON pa.id = n.patron_id ";
+
+            rst = stm.executeQuery(query);
+
+            String[] title = new String[]{
+                    "Notification ID", "Sent At", "Message", "Patron Email"
+            };
+            Collections.addAll(vTitle, title);
+            while (rst.next()) {
+                Vector row = new Vector();
+
+                row.add(rst.getInt("id"));
+                row.add(rst.getTimestamp("sent_at"));
+                row.add(rst.getString("message"));
+                row.add(rst.getString("email"));
+                vData.add(row);
+            }
+            rst.close();
+            return new Response(200, new DefaultTableModel(vData, vTitle));
+        } catch (SQLException e) {
+            System.out.println("!!!---Error: " + e);
+            return new Response(100, null);
+
+        }
     }
 
     // CRUD - Book
@@ -257,17 +327,18 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             insertBookAuthorStatement.executeUpdate();
 
             return new Response(200, "Created new book successfully!");
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return new Response(100, e.getMessage());
         }
     }
+
     @Override
     public Response getBook(int id) throws RemoteException {
         return null;
     }
+
     @Override
-    public Response updateBook(Book book,int author_id) throws RemoteException {
+    public Response updateBook(Book book, int author_id) throws RemoteException {
         try {
             // Cập nhật sách theo id
             String insertBookQuery = "UPDATE book SET title = ?, category_id = ? WHERE id = ?";
@@ -281,15 +352,15 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             String insertBookAuthorQuery = "UPDATE book_author SET author_id = ? WHERE book_id = ?";
             PreparedStatement insertBookAuthorStatement = conn.prepareStatement(insertBookAuthorQuery);
             insertBookAuthorStatement.setInt(1, author_id);
-            insertBookAuthorStatement.setInt(2, book.getId() );
+            insertBookAuthorStatement.setInt(2, book.getId());
             insertBookAuthorStatement.executeUpdate();
 
             return new Response(200, "Updated book successfully!");
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return new Response(100, e.getMessage());
         }
     }
+
     @Override
     public Response deleteBook(int id) throws RemoteException {
         try {
@@ -311,7 +382,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             int rowsAffected = deleteBookStatement.executeUpdate();
 
             if (rowsAffected > 0) {
-                return new Response(200, "Deleted Book Successfully!" );
+                return new Response(200, "Deleted Book Successfully!");
 
             } else {
                 return new Response(100, "Not find book_id " + id);
@@ -334,15 +405,16 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             insertAuthorStatement.executeUpdate();
 
             return new Response(200, "Created new author successfully!");
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return new Response(100, e.getMessage());
         }
     }
+
     @Override
     public Response getAuthor(int id) throws RemoteException {
         return null;
     }
+
     @Override
     public Response updateAuthor(Author author) throws RemoteException {
         try {
@@ -352,11 +424,11 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             updateAuthorStatement.setInt(2, author.getId());
             updateAuthorStatement.executeUpdate();
             return new Response(200, "Updated author successfully!");
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return new Response(100, e.getMessage());
         }
     }
+
     @Override
     public Response deleteAuthor(int id) throws RemoteException {
         try {
@@ -367,7 +439,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             int rowsAffected = deleteAuthorStatement.executeUpdate();
 
             if (rowsAffected > 0) {
-                return new Response(200, "Deleted author Successfully!" );
+                return new Response(200, "Deleted author Successfully!");
 
             } else {
                 return new Response(100, "Not find author_id " + id);
@@ -394,10 +466,12 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             return new Response(100, e.getMessage());
         }
     }
+
     @Override
     public Response getCategory(int id) throws RemoteException {
         return null;
     }
+
     @Override
     public Response updateCategory(Category category) throws RemoteException {
         try {
@@ -412,6 +486,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             return new Response(100, e.getMessage());
         }
     }
+
     @Override
     public Response deleteCategory(int id) throws RemoteException {
         try {
@@ -422,7 +497,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             int rowsAffected = deleteCategoryStatement.executeUpdate();
 
             if (rowsAffected > 0) {
-                return new Response(200, "Deleted category Successfully!" );
+                return new Response(200, "Deleted category Successfully!");
 
             } else {
                 return new Response(100, "Not find author_id " + id);
@@ -440,14 +515,17 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     public Response createPublished(Published published) throws RemoteException {
         return null;
     }
+
     @Override
     public Response getPublished(int id) throws RemoteException {
         return null;
     }
+
     @Override
     public Response updatePublished(Published published) throws RemoteException {
         return null;
     }
+
     @Override
     public Response deletePublished(int id) throws RemoteException {
         return null;
@@ -458,14 +536,17 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     public Response createPatron(Patron patron) throws RemoteException {
         return null;
     }
+
     @Override
     public Response getPatron(int id) throws RemoteException {
         return null;
     }
+
     @Override
     public Response updatePatron(Patron patron) throws RemoteException {
         return null;
     }
+
     @Override
     public Response deletePatron(int id) throws RemoteException {
         return null;
@@ -476,14 +557,17 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     public Response createBookCopy(BookCopy bookCopy) throws RemoteException {
         return null;
     }
+
     @Override
     public Response getBookCopy(int id) throws RemoteException {
         return null;
     }
+
     @Override
     public Response updateBookCopy(BookCopy bookCopy) throws RemoteException {
         return null;
     }
+
     @Override
     public Response deleteBookCopy(int id) throws RemoteException {
         return null;
@@ -494,14 +578,17 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     public Response createHold(Hold hold) throws RemoteException {
         return null;
     }
+
     @Override
     public Response getHold(int id) throws RemoteException {
         return null;
     }
+
     @Override
     public Response updateHold(Hold hold) throws RemoteException {
         return null;
     }
+
     @Override
     public Response deleteHold(int id) throws RemoteException {
         return null;
@@ -512,14 +599,17 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     public Response createCheckout(Checkout checkout) throws RemoteException {
         return null;
     }
+
     @Override
     public Response getCheckout(int id) throws RemoteException {
         return null;
     }
+
     @Override
     public Response updateCheckout(Checkout checkout) throws RemoteException {
         return null;
     }
+
     @Override
     public Response deleteCheckout(int id) throws RemoteException {
         return null;
@@ -530,14 +620,17 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     public Response createNotification(Notification notification) throws RemoteException {
         return null;
     }
+
     @Override
     public Response getNotification(int id) throws RemoteException {
         return null;
     }
+
     @Override
     public Response updateNotification(Notification notification) throws RemoteException {
         return null;
     }
+
     @Override
     public Response deleteNotification(int id) throws RemoteException {
         return null;
@@ -564,12 +657,12 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
                 return log_id;
             }
             return -1;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return -1;
         }
     }
+
     @Override
     public void updateLog(Log log) throws RemoteException {
         try {
@@ -582,11 +675,11 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             updateLogStatement.setTimestamp(5, log.getTime_start());
             updateLogStatement.setInt(6, log.getId());
             updateLogStatement.executeUpdate();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
+
     @Override
     public void deleteLog(int id) throws RemoteException {
         try {
@@ -599,6 +692,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             System.out.println(e.getMessage());
         }
     }
+
     @Override
     public boolean checkLog(String table_name, int col_id) throws RemoteException {
         try {
