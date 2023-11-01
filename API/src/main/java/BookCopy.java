@@ -1,7 +1,7 @@
 import java.io.Serializable;
 
 public class BookCopy implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID =  8271963769266110398L;
     private int id;
     private int year_published;
     private int book_id;

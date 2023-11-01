@@ -2,7 +2,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 public class Notification implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID =  8271963769266110398L;
     private int id;
     private Timestamp send_at;
     private String message;

@@ -1,7 +1,7 @@
 import java.io.Serializable;
 
 public class Response implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID =  8271963769266110398L;
     /*
     * status = 200 => success
     * status = 100 => error

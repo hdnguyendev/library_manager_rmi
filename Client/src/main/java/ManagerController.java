@@ -15,6 +15,7 @@ public class ManagerController {
 
     public ManagerController() {
         try {
+            System.setProperty("java.rmi.server.hostname", Config.IP_SERVER);
             libraryRemote = (LibraryRemote) Naming.lookup("rmi://" + Config.IP_SERVER + ":" + Config.PORT_SERVER + "/api");
         } catch (NotBoundException e) {
             JOptionPane.showMessageDialog(null, "Error to Connect with Server", "Error", JOptionPane.WARNING_MESSAGE);

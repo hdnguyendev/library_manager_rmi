@@ -12,7 +12,7 @@ import static java.rmi.registry.LocateRegistry.getRegistry;
 public class RMIServer {
     public static void main(String[] args) {
         try {
-
+            System.setProperty("java.rmi.server.hostname", Config.IP_SERVER);
             LibraryImpl server = new LibraryImpl();
             LocateRegistry.createRegistry(Config.PORT_SERVER);
 
