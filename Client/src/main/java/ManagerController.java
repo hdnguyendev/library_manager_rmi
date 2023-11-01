@@ -100,6 +100,14 @@ public class ManagerController {
     public Response getNotificationsController() throws RemoteException {
         return libraryRemote.getNotifications();
     }
+    // CRUD - Patron Account
+    public Response getPatronsController() throws RemoteException {
+        return libraryRemote.getPatrons();
+    }
+    // CRUD - History
+    public Response getHistoryController() throws RemoteException {
+        return libraryRemote.getHistory();
+    }
     // Log
     public int createLog(Log log) throws RemoteException {
         return libraryRemote.createLog(log);

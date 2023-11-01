@@ -1,7 +1,7 @@
 import java.io.Serializable;
 
 public class Book implements Serializable {
-    private static final long serialVersionUID =  s;
+    private static final long serialVersionUID =  8271963769266110398L;
     private int id;
     private String title;
     private int category_id;

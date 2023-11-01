@@ -10,6 +10,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
@@ -47,6 +50,18 @@ public class LibraryGUI extends javax.swing.JFrame {
      */
     public LibraryGUI() {
         initComponents();
+        // Bắt sự kiện đóng cửa sổ để xóa log
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try {
+                    if (log != null)
+                    controller.deleteLog(log.getId());
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
         // load data
         showTableBook();
         showTableAuthor();
@@ -56,10 +71,15 @@ public class LibraryGUI extends javax.swing.JFrame {
         showTableHold();
         showTableCheckout();
         showTableNotification();
+        showTablePatrons();
+        showTableHistory();
+
         showDataComboBoxCategory();
         showDataComboBoxAuthor();
         //
     }
+
+
 
     private synchronized void showTableBook() {
         try {
@@ -108,6 +128,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
 
     }
+
     private synchronized void showTableAuthor() {
         try {
             Response response = controller.getAuthorsController();
@@ -155,6 +176,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
 
     }
+
     private synchronized void showTableCategory() {
         try {
             Response response = controller.getCategoriesController();
@@ -202,6 +224,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
 
     }
+
     private synchronized void showTablePublished() {
         try {
             Response response = controller.getPublishedController();
@@ -249,6 +272,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
 
     }
+
     private synchronized void showTableBookCopy() {
         try {
             Response response = controller.getBooksCopyController();
@@ -296,6 +320,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
 
     }
+
     private synchronized void showTableHold() {
         try {
             Response response = controller.getHoldsController();
@@ -343,6 +368,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
 
     }
+
     private synchronized void showTableCheckout() {
         try {
             Response response = controller.getCheckoutsController();
@@ -390,6 +416,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
 
     }
+
     private synchronized void showTableNotification() {
         try {
             Response response = controller.getNotificationsController();
@@ -437,7 +464,100 @@ public class LibraryGUI extends javax.swing.JFrame {
 
 
     }
+    private synchronized void showTablePatrons() {
+        try {
+            Response response = controller.getPatronsController();
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+            sorter = new TableRowSorter<>((DefaultTableModel) response.getData());
+            tbl_Patron.setRowSorter(sorter);
+            tf_search_Patron.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    search(tf_search_Patron.getText());
+                }
 
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    search(tf_search_Patron.getText());
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    search(tf_search_Patron.getText());
+                }
+
+                public void search(String str) {
+                    if (str.length() == 0) {
+                        sorter.setRowFilter(null);
+                    } else {
+                        sorter.setRowFilter(RowFilter.regexFilter(str));
+                    }
+                }
+            });
+
+            tbl_Patron.setModel((DefaultTableModel) response.getData());
+            tbl_Patron.getTableHeader().setDefaultRenderer(new CustomHeaderRenderer());
+            tbl_Patron.setRowHeight(30);
+            tbl_Patron.setDefaultEditor(Object.class, null);
+            TableColumn indexColumn = tbl_Patron.getColumnModel().getColumn(0);
+            indexColumn.setCellRenderer(new CenteredTableCellRenderer());
+            indexColumn.setMaxWidth(80);
+            sp_Patron.setViewportView(tbl_Patron);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+    private synchronized void showTableHistory() {
+        try {
+            Response response = controller.getHistoryController();
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+            sorter = new TableRowSorter<>((DefaultTableModel) response.getData());
+            tbl_History.setRowSorter(sorter);
+            tf_search_History.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    search(tf_search_History.getText());
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    search(tf_search_History.getText());
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    search(tf_search_History.getText());
+                }
+
+                public void search(String str) {
+                    if (str.length() == 0) {
+                        sorter.setRowFilter(null);
+                    } else {
+                        sorter.setRowFilter(RowFilter.regexFilter(str));
+                    }
+                }
+            });
+
+            tbl_History.setModel((DefaultTableModel) response.getData());
+            tbl_History.getTableHeader().setDefaultRenderer(new CustomHeaderRenderer());
+            tbl_History.setRowHeight(30);
+            tbl_History.setDefaultEditor(Object.class, null);
+            TableColumn indexColumn = tbl_History.getColumnModel().getColumn(0);
+            indexColumn.setCellRenderer(new CenteredTableCellRenderer());
+            indexColumn.setMaxWidth(80);
+            sp_History.setViewportView(tbl_History);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+
+    }
     // ------------------------------------------------------------------
     private synchronized void showDataComboBoxCategory() {
         try {
@@ -1866,7 +1986,7 @@ public class LibraryGUI extends javax.swing.JFrame {
     }
 
     private void btn_refresh_NotificationActionPerformed(ActionEvent evt) {
-        
+        showTableNotification();
     }
 
     private void btn_sendAllActionPerformed(ActionEvent evt) {
@@ -1876,8 +1996,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
-    // ==================================================================================================================
-    // Block
+     // Block
 
     private boolean checkBlock(String table_name, int col_id) {
         try {
@@ -1886,7 +2005,6 @@ public class LibraryGUI extends javax.swing.JFrame {
             throw new RuntimeException(e);
         }
     }
-    // ==================================================================================================================
     // Book - done
 
     private void tbl_BookMousePressed(java.awt.event.MouseEvent evt) {
@@ -2056,7 +2174,6 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
         btn_refresh_BookActionPerformed(null);
     }
-    // ==================================================================================================================
     // Author
 
     private void tbl_AuthorMousePressed(java.awt.event.MouseEvent evt) {
@@ -2199,7 +2316,6 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
         btn_refresh_AuthorActionPerformed(null);
     }
-    // ==================================================================================================================
     // Category
 
     private void tbl_CategoryMousePressed(java.awt.event.MouseEvent evt) {
@@ -2342,8 +2458,11 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
         btn_refresh_CategoryActionPerformed(null);
     }
-    // ==================================================================================================================
-    //
+
+    // Patron Account
+    private void tbl_PatronMousePressed(java.awt.event.MouseEvent evt) {
+        // TODO add your handling code here:
+    }
 
     private void btn_refresh_PatronActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
@@ -2361,7 +2480,12 @@ public class LibraryGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
-    private void tbl_PatronMousePressed(java.awt.event.MouseEvent evt) {
+    // Hold
+    private void tbl_HoldMousePressed(java.awt.event.MouseEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btn_create_HoldActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
@@ -2377,11 +2501,9 @@ public class LibraryGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
-    private void tbl_HoldMousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
 
-    private void tbl_BookCopyMousePressed(java.awt.event.MouseEvent evt) {
+    // Published
+    private void tbl_PublishedMousePressed(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
     }
 
@@ -2401,10 +2523,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
-    private void tbl_PublishedMousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
-
+    // Checkout
 
     private void tbl_CheckoutMousePressed(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
@@ -2426,6 +2545,11 @@ public class LibraryGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
+    // Book Copy
+    private void tbl_BookCopyMousePressed(java.awt.event.MouseEvent evt) {
+        // TODO add your handling code here:
+    }
+
     private void btn_create_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
@@ -2439,10 +2563,6 @@ public class LibraryGUI extends javax.swing.JFrame {
     }
 
     private void btn_refresh_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void btn_create_HoldActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 

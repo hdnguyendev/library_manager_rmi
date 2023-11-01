@@ -299,6 +299,72 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
         }
     }
 
+    @Override
+    public Response getPatrons() throws RemoteException {
+        try {
+            vTitle.clear();
+            vData.clear();
+
+            String query = "SELECT * " +
+                    "FROM patron_account p ";
+
+            rst = stm.executeQuery(query);
+
+            String[] title = new String[]{
+                    "Patron ID", "First Name", "Last Name", "Email", "Status"
+            };
+            Collections.addAll(vTitle, title);
+            while (rst.next()) {
+                Vector row = new Vector();
+
+                row.add(rst.getInt("id"));
+                row.add(rst.getString("first_name"));
+                row.add(rst.getString("last_name"));
+                row.add(rst.getString("email"));
+                row.add(rst.getBoolean("status") ? "Available" : "Unavailable");
+                vData.add(row);
+            }
+            rst.close();
+            return new Response(200, new DefaultTableModel(vData, vTitle));
+        } catch (SQLException e) {
+            System.out.println("!!!---Error: " + e);
+            return new Response(100, null);
+
+        }
+    }
+
+    @Override
+    public Response getHistory() throws RemoteException {
+        try {
+            vTitle.clear();
+            vData.clear();
+
+            String query = "SELECT * " +
+                    "FROM db_log";
+
+            rst = stm.executeQuery(query);
+
+            String[] title = new String[]{
+                    "Table Name", "Action", "Time"
+            };
+            Collections.addAll(vTitle, title);
+            while (rst.next()) {
+                Vector row = new Vector();
+
+                row.add(rst.getString("table_name"));
+                row.add(rst.getString("action"));
+                row.add(rst.getTime("timestamp"));
+                vData.add(row);
+            }
+            rst.close();
+            return new Response(200, new DefaultTableModel(vData, vTitle));
+        } catch (SQLException e) {
+            System.out.println("!!!---Error: " + e);
+            return new Response(100, null);
+
+        }
+    }
+
     // CRUD - Book
     @Override
     public Response createBook(Book book, int author_id) throws RemoteException {

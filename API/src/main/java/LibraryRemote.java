@@ -13,6 +13,8 @@ public interface LibraryRemote extends Remote {
     public Response getPublished() throws RemoteException;
     public Response getHolds() throws RemoteException;
     public Response getCheckouts() throws RemoteException;
+    public Response getPatrons() throws RemoteException;
+    public Response getHistory() throws RemoteException;
     //
 
     // CRUD Book
