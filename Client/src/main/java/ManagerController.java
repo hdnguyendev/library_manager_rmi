@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -12,11 +13,17 @@ import java.util.List;
 
 public class ManagerController {
     LibraryRemote libraryRemote;
+    ClientInterface callbackObj;
 
-    public ManagerController() {
+    public ManagerController(ClientInterface client) {
         try {
             System.setProperty("java.rmi.server.hostname", Config.IP_SERVER);
             libraryRemote = (LibraryRemote) Naming.lookup("rmi://" + Config.IP_SERVER + ":" + Config.PORT_SERVER + "/api");
+
+            // register for callback
+            callbackObj = client;
+            libraryRemote.registerForCallback(callbackObj);
+            System.out.println("Registered for callback.");
         } catch (NotBoundException e) {
             JOptionPane.showMessageDialog(null, "Error to Connect with Server", "Error", JOptionPane.WARNING_MESSAGE);
             throw new RuntimeException(e);
@@ -35,16 +42,19 @@ public class ManagerController {
         return response;
 
     }
+
     public Response createBookController(Book book, int author_id) throws RemoteException, SQLException {
-        Response response = libraryRemote.createBook(book, author_id);
+        Response response = libraryRemote.createBook(book, author_id,false);
         return response;
     }
+
     public Response deleteBookController(int book_id) throws RemoteException {
-        Response res = libraryRemote.deleteBook(book_id);
+        Response res = libraryRemote.deleteBook(book_id,false);
         return res;
     }
+
     public Response updateBookController(Book book, int authorId) throws RemoteException {
-        Response response = libraryRemote.updateBook(book, authorId);
+        Response response = libraryRemote.updateBook(book, authorId,false);
         return response;
     }
 
@@ -54,14 +64,17 @@ public class ManagerController {
     public Response getAuthorsController() throws RemoteException {
         return libraryRemote.getAuthors();
     }
+
     public Response createAuthorController(Author author) throws RemoteException {
-        return libraryRemote.createAuthor(author);
+        return libraryRemote.createAuthor(author,false);
     }
+
     public Response updateAuthorController(Author author) throws RemoteException {
-        return libraryRemote.updateAuthor(author);
+        return libraryRemote.updateAuthor(author,false);
     }
+
     public Response deleteAuthorController(int authorId) throws RemoteException {
-        return libraryRemote.deleteAuthor(authorId);
+        return libraryRemote.deleteAuthor(authorId,false);
     }
 
     //
@@ -70,55 +83,69 @@ public class ManagerController {
     public Response getCategoriesController() throws RemoteException {
         return libraryRemote.getCategories();
     }
+
     public Response createCategoryController(Category category) throws RemoteException {
-        return libraryRemote.createCategory(category);
+        return libraryRemote.createCategory(category,false);
     }
+
     public Response updateCategoryController(Category category) throws RemoteException {
-        return libraryRemote.updateCategory(category);
+        return libraryRemote.updateCategory(category,false);
     }
+
     public Response deleteCategoryController(int categoryId) throws RemoteException {
-        return libraryRemote.deleteCategory(categoryId);
+        return libraryRemote.deleteCategory(categoryId,false);
     }
 
     // CRUD - Published
     public Response getPublishedController() throws RemoteException {
         return libraryRemote.getPublished();
     }
+
     // CRUD - Book Copy
     public Response getBooksCopyController() throws RemoteException {
         return libraryRemote.getBooksCopy();
     }
+
     // CRUD - Hold
     public Response getHoldsController() throws RemoteException {
         return libraryRemote.getHolds();
     }
+
     // CRUD - Checkout
     public Response getCheckoutsController() throws RemoteException {
         return libraryRemote.getCheckouts();
     }
+
     // CRUD - Notification
     public Response getNotificationsController() throws RemoteException {
         return libraryRemote.getNotifications();
     }
+
     // CRUD - Patron Account
     public Response getPatronsController() throws RemoteException {
         return libraryRemote.getPatrons();
     }
+
     // CRUD - History
     public Response getHistoryController() throws RemoteException {
         return libraryRemote.getHistory();
     }
+
     // Log
     public int createLog(Log log) throws RemoteException {
-        return libraryRemote.createLog(log);
+        return libraryRemote.createLog(log,false);
     }
 
     public void updateLog(Log log) throws RemoteException {
-        libraryRemote.updateLog(log);
+        libraryRemote.updateLog(log,false);
     }
 
     public void deleteLog(int id) throws RemoteException {
-        libraryRemote.deleteLog(id);
+        libraryRemote.deleteLog(id,false);
+    }
+
+    public void exit() throws RemoteException {
+        libraryRemote.unregisterForCallback(callbackObj);
     }
 
     public boolean checkLog(String table_name, int col_id) throws RemoteException {
@@ -187,7 +214,6 @@ public class ManagerController {
         return new Response(200, authorsList);
 
     }
-
 
 
 }

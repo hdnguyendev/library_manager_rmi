@@ -18,6 +18,7 @@ import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -27,7 +28,20 @@ import java.util.List;
  * @author nguye
  */
 public class LibraryGUI extends javax.swing.JFrame {
-    ManagerController controller = new ManagerController();
+    class ClientImpl extends UnicastRemoteObject implements ClientInterface {
+
+        public ClientImpl() throws RemoteException {
+        }
+
+        @Override
+        public void notify(NOTIFY notify) throws RemoteException {
+            if (notify == NOTIFY.UPDATE_BOOK) showTableBook();
+            if (notify == NOTIFY.UPDATE_AUTHOR) showTableAuthor();
+            if (notify == NOTIFY.UPDATE_CATEGORY) showTableCategory();
+
+        }
+    }
+    ManagerController controller;
     TableRowSorter sorter;
     Log log;
     InetAddress ipAddress;
@@ -50,13 +64,20 @@ public class LibraryGUI extends javax.swing.JFrame {
      */
     public LibraryGUI() {
         initComponents();
+        try {
+            controller = new ManagerController(new ClientImpl());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
         // Bắt sự kiện đóng cửa sổ để xóa log
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+
                 try {
+                    controller.exit();
                     if (log != null)
-                    controller.deleteLog(log.getId());
+                        controller.deleteLog(log.getId());
                 } catch (RemoteException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -80,8 +101,7 @@ public class LibraryGUI extends javax.swing.JFrame {
     }
 
 
-
-    private synchronized void showTableBook() {
+    public synchronized void showTableBook() {
         try {
             Response response = controller.getBooksController();
             if (response.getStatus() == 100) {
@@ -129,7 +149,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
     }
 
-    private synchronized void showTableAuthor() {
+    public synchronized void showTableAuthor() {
         try {
             Response response = controller.getAuthorsController();
             if (response.getStatus() == 100) {
@@ -177,7 +197,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
     }
 
-    private synchronized void showTableCategory() {
+    public synchronized void showTableCategory() {
         try {
             Response response = controller.getCategoriesController();
             if (response.getStatus() == 100) {
@@ -225,7 +245,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
     }
 
-    private synchronized void showTablePublished() {
+    public synchronized void showTablePublished() {
         try {
             Response response = controller.getPublishedController();
             if (response.getStatus() == 100) {
@@ -273,7 +293,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
     }
 
-    private synchronized void showTableBookCopy() {
+    public synchronized void showTableBookCopy() {
         try {
             Response response = controller.getBooksCopyController();
             if (response.getStatus() == 100) {
@@ -321,7 +341,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
     }
 
-    private synchronized void showTableHold() {
+    public synchronized void showTableHold() {
         try {
             Response response = controller.getHoldsController();
             if (response.getStatus() == 100) {
@@ -369,7 +389,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
     }
 
-    private synchronized void showTableCheckout() {
+    public synchronized void showTableCheckout() {
         try {
             Response response = controller.getCheckoutsController();
             if (response.getStatus() == 100) {
@@ -417,7 +437,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
     }
 
-    private synchronized void showTableNotification() {
+    public synchronized void showTableNotification() {
         try {
             Response response = controller.getNotificationsController();
             if (response.getStatus() == 100) {
@@ -464,7 +484,8 @@ public class LibraryGUI extends javax.swing.JFrame {
 
 
     }
-    private synchronized void showTablePatrons() {
+
+    public synchronized void showTablePatrons() {
         try {
             Response response = controller.getPatronsController();
             if (response.getStatus() == 100) {
@@ -511,7 +532,8 @@ public class LibraryGUI extends javax.swing.JFrame {
 
 
     }
-    private synchronized void showTableHistory() {
+
+    public synchronized void showTableHistory() {
         try {
             Response response = controller.getHistoryController();
             if (response.getStatus() == 100) {
@@ -558,8 +580,9 @@ public class LibraryGUI extends javax.swing.JFrame {
 
 
     }
+
     // ------------------------------------------------------------------
-    private synchronized void showDataComboBoxCategory() {
+    public synchronized void showDataComboBoxCategory() {
         try {
             Response response = controller.getDataComboBoxCategories();
             if (response.getStatus() == 100) {
@@ -577,7 +600,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
     }
 
-    private synchronized void showDataComboBoxAuthor() {
+    public synchronized void showDataComboBoxAuthor() {
         try {
             Response response = controller.getDataComboBoxAuthors();
             if (response.getStatus() == 100) {
@@ -596,7 +619,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
-    private void initComponents() {
+    public void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -1982,23 +2005,23 @@ public class LibraryGUI extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>         
 
-    private void btn_refresh_HistoryActionPerformed(ActionEvent evt) {
+    public void btn_refresh_HistoryActionPerformed(ActionEvent evt) {
     }
 
-    private void btn_refresh_NotificationActionPerformed(ActionEvent evt) {
+    public void btn_refresh_NotificationActionPerformed(ActionEvent evt) {
         showTableNotification();
     }
 
-    private void btn_sendAllActionPerformed(ActionEvent evt) {
+    public void btn_sendAllActionPerformed(ActionEvent evt) {
     }
 
-    private void btn_sendMouseClicked(java.awt.event.MouseEvent evt) {
+    public void btn_sendMouseClicked(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
     }
 
-     // Block
+    // Block
 
-    private boolean checkBlock(String table_name, int col_id) {
+    public boolean checkBlock(String table_name, int col_id) {
         try {
             return controller.checkLog(table_name, col_id);
         } catch (RemoteException e) {
@@ -2007,7 +2030,7 @@ public class LibraryGUI extends javax.swing.JFrame {
     }
     // Book - done
 
-    private void tbl_BookMousePressed(java.awt.event.MouseEvent evt) {
+    public void tbl_BookMousePressed(java.awt.event.MouseEvent evt) {
         int selectedRow = tbl_Book.getSelectedRow();
         tf_ID_Book.setEditable(false);
         if (selectedRow != -1) {
@@ -2086,7 +2109,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
     }
 
-    private void btn_refresh_BookActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_refresh_BookActionPerformed(java.awt.event.ActionEvent evt) {
         tf_ID_Book.setEditable(true);
 
         tf_ID_Book.setText("");
@@ -2096,7 +2119,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         showDataComboBoxCategory();
     }
 
-    private void btn_delete_BookActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_delete_BookActionPerformed(java.awt.event.ActionEvent evt) {
 
         int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa sách này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
@@ -2119,7 +2142,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         btn_refresh_BookActionPerformed(null);
     }
 
-    private void btn_update_BookActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_update_BookActionPerformed(java.awt.event.ActionEvent evt) {
         Book book = new Book();
         int book_id = Integer.parseInt(tf_ID_Book.getText());
         String book_title = tf_title_Book.getText();
@@ -2147,7 +2170,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         btn_refresh_BookActionPerformed(null);
     }
 
-    private void btn_create_BookActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_create_BookActionPerformed(java.awt.event.ActionEvent evt) {
         Book book = new Book();
         String book_title = tf_title_Book.getText();
         Category category = (Category) cb_category_Book.getSelectedItem();
@@ -2176,7 +2199,7 @@ public class LibraryGUI extends javax.swing.JFrame {
     }
     // Author
 
-    private void tbl_AuthorMousePressed(java.awt.event.MouseEvent evt) {
+    public void tbl_AuthorMousePressed(java.awt.event.MouseEvent evt) {
         int selectedRow = tbl_Author.getSelectedRow();
         tf_ID_Author.setEditable(false);
         if (selectedRow != -1) {
@@ -2239,7 +2262,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
     }
 
-    private void btn_refresh_AuthorActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_refresh_AuthorActionPerformed(java.awt.event.ActionEvent evt) {
         tf_ID_Author.setEditable(true);
 
         tf_ID_Author.setText("");
@@ -2247,7 +2270,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         showTableAuthor();
     }
 
-    private void btn_delete_AuthorActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_delete_AuthorActionPerformed(java.awt.event.ActionEvent evt) {
         int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
 
@@ -2269,7 +2292,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         btn_refresh_BookActionPerformed(null);
     }
 
-    private void btn_update_AuthorActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_update_AuthorActionPerformed(java.awt.event.ActionEvent evt) {
         Author author = new Author();
         if (tf_ID_Author.getText() != null) {
             int author_id = Integer.parseInt(tf_ID_Author.getText());
@@ -2293,7 +2316,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         btn_refresh_BookActionPerformed(null);
     }
 
-    private void btn_create_AuthorActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_create_AuthorActionPerformed(java.awt.event.ActionEvent evt) {
         Author author = new Author();
         if (!tf_ID_Author.getText().isEmpty()) {
             int author_id = Integer.parseInt(tf_ID_Author.getText());
@@ -2318,7 +2341,7 @@ public class LibraryGUI extends javax.swing.JFrame {
     }
     // Category
 
-    private void tbl_CategoryMousePressed(java.awt.event.MouseEvent evt) {
+    public void tbl_CategoryMousePressed(java.awt.event.MouseEvent evt) {
         int selectedRow = tbl_Category.getSelectedRow();
         tf_ID_Category.setEditable(false);
         if (selectedRow != -1) {
@@ -2381,7 +2404,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
     }
 
-    private void btn_refresh_CategoryActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_refresh_CategoryActionPerformed(java.awt.event.ActionEvent evt) {
         tf_ID_Category.setEditable(true);
 
         tf_ID_Category.setText("");
@@ -2389,7 +2412,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         showTableCategory();
     }
 
-    private void btn_delete_CategoryActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_delete_CategoryActionPerformed(java.awt.event.ActionEvent evt) {
         int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
 
@@ -2411,7 +2434,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         btn_refresh_CategoryActionPerformed(null);
     }
 
-    private void btn_update_CategoryActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_update_CategoryActionPerformed(java.awt.event.ActionEvent evt) {
         Category category = new Category();
         if (tf_ID_Category.getText() != null) {
             int category_id = Integer.parseInt(tf_ID_Category.getText());
@@ -2435,7 +2458,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         btn_refresh_BookActionPerformed(null);
     }
 
-    private void btn_create_CategoryActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_create_CategoryActionPerformed(java.awt.event.ActionEvent evt) {
         Category category = new Category();
         if (!tf_ID_Category.getText().isEmpty()) {
             int category_id = Integer.parseInt(tf_ID_Category.getText());
@@ -2460,109 +2483,109 @@ public class LibraryGUI extends javax.swing.JFrame {
     }
 
     // Patron Account
-    private void tbl_PatronMousePressed(java.awt.event.MouseEvent evt) {
+    public void tbl_PatronMousePressed(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_refresh_PatronActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_refresh_PatronActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_delete_PatronActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_delete_PatronActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_update_PatronActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_update_PatronActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_create_PatronActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_create_PatronActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
     // Hold
-    private void tbl_HoldMousePressed(java.awt.event.MouseEvent evt) {
+    public void tbl_HoldMousePressed(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_create_HoldActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_create_HoldActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_refresh_HoldActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_refresh_HoldActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_delete_HoldActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_delete_HoldActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_update_HoldActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_update_HoldActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
 
     // Published
-    private void tbl_PublishedMousePressed(java.awt.event.MouseEvent evt) {
+    public void tbl_PublishedMousePressed(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_refresh_PublishedActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_refresh_PublishedActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_delete_PublishedActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_delete_PublishedActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_update_PublishedActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_update_PublishedActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_create_PublishedActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_create_PublishedActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
     // Checkout
 
-    private void tbl_CheckoutMousePressed(java.awt.event.MouseEvent evt) {
+    public void tbl_CheckoutMousePressed(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_create_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_create_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_update_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_update_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_delete_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_delete_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_refresh_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_refresh_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
     // Book Copy
-    private void tbl_BookCopyMousePressed(java.awt.event.MouseEvent evt) {
+    public void tbl_BookCopyMousePressed(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_create_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_create_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_delete_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_delete_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_update_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_update_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btn_refresh_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
+    public void btn_refresh_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
@@ -2764,5 +2787,7 @@ public class LibraryGUI extends javax.swing.JFrame {
     private javax.swing.JTextField tf_start_Hold;
     private javax.swing.JTextField tf_title_Book;
     private javax.swing.JTextField tf_year_BookCopy;
+
+
     // End of variables declaration                   
 }

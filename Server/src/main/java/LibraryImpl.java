@@ -1,6 +1,9 @@
 import javax.swing.table.DefaultTableModel;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.UnknownHostException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -18,10 +21,56 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     ResultSetMetaData rstmeta;
     Vector vTitle = new Vector();
     Vector vData = new Vector();
+    Vector clientList;
+
 
     public LibraryImpl() throws SQLException, RemoteException, UnknownHostException {
         super();
+        clientList = new Vector();
     }
+
+    public synchronized void registerForCallback(
+            ClientInterface callbackClientObject)
+            throws java.rmi.RemoteException {
+        // store the callback object into the vector
+        if (!(clientList.contains(callbackClientObject))) {
+            clientList.addElement(callbackClientObject);
+            System.out.println("Registered new client ");
+        } // end if
+    }
+
+    // This remote method allows an object client to
+// cancel its registration for callback
+// @param id is an ID for the client; to be used by
+// the server to uniquely identify the registered client.
+    public synchronized void unregisterForCallback(
+            ClientInterface callbackClientObject)
+            throws java.rmi.RemoteException {
+        if (clientList.removeElement(callbackClientObject)) {
+            System.out.println("Unregistered client ");
+        } else {
+            System.out.println(
+                    "unregister: clientwasn't registered.");
+        }
+    }
+
+    private synchronized void doCallbacks(NOTIFY notify) throws java.rmi.RemoteException {
+        // make callback to each registered client
+        System.out.println(
+                "**************************************\n"
+                        + "Callbacks initiated ---");
+        for (int i = 0; i < clientList.size(); i++) {
+            System.out.println("doing " + (i + 1) + "-th callback\n");
+            // convert the vector object to a callback object
+            ClientInterface nextClient =
+                    (ClientInterface) clientList.elementAt(i);
+            // invoke the callback method
+            nextClient.notify(notify);
+            System.out.println("SERVER send CLIENT: " + notify.toString());
+        }// end for
+        System.out.println("********************************\n" +
+                "Server completed callbacks ---");
+    } // doCallbacks
 
     // Manage
     @Override
@@ -248,7 +297,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
                 Vector row = new Vector();
 
                 row.add(rst.getInt("id"));
-                row.add(rst.getBoolean("is_returned" ) ? "Yes" : "No");
+                row.add(rst.getBoolean("is_returned") ? "Yes" : "No");
                 row.add(rst.getString("email"));
                 row.add(rst.getString("fullname"));
                 row.add(rst.getString("title"));
@@ -340,7 +389,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             vData.clear();
 
             String query = "SELECT * " +
-                    "FROM db_log";
+                    "FROM db_log ORDER BY id DESC ";
 
             rst = stm.executeQuery(query);
 
@@ -367,8 +416,11 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
     // CRUD - Book
     @Override
-    public Response createBook(Book book, int author_id) throws RemoteException {
+    public Response createBook(Book book, int author_id, boolean isCallFromSever) throws RemoteException {
         try {
+            if (!isCallFromSever) {
+                server2().createBook(book, author_id, true);
+            }
             // Thêm sách mới vào bảng book
             String insertBookQuery = "INSERT INTO book (title, category_id) VALUES (?, ?)";
             PreparedStatement insertBookStatement = conn.prepareStatement(insertBookQuery, Statement.RETURN_GENERATED_KEYS);
@@ -392,6 +444,8 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             insertBookAuthorStatement.setInt(2, author_id);
             insertBookAuthorStatement.executeUpdate();
 
+            doCallbacks(NOTIFY.UPDATE_BOOK);
+
             return new Response(200, "Created new book successfully!");
         } catch (Exception e) {
             return new Response(100, e.getMessage());
@@ -404,8 +458,11 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
     @Override
-    public Response updateBook(Book book, int author_id) throws RemoteException {
+    public Response updateBook(Book book, int author_id, boolean isCallFromSever) throws RemoteException {
         try {
+            if (!isCallFromSever) {
+                server2().updateBook(book, author_id, true);
+            }
             // Cập nhật sách theo id
             String insertBookQuery = "UPDATE book SET title = ?, category_id = ? WHERE id = ?";
             PreparedStatement insertBookStatement = conn.prepareStatement(insertBookQuery, Statement.RETURN_GENERATED_KEYS);
@@ -420,7 +477,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             insertBookAuthorStatement.setInt(1, author_id);
             insertBookAuthorStatement.setInt(2, book.getId());
             insertBookAuthorStatement.executeUpdate();
-
+            doCallbacks(NOTIFY.UPDATE_BOOK);
             return new Response(200, "Updated book successfully!");
         } catch (Exception e) {
             return new Response(100, e.getMessage());
@@ -428,8 +485,11 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
     @Override
-    public Response deleteBook(int id) throws RemoteException {
+    public Response deleteBook(int id, boolean isCallFromSever) throws RemoteException {
         try {
+            if (!isCallFromSever) {
+                server2().deleteBook(id,true);
+            }
             // Xóa các bản sao sách từ bảng book_copy
             String deleteBookCopyQuery = "DELETE FROM book_copy WHERE book_id = ?";
             PreparedStatement deleteBookCopyStatement = conn.prepareStatement(deleteBookCopyQuery);
@@ -448,6 +508,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             int rowsAffected = deleteBookStatement.executeUpdate();
 
             if (rowsAffected > 0) {
+                doCallbacks(NOTIFY.UPDATE_BOOK);
                 return new Response(200, "Deleted Book Successfully!");
 
             } else {
@@ -463,13 +524,16 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
     // CRUD Author
     @Override
-    public Response createAuthor(Author author) throws RemoteException {
+    public Response createAuthor(Author author, boolean isCallFromSever) throws RemoteException {
         try {
+            if (!isCallFromSever) {
+                server2().createAuthor(author,true);
+            }
             String insertAuthorQuery = "INSERT INTO author (name) VALUES (?)";
             PreparedStatement insertAuthorStatement = conn.prepareStatement(insertAuthorQuery, Statement.RETURN_GENERATED_KEYS);
             insertAuthorStatement.setString(1, author.getName());
             insertAuthorStatement.executeUpdate();
-
+            doCallbacks(NOTIFY.UPDATE_AUTHOR);
             return new Response(200, "Created new author successfully!");
         } catch (Exception e) {
             return new Response(100, e.getMessage());
@@ -482,13 +546,17 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
     @Override
-    public Response updateAuthor(Author author) throws RemoteException {
+    public Response updateAuthor(Author author, boolean isCallFromSever) throws RemoteException {
         try {
+            if (!isCallFromSever) {
+                server2().updateAuthor(author,true);
+            }
             String updateAuthorQuery = "UPDATE author SET name = ? WHERE id = ?";
             PreparedStatement updateAuthorStatement = conn.prepareStatement(updateAuthorQuery);
             updateAuthorStatement.setString(1, author.getName());
             updateAuthorStatement.setInt(2, author.getId());
             updateAuthorStatement.executeUpdate();
+            doCallbacks(NOTIFY.UPDATE_AUTHOR);
             return new Response(200, "Updated author successfully!");
         } catch (Exception e) {
             return new Response(100, e.getMessage());
@@ -496,15 +564,18 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
     @Override
-    public Response deleteAuthor(int id) throws RemoteException {
+    public Response deleteAuthor(int id, boolean isCallFromSever) throws RemoteException {
         try {
-
+            if (!isCallFromSever) {
+                server2().deleteAuthor(id,true);
+            }
             String deleteAuthorQuery = "DELETE FROM author WHERE id = ?";
             PreparedStatement deleteAuthorStatement = conn.prepareStatement(deleteAuthorQuery);
             deleteAuthorStatement.setInt(1, id);
             int rowsAffected = deleteAuthorStatement.executeUpdate();
 
             if (rowsAffected > 0) {
+                doCallbacks(NOTIFY.UPDATE_AUTHOR);
                 return new Response(200, "Deleted author Successfully!");
 
             } else {
@@ -520,13 +591,16 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
     // CRUD Category
     @Override
-    public Response createCategory(Category category) throws RemoteException {
+    public Response createCategory(Category category, boolean isCallFromSever) throws RemoteException {
         try {
+            if (!isCallFromSever) {
+                server2().createCategory(category,true);
+            }
             String createCategoryQuery = "INSERT INTO category(name) VALUE (?)";
             PreparedStatement createCategoryStatement = conn.prepareStatement(createCategoryQuery);
             createCategoryStatement.setString(1, category.getName());
             createCategoryStatement.executeUpdate();
-
+            doCallbacks(NOTIFY.UPDATE_CATEGORY);
             return new Response(200, "Created new Category successfully!");
         } catch (Exception e) {
             return new Response(100, e.getMessage());
@@ -539,14 +613,17 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
     @Override
-    public Response updateCategory(Category category) throws RemoteException {
+    public Response updateCategory(Category category, boolean isCallFromSever) throws RemoteException {
         try {
+            if (!isCallFromSever) {
+                server2().updateCategory(category,true);
+            }
             String updateCategoryQuery = "UPDATE category SET name = ? WHERE id = ?";
             PreparedStatement updateCategoryStatement = conn.prepareStatement(updateCategoryQuery);
             updateCategoryStatement.setString(1, category.getName());
             updateCategoryStatement.setInt(2, category.getId());
             updateCategoryStatement.executeUpdate();
-
+            doCallbacks(NOTIFY.UPDATE_CATEGORY);
             return new Response(200, "Updated Category successfully!");
         } catch (Exception e) {
             return new Response(100, e.getMessage());
@@ -554,15 +631,18 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
     @Override
-    public Response deleteCategory(int id) throws RemoteException {
+    public Response deleteCategory(int id, boolean isCallFromSever) throws RemoteException {
         try {
-
+            if (!isCallFromSever) {
+                server2().deleteCategory(id,true);
+            }
             String deleteCategoryQuery = "DELETE FROM category WHERE id = ?";
             PreparedStatement deleteCategoryStatement = conn.prepareStatement(deleteCategoryQuery);
             deleteCategoryStatement.setInt(1, id);
             int rowsAffected = deleteCategoryStatement.executeUpdate();
 
             if (rowsAffected > 0) {
+                doCallbacks(NOTIFY.UPDATE_CATEGORY);
                 return new Response(200, "Deleted category Successfully!");
 
             } else {
@@ -578,7 +658,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
     // CRUD Published
     @Override
-    public Response createPublished(Published published) throws RemoteException {
+    public Response createPublished(Published published, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
@@ -588,18 +668,18 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
     @Override
-    public Response updatePublished(Published published) throws RemoteException {
+    public Response updatePublished(Published published, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
     @Override
-    public Response deletePublished(int id) throws RemoteException {
+    public Response deletePublished(int id, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
     // CRUD Patron
     @Override
-    public Response createPatron(Patron patron) throws RemoteException {
+    public Response createPatron(Patron patron, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
@@ -609,18 +689,18 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
     @Override
-    public Response updatePatron(Patron patron) throws RemoteException {
+    public Response updatePatron(Patron patron, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
     @Override
-    public Response deletePatron(int id) throws RemoteException {
+    public Response deletePatron(int id, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
     // CRUD BookCopy
     @Override
-    public Response createBookCopy(BookCopy bookCopy) throws RemoteException {
+    public Response createBookCopy(BookCopy bookCopy, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
@@ -630,18 +710,18 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
     @Override
-    public Response updateBookCopy(BookCopy bookCopy) throws RemoteException {
+    public Response updateBookCopy(BookCopy bookCopy, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
     @Override
-    public Response deleteBookCopy(int id) throws RemoteException {
+    public Response deleteBookCopy(int id, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
     // CRUD Hold
     @Override
-    public Response createHold(Hold hold) throws RemoteException {
+    public Response createHold(Hold hold, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
@@ -651,18 +731,18 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
     @Override
-    public Response updateHold(Hold hold) throws RemoteException {
+    public Response updateHold(Hold hold, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
     @Override
-    public Response deleteHold(int id) throws RemoteException {
+    public Response deleteHold(int id, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
     // CRUD Checkout
     @Override
-    public Response createCheckout(Checkout checkout) throws RemoteException {
+    public Response createCheckout(Checkout checkout, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
@@ -672,18 +752,18 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
     @Override
-    public Response updateCheckout(Checkout checkout) throws RemoteException {
+    public Response updateCheckout(Checkout checkout, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
     @Override
-    public Response deleteCheckout(int id) throws RemoteException {
+    public Response deleteCheckout(int id, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
     // CRUD Notification
     @Override
-    public Response createNotification(Notification notification) throws RemoteException {
+    public Response createNotification(Notification notification, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
@@ -693,19 +773,22 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
     @Override
-    public Response updateNotification(Notification notification) throws RemoteException {
+    public Response updateNotification(Notification notification, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
     @Override
-    public Response deleteNotification(int id) throws RemoteException {
+    public Response deleteNotification(int id, boolean isCallFromSever) throws RemoteException {
         return null;
     }
 
     // CRUD - Log
     @Override
-    public int createLog(Log log) throws RemoteException {
+    public int createLog(Log log, boolean isCallFromSever) throws RemoteException {
         try {
+            if (!isCallFromSever) {
+                server2().createLog(log,true);
+            }
             String createLogQuery = "INSERT INTO log (ip, username, table_name, col_id, time_start) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement createLogStatement = conn.prepareStatement(createLogQuery, Statement.RETURN_GENERATED_KEYS);
             createLogStatement.setString(1, log.getIp());
@@ -730,8 +813,11 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
     @Override
-    public void updateLog(Log log) throws RemoteException {
+    public void updateLog(Log log, boolean isCallFromSever) throws RemoteException {
         try {
+            if (!isCallFromSever) {
+                server2().updateLog(log,true);
+            }
             String updateLogQuery = "UPDATE log SET ip = ? , username = ?, table_name = ? , col_id = ?, time_start = ?  WHERE id = ?";
             PreparedStatement updateLogStatement = conn.prepareStatement(updateLogQuery);
             updateLogStatement.setString(1, log.getIp());
@@ -747,8 +833,11 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
     @Override
-    public void deleteLog(int id) throws RemoteException {
+    public void deleteLog(int id, boolean isCallFromSever) throws RemoteException {
         try {
+            if (!isCallFromSever) {
+                server2().deleteLog(id,true);
+            }
             // Xóa các bản sao sách từ bảng book_copy
             String deleteLogQuery = "DELETE FROM log WHERE id = ?";
             PreparedStatement deleteLogStatement = conn.prepareStatement(deleteLogQuery);
@@ -779,4 +868,22 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             return false;
         }
     }
+
+    // synchronized server - server
+    public LibraryRemote server2() throws RemoteException {
+        try {
+            if (Config.PORT_SERVER_2.equals("localhost")) {
+                System.out.println("SERVER: server2 don't running");
+                return null;
+            }
+            return (LibraryRemote) Naming.lookup("rmi://" + Config.IP_SERVER_2 + ":" + Config.PORT_SERVER_2 + "/api");
+        } catch (NotBoundException e) {
+            throw new RuntimeException(e);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

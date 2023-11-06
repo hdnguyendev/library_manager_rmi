@@ -1,0 +1,6 @@
+public enum NOTIFY {
+    REGISTER,
+    UPDATE_BOOK,
+    UPDATE_CATEGORY,
+    UPDATE_AUTHOR,
+}
