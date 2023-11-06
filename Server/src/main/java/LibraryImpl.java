@@ -50,7 +50,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             System.out.println("Unregistered client ");
         } else {
             System.out.println(
-                    "unregister: clientwasn't registered.");
+                    "unregister: client wasn't registered.");
         }
     }
 
@@ -418,9 +418,13 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response createBook(Book book, int author_id, boolean isCallFromSever) throws RemoteException {
         try {
+            if (server2().equals(null)) {
+                System.out.println("SERVER2 ISN'T RUNNING !!!");
+            }
             if (!isCallFromSever) {
                 server2().createBook(book, author_id, true);
             }
+
             // Thêm sách mới vào bảng book
             String insertBookQuery = "INSERT INTO book (title, category_id) VALUES (?, ?)";
             PreparedStatement insertBookStatement = conn.prepareStatement(insertBookQuery, Statement.RETURN_GENERATED_KEYS);
@@ -460,9 +464,14 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response updateBook(Book book, int author_id, boolean isCallFromSever) throws RemoteException {
         try {
+            if (server2().equals(null)) {
+                System.out.println("SERVER2 ISN'T RUNNING !!!");
+
+            }
             if (!isCallFromSever) {
                 server2().updateBook(book, author_id, true);
             }
+
             // Cập nhật sách theo id
             String insertBookQuery = "UPDATE book SET title = ?, category_id = ? WHERE id = ?";
             PreparedStatement insertBookStatement = conn.prepareStatement(insertBookQuery, Statement.RETURN_GENERATED_KEYS);
@@ -487,9 +496,14 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response deleteBook(int id, boolean isCallFromSever) throws RemoteException {
         try {
-            if (!isCallFromSever) {
-                server2().deleteBook(id,true);
+            if (server2().equals(null)) {
+                System.out.println("SERVER2 ISN'T RUNNING !!!");
+
             }
+            if (!isCallFromSever) {
+                server2().deleteBook(id, true);
+            }
+
             // Xóa các bản sao sách từ bảng book_copy
             String deleteBookCopyQuery = "DELETE FROM book_copy WHERE book_id = ?";
             PreparedStatement deleteBookCopyStatement = conn.prepareStatement(deleteBookCopyQuery);
@@ -526,9 +540,14 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response createAuthor(Author author, boolean isCallFromSever) throws RemoteException {
         try {
-            if (!isCallFromSever) {
-                server2().createAuthor(author,true);
+            if (server2().equals(null)) {
+                System.out.println("SERVER2 ISN'T RUNNING !!!");
+
             }
+            if (!isCallFromSever) {
+                server2().createAuthor(author, true);
+            }
+
             String insertAuthorQuery = "INSERT INTO author (name) VALUES (?)";
             PreparedStatement insertAuthorStatement = conn.prepareStatement(insertAuthorQuery, Statement.RETURN_GENERATED_KEYS);
             insertAuthorStatement.setString(1, author.getName());
@@ -548,9 +567,14 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response updateAuthor(Author author, boolean isCallFromSever) throws RemoteException {
         try {
-            if (!isCallFromSever) {
-                server2().updateAuthor(author,true);
+            if (server2().equals(null)) {
+                System.out.println("SERVER2 ISN'T RUNNING !!!");
+
             }
+            if (!isCallFromSever) {
+                server2().updateAuthor(author, true);
+            }
+
             String updateAuthorQuery = "UPDATE author SET name = ? WHERE id = ?";
             PreparedStatement updateAuthorStatement = conn.prepareStatement(updateAuthorQuery);
             updateAuthorStatement.setString(1, author.getName());
@@ -566,9 +590,14 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response deleteAuthor(int id, boolean isCallFromSever) throws RemoteException {
         try {
-            if (!isCallFromSever) {
-                server2().deleteAuthor(id,true);
+            if (server2().equals(null)) {
+                System.out.println("SERVER2 ISN'T RUNNING !!!");
+
             }
+            if (!isCallFromSever) {
+                server2().deleteAuthor(id, true);
+            }
+
             String deleteAuthorQuery = "DELETE FROM author WHERE id = ?";
             PreparedStatement deleteAuthorStatement = conn.prepareStatement(deleteAuthorQuery);
             deleteAuthorStatement.setInt(1, id);
@@ -593,9 +622,14 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response createCategory(Category category, boolean isCallFromSever) throws RemoteException {
         try {
-            if (!isCallFromSever) {
-                server2().createCategory(category,true);
+            if (server2().equals(null)) {
+                System.out.println("SERVER2 ISN'T RUNNING !!!");
+
             }
+            if (!isCallFromSever) {
+                server2().createCategory(category, true);
+            }
+
             String createCategoryQuery = "INSERT INTO category(name) VALUE (?)";
             PreparedStatement createCategoryStatement = conn.prepareStatement(createCategoryQuery);
             createCategoryStatement.setString(1, category.getName());
@@ -615,9 +649,14 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response updateCategory(Category category, boolean isCallFromSever) throws RemoteException {
         try {
-            if (!isCallFromSever) {
-                server2().updateCategory(category,true);
+            if (server2().equals(null)) {
+                System.out.println("SERVER2 ISN'T RUNNING !!!");
+
             }
+            if (!isCallFromSever) {
+                server2().updateCategory(category, true);
+            }
+
             String updateCategoryQuery = "UPDATE category SET name = ? WHERE id = ?";
             PreparedStatement updateCategoryStatement = conn.prepareStatement(updateCategoryQuery);
             updateCategoryStatement.setString(1, category.getName());
@@ -633,9 +672,14 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response deleteCategory(int id, boolean isCallFromSever) throws RemoteException {
         try {
-            if (!isCallFromSever) {
-                server2().deleteCategory(id,true);
+            if (server2().equals(null)) {
+                System.out.println("SERVER2 ISN'T RUNNING !!!");
+
             }
+            if (!isCallFromSever) {
+                server2().deleteCategory(id, true);
+            }
+
             String deleteCategoryQuery = "DELETE FROM category WHERE id = ?";
             PreparedStatement deleteCategoryStatement = conn.prepareStatement(deleteCategoryQuery);
             deleteCategoryStatement.setInt(1, id);
@@ -786,9 +830,14 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public int createLog(Log log, boolean isCallFromSever) throws RemoteException {
         try {
-            if (!isCallFromSever) {
-                server2().createLog(log,true);
+            if (server2().equals(null)) {
+                System.out.println("SERVER2 ISN'T RUNNING !!!");
+
             }
+            if (!isCallFromSever) {
+                server2().createLog(log, true);
+            }
+
             String createLogQuery = "INSERT INTO log (ip, username, table_name, col_id, time_start) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement createLogStatement = conn.prepareStatement(createLogQuery, Statement.RETURN_GENERATED_KEYS);
             createLogStatement.setString(1, log.getIp());
@@ -815,9 +864,14 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public void updateLog(Log log, boolean isCallFromSever) throws RemoteException {
         try {
-            if (!isCallFromSever) {
-                server2().updateLog(log,true);
+            if (server2().equals(null)) {
+                System.out.println("SERVER2 ISN'T RUNNING !!!");
+
             }
+            if (!isCallFromSever) {
+                server2().updateLog(log, true);
+            }
+
             String updateLogQuery = "UPDATE log SET ip = ? , username = ?, table_name = ? , col_id = ?, time_start = ?  WHERE id = ?";
             PreparedStatement updateLogStatement = conn.prepareStatement(updateLogQuery);
             updateLogStatement.setString(1, log.getIp());
@@ -835,9 +889,14 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public void deleteLog(int id, boolean isCallFromSever) throws RemoteException {
         try {
-            if (!isCallFromSever) {
-                server2().deleteLog(id,true);
+            if (server2().equals(null)) {
+                System.out.println("SERVER2 ISN'T RUNNING !!!");
+
             }
+            if (!isCallFromSever) {
+                server2().deleteLog(id, true);
+            }
+
             // Xóa các bản sao sách từ bảng book_copy
             String deleteLogQuery = "DELETE FROM log WHERE id = ?";
             PreparedStatement deleteLogStatement = conn.prepareStatement(deleteLogQuery);
@@ -872,7 +931,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     // synchronized server - server
     public LibraryRemote server2() throws RemoteException {
         try {
-            if (Config.PORT_SERVER_2.equals("localhost")) {
+            if (Config.IP_SERVER_2.equals("localhost")) {
                 System.out.println("SERVER: server2 don't running");
                 return null;
             }
