@@ -486,7 +486,9 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             insertBookAuthorStatement.setInt(1, author_id);
             insertBookAuthorStatement.setInt(2, book.getId());
             insertBookAuthorStatement.executeUpdate();
+
             doCallbacks(NOTIFY.UPDATE_BOOK);
+
             return new Response(200, "Updated book successfully!");
         } catch (Exception e) {
             return new Response(100, e.getMessage());
