@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `rmi_manager_lib` /*!40100 DEFAULT CHARACTER SET utf8mb3 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `rmi_manager_lib`;
 -- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
 --
 -- Host: localhost    Database: rmi_manager_lib
@@ -51,6 +53,7 @@ INSERT INTO author VALUES (17,'Charlotte Bronte');
 INSERT INTO author VALUES (18,'David J.Lieberman');
 INSERT INTO author VALUES (19,'Mari Tamagawa');
 INSERT INTO author VALUES (20,'Stephen R. Covey');
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -68,6 +71,8 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -85,6 +90,8 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -102,6 +109,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
 
 --
 -- Table structure for table `book`
@@ -139,6 +147,7 @@ INSERT INTO book VALUES (21,'Người yêu lí tưởng của tôi',5);
 INSERT INTO book VALUES (22,'Đồi thông hai mộ',3);
 INSERT INTO book VALUES (23,'Lập trình hướng lung tung',1);
 INSERT INTO book VALUES (24,'Nhập môn CsSGO',6);
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -156,6 +165,8 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -173,6 +184,8 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -190,6 +203,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
 
 --
 -- Table structure for table `book_author`
@@ -205,7 +219,7 @@ CREATE TABLE book_author (
   KEY FK_author_idx (author_id),
   CONSTRAINT FK_author FOREIGN KEY (author_id) REFERENCES author (id),
   CONSTRAINT FK_book FOREIGN KEY (book_id) REFERENCES book (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -224,57 +238,6 @@ INSERT INTO book_author VALUES (8,19);
 INSERT INTO book_author VALUES (18,19);
 INSERT INTO book_author VALUES (1,20);
 INSERT INTO book_author VALUES (21,20);
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=root@localhost*/ /*!50003 TRIGGER trg_db_log_insert_book_author AFTER INSERT ON book_author FOR EACH ROW BEGIN
-  INSERT INTO `db_log` (`table_name`, `action`) VALUES ('book_author', 'INSERT');
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=root@localhost*/ /*!50003 TRIGGER trg_db_log_update_book_author AFTER UPDATE ON book_author FOR EACH ROW BEGIN
-  INSERT INTO `db_log` (`table_name`, `action`) VALUES ('book_author', 'UPDATE');
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=root@localhost*/ /*!50003 TRIGGER trg_db_log_delete_book_author AFTER DELETE ON book_author FOR EACH ROW BEGIN
-  INSERT INTO `db_log` (`table_name`, `action`) VALUES ('book_author', 'DELETE');
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `book_copy`
@@ -310,6 +273,7 @@ INSERT INTO book_copy VALUES (7,2006,7,4);
 INSERT INTO book_copy VALUES (8,2007,8,3);
 INSERT INTO book_copy VALUES (9,2008,9,2);
 INSERT INTO book_copy VALUES (10,2009,10,4);
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -327,6 +291,8 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -344,6 +310,8 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -361,6 +329,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
 
 --
 -- Table structure for table `category`
@@ -392,6 +361,7 @@ INSERT INTO category VALUES (9,'Hình sự');
 INSERT INTO category VALUES (10,'Trẻ em');
 INSERT INTO category VALUES (11,'Truyện tranh');
 INSERT INTO category VALUES (12,'Truyện chữ');
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -409,6 +379,8 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -426,6 +398,8 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -443,6 +417,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
 
 --
 -- Table structure for table `checkout`
@@ -463,7 +438,7 @@ CREATE TABLE checkout (
   KEY FK_checkout_book_copy_idx (book_copy_id),
   CONSTRAINT FK_checkout_book_copy FOREIGN KEY (book_copy_id) REFERENCES book_copy (id),
   CONSTRAINT FK_checkout_patron FOREIGN KEY (patron_id) REFERENCES patron_account (id)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -480,57 +455,6 @@ INSERT INTO checkout VALUES (7,'2023-10-15 17:00:00','2023-10-16 17:00:00',1,7,7
 INSERT INTO checkout VALUES (8,'2023-10-15 17:30:00','2023-10-16 17:30:00',1,8,8);
 INSERT INTO checkout VALUES (9,'2023-10-15 18:00:00','2023-10-16 18:00:00',0,9,9);
 INSERT INTO checkout VALUES (10,'2023-10-15 18:30:00','2023-10-16 18:30:00',0,10,10);
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=root@localhost*/ /*!50003 TRIGGER trg_db_log_insert_checkout AFTER INSERT ON checkout FOR EACH ROW BEGIN
-  INSERT INTO `db_log` (`table_name`, `action`) VALUES ('checkout', 'INSERT');
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=root@localhost*/ /*!50003 TRIGGER trg_db_log_update_checkout AFTER UPDATE ON checkout FOR EACH ROW BEGIN
-  INSERT INTO `db_log` (`table_name`, `action`) VALUES ('checkout', 'UPDATE');
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=root@localhost*/ /*!50003 TRIGGER trg_db_log_delete_checkout AFTER DELETE ON checkout FOR EACH ROW BEGIN
-  INSERT INTO `db_log` (`table_name`, `action`) VALUES ('checkout', 'DELETE');
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `db_log`
@@ -545,8 +469,13 @@ CREATE TABLE db_log (
   `action` enum('INSERT','UPDATE','DELETE') NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
-) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `db_log`
+--
+
 
 --
 -- Table structure for table `hold`
@@ -566,7 +495,7 @@ CREATE TABLE hold (
   KEY FK_hold_patron_idx (patron_id),
   CONSTRAINT FK_hold_book_copy FOREIGN KEY (book_copy_id) REFERENCES book_copy (id),
   CONSTRAINT FK_hold_patron FOREIGN KEY (patron_id) REFERENCES patron_account (id)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -583,57 +512,6 @@ INSERT INTO hold VALUES (22,'2023-10-15 17:00:00','2023-10-16 17:00:00',7,7);
 INSERT INTO hold VALUES (23,'2023-10-15 17:30:00','2023-10-16 17:30:00',8,8);
 INSERT INTO hold VALUES (24,'2023-10-15 18:00:00','2023-10-16 18:00:00',9,9);
 INSERT INTO hold VALUES (25,'2023-10-15 18:30:00','2023-10-16 18:30:00',10,10);
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=root@localhost*/ /*!50003 TRIGGER trg_db_log_insert_hold AFTER INSERT ON hold FOR EACH ROW BEGIN
-  INSERT INTO `db_log` (`table_name`, `action`) VALUES ('hold', 'INSERT');
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=root@localhost*/ /*!50003 TRIGGER trg_db_log_update_hold AFTER UPDATE ON hold FOR EACH ROW BEGIN
-  INSERT INTO `db_log` (`table_name`, `action`) VALUES ('hold', 'UPDATE');
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=root@localhost*/ /*!50003 TRIGGER trg_db_log_delete_hold AFTER DELETE ON hold FOR EACH ROW BEGIN
-  INSERT INTO `db_log` (`table_name`, `action`) VALUES ('hold', 'DELETE');
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `log`
@@ -651,8 +529,13 @@ CREATE TABLE log (
   time_start timestamp NOT NULL,
   time_end timestamp NULL DEFAULT NULL,
   PRIMARY KEY (id)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `log`
+--
+
 
 --
 -- Table structure for table `notification`
@@ -669,7 +552,7 @@ CREATE TABLE notification (
   PRIMARY KEY (id),
   KEY FK_notification_patron_idx (patron_id),
   CONSTRAINT FK_notification_patron FOREIGN KEY (patron_id) REFERENCES patron_account (id)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -686,57 +569,6 @@ INSERT INTO notification VALUES (7,'2023-10-15 17:00:00','Notification 7',7);
 INSERT INTO notification VALUES (8,'2023-10-15 17:30:00','Notification 8',8);
 INSERT INTO notification VALUES (9,'2023-10-15 18:00:00','Notification 9',9);
 INSERT INTO notification VALUES (10,'2023-10-15 18:30:00','Notification 10',10);
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=root@localhost*/ /*!50003 TRIGGER trg_db_log_insert_notification AFTER INSERT ON notification FOR EACH ROW BEGIN
-  INSERT INTO `db_log` (`table_name`, `action`) VALUES ('notification', 'INSERT');
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=root@localhost*/ /*!50003 TRIGGER trg_db_log_update_notification AFTER UPDATE ON notification FOR EACH ROW BEGIN
-  INSERT INTO `db_log` (`table_name`, `action`) VALUES ('notification', 'UPDATE');
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=root@localhost*/ /*!50003 TRIGGER trg_db_log_delete_notification AFTER DELETE ON notification FOR EACH ROW BEGIN
-  INSERT INTO `db_log` (`table_name`, `action`) VALUES ('notification', 'DELETE');
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `patron_account`
@@ -771,6 +603,7 @@ INSERT INTO patron_account VALUES (7,'First 7','Last 7','7@gmail.com','1',1);
 INSERT INTO patron_account VALUES (8,'First 8','Last 8','8@gmail.com','1',1);
 INSERT INTO patron_account VALUES (9,'First 9','Last 9','9@gmail.com','1',1);
 INSERT INTO patron_account VALUES (10,'First 10','Last 10','10@gmail.com','1',1);
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -788,6 +621,8 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -805,6 +640,8 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -822,6 +659,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
 
 --
 -- Table structure for table `published`
@@ -851,6 +689,7 @@ INSERT INTO published VALUES (7,'Publisher 7');
 INSERT INTO published VALUES (8,'Publisher 8');
 INSERT INTO published VALUES (9,'Publisher 9');
 INSERT INTO published VALUES (10,'Publisher 10');
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -868,6 +707,8 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -885,6 +726,8 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -902,6 +745,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE rmi_manager_lib CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci ;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

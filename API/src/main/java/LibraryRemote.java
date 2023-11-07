@@ -130,6 +130,7 @@ public interface LibraryRemote extends Remote {
     public void updateLog(Log log, boolean isCallFromSever) throws RemoteException;
 
     public void deleteLog(int id, boolean isCallFromSever) throws RemoteException;
+    public void deleteAllLog(boolean isCallFromSever) throws RemoteException;
 
     public boolean checkLog(String table_name, int col_id) throws RemoteException;
 

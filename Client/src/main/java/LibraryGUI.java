@@ -35,6 +35,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
         @Override
         public void notify(NOTIFY notify) throws RemoteException {
+            log = null;
             if (notify == NOTIFY.UPDATE_BOOK) showTableBook();
             if (notify == NOTIFY.UPDATE_AUTHOR) showTableAuthor();
             if (notify == NOTIFY.UPDATE_CATEGORY) showTableCategory();

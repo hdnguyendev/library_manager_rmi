@@ -59,6 +59,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
         System.out.println(
                 "**************************************\n"
                         + "Callbacks initiated ---");
+        deleteAllLog(true);
         for (int i = 0; i < clientList.size(); i++) {
             System.out.println("doing " + (i + 1) + "-th callback\n");
             // convert the vector object to a callback object
@@ -904,6 +905,27 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             PreparedStatement deleteLogStatement = conn.prepareStatement(deleteLogQuery);
             deleteLogStatement.setInt(1, id);
             deleteLogStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteAllLog(boolean isCallFromSever) throws RemoteException {
+        try {
+            if (server2().equals(null)) {
+                System.out.println("SERVER2 ISN'T RUNNING !!!");
+
+            }
+            if (!isCallFromSever) {
+                server2().deleteAllLog( true);
+            }
+
+            // Xóa các bản sao sách từ bảng book_copy
+            String deleteLogQuery = "DELETE FROM log";
+            PreparedStatement deleteLogStatement = conn.prepareStatement(deleteLogQuery);
+            deleteLogStatement.executeUpdate();
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
