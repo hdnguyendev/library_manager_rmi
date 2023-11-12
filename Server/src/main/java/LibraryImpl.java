@@ -323,7 +323,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
             String query = "SELECT n.id, n.sent_at, n.message, pa.email " +
                     "FROM notification as n " +
-                    "INNER JOIN patron_account as pa ON pa.id = n.patron_id ";
+                    "INNER JOIN patron_account as pa ON pa.id = n.patron_id ORDER BY id DESC ";
 
             rst = stm.executeQuery(query);
 
@@ -419,10 +419,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response createBook(Book book, int author_id, boolean isCallFromSever) throws RemoteException {
         try {
-            if (server2().equals(null)) {
-                System.out.println("SERVER2 ISN'T RUNNING !!!");
-            }
-            if (!isCallFromSever) {
+            if (!isCallFromSever && !(server2() == null)) {
                 server2().createBook(book, author_id, true);
             }
 
@@ -465,11 +462,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response updateBook(Book book, int author_id, boolean isCallFromSever) throws RemoteException {
         try {
-            if (server2().equals(null)) {
-                System.out.println("SERVER2 ISN'T RUNNING !!!");
-
-            }
-            if (!isCallFromSever) {
+            if (!isCallFromSever && !(server2() == null)) {
                 server2().updateBook(book, author_id, true);
             }
 
@@ -499,11 +492,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response deleteBook(int id, boolean isCallFromSever) throws RemoteException {
         try {
-            if (server2().equals(null)) {
-                System.out.println("SERVER2 ISN'T RUNNING !!!");
-
-            }
-            if (!isCallFromSever) {
+            if (!isCallFromSever && !(server2() == null)) {
                 server2().deleteBook(id, true);
             }
 
@@ -543,11 +532,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response createAuthor(Author author, boolean isCallFromSever) throws RemoteException {
         try {
-            if (server2().equals(null)) {
-                System.out.println("SERVER2 ISN'T RUNNING !!!");
-
-            }
-            if (!isCallFromSever) {
+            if (!isCallFromSever && !(server2() == null)) {
                 server2().createAuthor(author, true);
             }
 
@@ -570,11 +555,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response updateAuthor(Author author, boolean isCallFromSever) throws RemoteException {
         try {
-            if (server2().equals(null)) {
-                System.out.println("SERVER2 ISN'T RUNNING !!!");
-
-            }
-            if (!isCallFromSever) {
+            if (!isCallFromSever && !(server2() == null)) {
                 server2().updateAuthor(author, true);
             }
 
@@ -593,11 +574,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response deleteAuthor(int id, boolean isCallFromSever) throws RemoteException {
         try {
-            if (server2().equals(null)) {
-                System.out.println("SERVER2 ISN'T RUNNING !!!");
-
-            }
-            if (!isCallFromSever) {
+            if (!isCallFromSever && !(server2() == null)) {
                 server2().deleteAuthor(id, true);
             }
 
@@ -625,11 +602,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response createCategory(Category category, boolean isCallFromSever) throws RemoteException {
         try {
-            if (server2().equals(null)) {
-                System.out.println("SERVER2 ISN'T RUNNING !!!");
-
-            }
-            if (!isCallFromSever) {
+            if (!isCallFromSever && !(server2() == null)) {
                 server2().createCategory(category, true);
             }
 
@@ -652,11 +625,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response updateCategory(Category category, boolean isCallFromSever) throws RemoteException {
         try {
-            if (server2().equals(null)) {
-                System.out.println("SERVER2 ISN'T RUNNING !!!");
-
-            }
-            if (!isCallFromSever) {
+            if (!isCallFromSever && !(server2() == null)) {
                 server2().updateCategory(category, true);
             }
 
@@ -675,11 +644,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response deleteCategory(int id, boolean isCallFromSever) throws RemoteException {
         try {
-            if (server2().equals(null)) {
-                System.out.println("SERVER2 ISN'T RUNNING !!!");
-
-            }
-            if (!isCallFromSever) {
+            if (!isCallFromSever && !(server2() == null)) {
                 server2().deleteCategory(id, true);
             }
 
@@ -727,7 +692,26 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     // CRUD Patron
     @Override
     public Response createPatron(Patron patron, boolean isCallFromSever) throws RemoteException {
-        return null;
+        try {
+            String query = "INSERT INTO patron_account (first_name, last_name, email, password, status) VALUES (?, ?, ?, ?, ?)";
+            pst = conn.prepareStatement(query);
+
+            pst.setString(1, patron.getFirstName());
+            pst.setString(2, patron.getLastName());
+            pst.setString(3, patron.getEmail());
+            pst.setString(4, patron.getPassword());
+            pst.setBoolean(5, patron.isStatus());
+
+            int rowsInserted = pst.executeUpdate();
+            if (rowsInserted > 0) {
+                return new Response(200, "Create new patron account successfully");
+            } else {
+                return new Response(100, "Some error when create new patron account");
+            }
+
+        } catch (SQLException e) {
+            return new Response(100, e.getMessage());
+        }
     }
 
     @Override
@@ -769,7 +753,22 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     // CRUD Hold
     @Override
     public Response createHold(Hold hold, boolean isCallFromSever) throws RemoteException {
-        return null;
+
+        try {
+            String query = "INSERT INTO hold (start_time, end_time, patron_id, book_copy_id) VALUES (?, ?, ?, ?)";
+            pst = conn.prepareStatement(query);
+
+            pst.setTimestamp(1, hold.getStart_time());
+            pst.setTimestamp(2, hold.getEnd_time());
+            pst.setInt(3, hold.getPatron_id());
+            pst.setInt(4, hold.getBook_copy_id());
+
+            pst.executeUpdate();
+
+            return new Response(200, "Create hold successfully");
+        } catch (SQLException e) {
+            return new Response(100, e.getMessage());
+        }
     }
 
     @Override
@@ -779,18 +778,65 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
     @Override
     public Response updateHold(Hold hold, boolean isCallFromSever) throws RemoteException {
-        return null;
+        try  {
+            String query = "UPDATE hold SET start_time = ?, end_time = ?, patron_id = ?, book_copy_id = ? WHERE id = ?";
+            pst = conn.prepareStatement(query);
+
+            pst.setTimestamp(1, hold.getStart_time());
+            pst.setTimestamp(2, hold.getEnd_time());
+            pst.setInt(3, hold.getPatron_id());
+            pst.setInt(4, hold.getBook_copy_id());
+            pst.setInt(5, hold.getId());
+
+            int rowsUpdated = pst.executeUpdate();
+            if (rowsUpdated > 0) {
+                return new Response(200, "Hold updated successfully.");
+            } else {
+                return new Response(100, "No hold found with the given ID.");
+            }
+        } catch (SQLException e) {
+            return new Response(100, e.getMessage());
+        }
     }
 
     @Override
     public Response deleteHold(int id, boolean isCallFromSever) throws RemoteException {
-        return null;
+        try {
+            String query = "DELETE FROM hold WHERE id = ?";
+            pst = conn.prepareStatement(query);
+
+            pst.setInt(1, id);
+
+            int rowsDeleted = pst.executeUpdate();
+            if (rowsDeleted > 0) {
+                return new Response(200, "Hold deleted successfully.");
+            } else {
+                return new Response(100, "No hold found with the given ID.");
+            }
+        } catch (SQLException e) {
+            return new Response(100, e.getMessage());
+        }
     }
 
     // CRUD Checkout
     @Override
     public Response createCheckout(Checkout checkout, boolean isCallFromSever) throws RemoteException {
-        return null;
+        try {
+            String query = "INSERT INTO checkout (start_time, end_time, is_returned, patron_id, book_copy_id) VALUES (?, ?, ?, ?, ?)";
+            pst = conn.prepareStatement(query);
+
+            pst.setTimestamp(1, checkout.getStart_time());
+            pst.setTimestamp(2, checkout.getEnd_time());
+            pst.setBoolean(3, checkout.isIs_returned());
+            pst.setInt(4, checkout.getPatron_id());
+            pst.setInt(5, checkout.getBook_copy_id());
+
+            pst.executeUpdate();
+
+            return new Response(200, "Create checkout successfully");
+        } catch (SQLException e) {
+            return new Response(100, e.getMessage());
+        }
     }
 
     @Override
@@ -800,44 +846,159 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
     @Override
     public Response updateCheckout(Checkout checkout, boolean isCallFromSever) throws RemoteException {
-        return null;
+        try  {
+            String query = "UPDATE checkout SET start_time = ?, end_time = ?, is_returned = ?, patron_id = ?, book_copy_id = ? WHERE id = ?";
+            pst = conn.prepareStatement(query);
+
+            pst.setTimestamp(1, checkout.getStart_time());
+            pst.setTimestamp(2, checkout.getEnd_time());
+            pst.setBoolean(3, checkout.isIs_returned());
+            pst.setInt(4, checkout.getPatron_id());
+            pst.setInt(5, checkout.getBook_copy_id());
+            pst.setInt(6, checkout.getId());
+
+            int rowsUpdated = pst.executeUpdate();
+            if (rowsUpdated > 0) {
+                return new Response(200, "Checkout updated successfully.");
+            } else {
+                return new Response(100, "No checkout found with the given ID.");
+            }
+        } catch (SQLException e) {
+            return new Response(100, e.getMessage());
+        }
     }
 
     @Override
     public Response deleteCheckout(int id, boolean isCallFromSever) throws RemoteException {
-        return null;
+        try {
+            String query = "DELETE FROM checkout WHERE id = ?";
+            pst = conn.prepareStatement(query);
+
+            pst.setInt(1, id);
+
+            int rowsDeleted = pst.executeUpdate();
+            if (rowsDeleted > 0) {
+                return new Response(200, "Checkout deleted successfully.");
+            } else {
+                return new Response(100, "No checkout found with the given ID.");
+            }
+        } catch (SQLException e) {
+            return new Response(100, e.getMessage());
+        }
     }
 
     // CRUD Notification
     @Override
     public Response createNotification(Notification notification, boolean isCallFromSever) throws RemoteException {
-        return null;
+        try {
+            if (!isCallFromSever && !(server2() == null)) {
+                server2().createNotification(notification, true);
+            }
+
+            String insertNotificationQuery = "INSERT INTO notification (sent_at, message, patron_id) VALUES (?, ?, ?)";
+            PreparedStatement insertNotificationStatement = conn.prepareStatement(insertNotificationQuery, Statement.RETURN_GENERATED_KEYS);
+            insertNotificationStatement.setTimestamp(1, notification.getSend_at());
+            insertNotificationStatement.setString(2, notification.getMessage());
+            insertNotificationStatement.setInt(3, notification.getPatron_id());
+            insertNotificationStatement.executeUpdate();
+
+            doCallbacks(NOTIFY.UPDATE_NOTIFICATION);
+            doCallbacks(NOTIFY.CLIENT_UPDATE_NOTIFICATION);
+
+
+            return new Response(200, "Created new notification successfully!");
+        } catch (Exception e) {
+            return new Response(100, e.getMessage());
+        }
     }
 
+    // Get by patron_id
     @Override
     public Response getNotification(int id) throws RemoteException {
-        return null;
+        try {
+            vTitle.clear();
+            vData.clear();
+
+            String query = "SELECT sent_at, message " +
+                    "FROM notification WHERE patron_id = ? ORDER BY id DESC ";
+
+            pst = conn.prepareStatement(query);
+            pst.setInt(1, id);
+            rst = pst.executeQuery();
+
+            String[] title = new String[]{
+                    "Time", "Message"
+            };
+            Collections.addAll(vTitle, title);
+            while (rst.next()) {
+                Vector row = new Vector();
+                System.out.println(row);
+                row.add(rst.getTimestamp("sent_at"));
+                row.add(rst.getString("message"));
+                vData.add(row);
+            }
+            rst.close();
+            return new Response(200, new DefaultTableModel(vData, vTitle));
+        } catch (SQLException e) {
+            System.out.println("!!!---Error: " + e);
+            return new Response(100, null);
+
+        }
     }
 
     @Override
     public Response updateNotification(Notification notification, boolean isCallFromSever) throws RemoteException {
-        return null;
+        try {
+            if (!isCallFromSever && !(server2() == null)) {
+                server2().updateNotification(notification, true);
+            }
+
+            String updateNotificationQuery = "UPDATE notification SET sent_at = ?, message = ? , patron_id = ? WHERE id = ?";
+            PreparedStatement updateNotificationStatement = conn.prepareStatement(updateNotificationQuery);
+            updateNotificationStatement.setTimestamp(1, notification.getSend_at());
+            updateNotificationStatement.setString(2, notification.getMessage());
+            updateNotificationStatement.setInt(3, notification.getPatron_id());
+            updateNotificationStatement.setInt(4, notification.getId());
+            updateNotificationStatement.executeUpdate();
+            doCallbacks(NOTIFY.UPDATE_NOTIFICATION);
+            return new Response(200, "Updated notification successfully!");
+        } catch (Exception e) {
+            return new Response(100, e.getMessage());
+        }
     }
 
     @Override
     public Response deleteNotification(int id, boolean isCallFromSever) throws RemoteException {
-        return null;
+        try {
+            if (!isCallFromSever && !(server2() == null)) {
+                server2().deleteNotification(id, true);
+            }
+
+            String deleteNotificationQuery = "DELETE FROM notification WHERE id = ?";
+            PreparedStatement deleteNotificationStatement = conn.prepareStatement(deleteNotificationQuery);
+            deleteNotificationStatement.setInt(1, id);
+            int rowsAffected = deleteNotificationStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                doCallbacks(NOTIFY.UPDATE_AUTHOR);
+                return new Response(200, "Deleted author Successfully!");
+
+            } else {
+                return new Response(100, "Not find author_id " + id);
+
+            }
+
+
+        } catch (SQLException e) {
+            return new Response(100, e.getMessage());
+        }
     }
 
     // CRUD - Log
     @Override
     public int createLog(Log log, boolean isCallFromSever) throws RemoteException {
         try {
-            if (server2().equals(null)) {
-                System.out.println("SERVER2 ISN'T RUNNING !!!");
-
-            }
-            if (!isCallFromSever) {
+            if (!isCallFromSever && !(server2() == null)) {
                 server2().createLog(log, true);
             }
 
@@ -867,11 +1028,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public void updateLog(Log log, boolean isCallFromSever) throws RemoteException {
         try {
-            if (server2().equals(null)) {
-                System.out.println("SERVER2 ISN'T RUNNING !!!");
-
-            }
-            if (!isCallFromSever) {
+            if (!isCallFromSever && !(server2() == null)) {
                 server2().updateLog(log, true);
             }
 
@@ -892,11 +1049,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public void deleteLog(int id, boolean isCallFromSever) throws RemoteException {
         try {
-            if (server2().equals(null)) {
-                System.out.println("SERVER2 ISN'T RUNNING !!!");
-
-            }
-            if (!isCallFromSever) {
+            if (!isCallFromSever && !(server2() == null)) {
                 server2().deleteLog(id, true);
             }
 
@@ -913,12 +1066,8 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public void deleteAllLog(boolean isCallFromSever) throws RemoteException {
         try {
-            if (server2().equals(null)) {
-                System.out.println("SERVER2 ISN'T RUNNING !!!");
-
-            }
-            if (!isCallFromSever) {
-                server2().deleteAllLog( true);
+            if (!isCallFromSever && !(server2() == null)) {
+                server2().deleteAllLog(true);
             }
 
             // Xóa các bản sao sách từ bảng book_copy
@@ -952,14 +1101,62 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
         }
     }
 
+    @Override
+    public Response loginClient(Patron patron) throws RemoteException {
+        String email = patron.getEmail();
+        String password = patron.getPassword();
+
+        try {
+            String query = "SELECT * FROM patron_account WHERE email = ?";
+            pst = conn.prepareStatement(query);
+            pst.setString(1, email);
+            
+            rst = pst.executeQuery();
+            if (rst.next()) {
+                String password_db= rst.getString("password");
+                
+                // Compare the stored password hash with the provided password
+                boolean passwordMatch = password_db.equals(password);
+
+                if (passwordMatch) {
+                    if (!rst.getBoolean("status")) {
+                        return new Response(100, "Account had banned! Contact with manage of VKU Library");
+                    }
+                    patron.setId(rst.getInt("id"));
+                    patron.setFirstName(rst.getString("first_name"));
+                    patron.setLastName(rst.getString("last_name"));
+                    patron.setStatus(rst.getBoolean("status"));
+                    return new Response(200, patron);
+                } else {
+                    return new Response(100, "Login failed! Please try again!");
+                }
+            } else {
+                return new Response(100, "User not found!");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Response registerClient(Patron patron) throws RemoteException {
+        return null;
+    }
+
+
     // synchronized server - server
+    LibraryRemote server2;
+
     public LibraryRemote server2() throws RemoteException {
         try {
             if (Config.IP_SERVER_2.equals("localhost")) {
                 System.out.println("SERVER: server2 don't running");
                 return null;
             }
-            return (LibraryRemote) Naming.lookup("rmi://" + Config.IP_SERVER_2 + ":" + Config.PORT_SERVER_2 + "/api");
+            if (server2 == null) {
+                server2 = (LibraryRemote) Naming.lookup("rmi://" + Config.IP_SERVER_2 + ":" + Config.PORT_SERVER_2 + "/api");
+            }
+            return server2;
         } catch (NotBoundException e) {
             throw new RuntimeException(e);
         } catch (MalformedURLException e) {

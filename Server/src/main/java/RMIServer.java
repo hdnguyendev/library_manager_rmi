@@ -20,7 +20,7 @@ public class RMIServer {
             Naming.rebind("rmi://" + Config.IP_SERVER + ":" + Config.PORT_SERVER + "/api", server);
 
 
-            System.out.println(">>>>>INFO: RMI Server started!!!!!!!!");
+            System.out.println(">>>>> INFO: RMI Server started !");
             System.out.println("rmi://" + Config.IP_SERVER + ":" + Config.PORT_SERVER + "/api");
 
 

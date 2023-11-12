@@ -6,8 +6,10 @@ public class Checkout implements Serializable {
     private int id;
     private Timestamp start_time;
     private Timestamp end_time;
+    private boolean is_returned;
     private int patron_id;
     private int book_copy_id;
+
 
     public Checkout() {
     }
@@ -51,4 +53,14 @@ public class Checkout implements Serializable {
     public void setBook_copy_id(int book_copy_id) {
         this.book_copy_id = book_copy_id;
     }
+
+    public boolean isIs_returned() {
+        return is_returned;
+    }
+
+    public void setIs_returned(boolean is_returned) {
+        this.is_returned = is_returned;
+    }
+
+
 }

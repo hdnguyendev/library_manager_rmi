@@ -15,6 +15,24 @@ public class ManagerController {
     LibraryRemote libraryRemote;
     ClientInterface callbackObj;
 
+    public ManagerController() {
+        try {
+            System.setProperty("java.rmi.server.hostname", Config.IP_SERVER);
+            libraryRemote = (LibraryRemote) Naming.lookup("rmi://" + Config.IP_SERVER + ":" + Config.PORT_SERVER + "/api");
+
+            // register for callback
+        } catch (NotBoundException e) {
+            JOptionPane.showMessageDialog(null, "Error to Connect with Server", "Error", JOptionPane.WARNING_MESSAGE);
+            throw new RuntimeException(e);
+        } catch (MalformedURLException e) {
+            JOptionPane.showMessageDialog(null, "Error to Connect with Server", "Error", JOptionPane.WARNING_MESSAGE);
+            throw new RuntimeException(e);
+        } catch (RemoteException e) {
+            JOptionPane.showMessageDialog(null, "Error to Connect with Server", "Error", JOptionPane.WARNING_MESSAGE);
+            throw new RuntimeException(e);
+        }
+    }
+
     public ManagerController(ClientInterface client) {
         try {
             System.setProperty("java.rmi.server.hostname", Config.IP_SERVER);
@@ -120,6 +138,18 @@ public class ManagerController {
     public Response getNotificationsController() throws RemoteException {
         return libraryRemote.getNotifications();
     }
+    public Response createNotificationController(Notification notification) throws RemoteException {
+        return libraryRemote.createNotification(notification,false);
+    }
+
+    public Response updateNotificationController(Notification notification) throws RemoteException {
+        return libraryRemote.updateNotification(notification,false);
+    }
+
+    public Response deleteNotificationController(int notificationId) throws RemoteException {
+        return libraryRemote.deleteNotification(notificationId,false);
+    }
+
 
     // CRUD - Patron Account
     public Response getPatronsController() throws RemoteException {
@@ -170,7 +200,23 @@ public class ManagerController {
 
         return dataList;
     }
+    private static List<Published> getTableDataPublished(DefaultTableModel model) {
+        List<Published> dataList = new ArrayList<>();
 
+        int rowCount = model.getRowCount();
+        int columnCount = model.getColumnCount();
+
+        for (int row = 0; row < rowCount; row++) {
+            Object[] rowData = new Object[columnCount];
+            for (int column = 0; column < columnCount; column++) {
+                rowData[column] = model.getValueAt(row, column);
+            }
+            Published published = new Published(rowData);
+            dataList.add(published);
+        }
+
+        return dataList;
+    }
     private static List<Author> getTableDataAuthor(DefaultTableModel model) {
         List<Author> dataList = new ArrayList<>();
 
@@ -188,6 +234,40 @@ public class ManagerController {
 
         return dataList;
     }
+    private static List<BookCopy> getTableDataBookCopy(DefaultTableModel model) {
+        List<BookCopy> dataList = new ArrayList<>();
+
+        int rowCount = model.getRowCount();
+        int columnCount = model.getColumnCount();
+
+        for (int row = 0; row < rowCount; row++) {
+            Object[] rowData = new Object[columnCount];
+            for (int column = 0; column < columnCount; column++) {
+                rowData[column] = model.getValueAt(row, column);
+            }
+            BookCopy bookcopy = new BookCopy(rowData);
+            dataList.add(bookcopy);
+        }
+
+        return dataList;
+    }
+    private static List<Patron> getTableDataPatron(DefaultTableModel model) {
+        List<Patron> dataList = new ArrayList<>();
+
+        int rowCount = model.getRowCount();
+        int columnCount = model.getColumnCount();
+
+        for (int row = 0; row < rowCount; row++) {
+            Object[] rowData = new Object[columnCount];
+            for (int column = 0; column < columnCount; column++) {
+                rowData[column] = model.getValueAt(row, column);
+            }
+            Patron patron = new Patron(rowData);
+            dataList.add(patron);
+        }
+
+        return dataList;
+    }
 
     public Response getDataComboBoxCategories() throws RemoteException {
         Response response = libraryRemote.getCategories();
@@ -201,7 +281,18 @@ public class ManagerController {
         return new Response(200, categoryList);
 
     }
+    public Response getDataComboBoxPublished() throws RemoteException {
+        Response response = libraryRemote.getPublished();
+        if (response.getStatus() == 100) {
+            return response;
+        }
 
+        DefaultTableModel defaultTableModel = (DefaultTableModel) response.getData();
+        List<Published> publishedList = getTableDataPublished(defaultTableModel);
+
+        return new Response(200, publishedList);
+
+    }
     public Response getDataComboBoxAuthors() throws RemoteException {
         Response response = libraryRemote.getAuthors();
         if (response.getStatus() == 100) {
@@ -212,6 +303,30 @@ public class ManagerController {
         List<Author> authorsList = getTableDataAuthor(defaultTableModel);
 
         return new Response(200, authorsList);
+
+    }
+    public Response getDataComboBoxBookCopies() throws RemoteException {
+        Response response = libraryRemote.getBooksCopy();
+        if (response.getStatus() == 100) {
+            return response;
+        }
+
+        DefaultTableModel defaultTableModel = (DefaultTableModel) response.getData();
+        List<BookCopy> bookCopiesList = getTableDataBookCopy(defaultTableModel);
+
+        return new Response(200, bookCopiesList);
+
+    }
+    public Response getDataComboBoxPatrons() throws RemoteException {
+        Response response = libraryRemote.getPatrons();
+        if (response.getStatus() == 100) {
+            return response;
+        }
+
+        DefaultTableModel defaultTableModel = (DefaultTableModel) response.getData();
+        List<Patron> patronsList = getTableDataPatron(defaultTableModel);
+
+        return new Response(200, patronsList);
 
     }
 

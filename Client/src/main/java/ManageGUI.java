@@ -12,11 +12,8 @@ import javax.swing.table.TableRowSorter;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
 import java.net.UnknownHostException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
@@ -27,7 +24,7 @@ import java.util.List;
 /**
  * @author nguye
  */
-public class LibraryGUI extends javax.swing.JFrame {
+public class ManageGUI extends javax.swing.JFrame {
     class ClientImpl extends UnicastRemoteObject implements ClientInterface {
 
         public ClientImpl() throws RemoteException {
@@ -39,9 +36,11 @@ public class LibraryGUI extends javax.swing.JFrame {
             if (notify == NOTIFY.UPDATE_BOOK) showTableBook();
             if (notify == NOTIFY.UPDATE_AUTHOR) showTableAuthor();
             if (notify == NOTIFY.UPDATE_CATEGORY) showTableCategory();
+            if (notify == NOTIFY.UPDATE_NOTIFICATION) showTableNotification();
 
         }
     }
+
     ManagerController controller;
     TableRowSorter sorter;
     Log log;
@@ -63,7 +62,7 @@ public class LibraryGUI extends javax.swing.JFrame {
     /**
      * Creates new form LibraryGUI
      */
-    public LibraryGUI() {
+    public ManageGUI() {
         initComponents();
         try {
             controller = new ManagerController(new ClientImpl());
@@ -97,7 +96,10 @@ public class LibraryGUI extends javax.swing.JFrame {
         showTableHistory();
 
         showDataComboBoxCategory();
+        showDataComboBoxPublished();
         showDataComboBoxAuthor();
+        showDataComboBoxBookCopy();
+        showDataComboBoxPatron();
         //
     }
 
@@ -587,7 +589,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         try {
             Response response = controller.getDataComboBoxCategories();
             if (response.getStatus() == 100) {
-                JOptionPane.showMessageDialog(this, response.getStatus());
+                JOptionPane.showMessageDialog(this, response.getData());
             }
             cb_category_Book.removeAllItems();
             List<Category> categoryList = (List<Category>) response.getData();
@@ -600,17 +602,74 @@ public class LibraryGUI extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+    public synchronized void showDataComboBoxPublished() {
+        try {
+            Response response = controller.getDataComboBoxPublished();
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+            cb_category_Book.removeAllItems();
+            List<Published> publishedList = (List<Published>) response.getData();
+            for (Published i :
+                    publishedList) {
+                cb_published_BookCopy.addItem(i);
+            }
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 
     public synchronized void showDataComboBoxAuthor() {
         try {
             Response response = controller.getDataComboBoxAuthors();
             if (response.getStatus() == 100) {
-                JOptionPane.showMessageDialog(this, response.getStatus());
+                JOptionPane.showMessageDialog(this, response.getData());
             }
             cb_author_Book.removeAllItems();
             List<Author> authorList = (List<Author>) response.getData();
             for (Author i : authorList) {
                 cb_author_Book.addItem(i);
+            }
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public synchronized void showDataComboBoxBookCopy() {
+        try {
+            Response response = controller.getDataComboBoxBookCopies();
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+            cb_book_BookCopy.removeAllItems();
+            cb_book_Hold.removeAllItems();
+            cb_book_Checkout.removeAllItems();
+            List<BookCopy> bookCopyList = (List<BookCopy>) response.getData();
+            for (BookCopy i : bookCopyList) {
+                cb_book_BookCopy.addItem(i);
+                cb_book_Hold.addItem(i);
+                cb_book_Checkout.addItem(i);
+            }
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public synchronized void showDataComboBoxPatron() {
+        try {
+            Response response = controller.getDataComboBoxPatrons();
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+            cb_patron_Hold.removeAllItems();
+            cb_patron_Checkout.removeAllItems();
+            List<Patron> patronsList = (List<Patron>) response.getData();
+            for (Patron i : patronsList) {
+                cb_patron_Hold.addItem(i);
+                cb_patron_Checkout.addItem(i);
             }
 
         } catch (RemoteException e) {
@@ -2006,18 +2065,42 @@ public class LibraryGUI extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>         
 
-    public void btn_refresh_HistoryActionPerformed(ActionEvent evt) {
-    }
 
-    public void btn_refresh_NotificationActionPerformed(ActionEvent evt) {
-        showTableNotification();
-    }
-
+    // Send Notification
     public void btn_sendAllActionPerformed(ActionEvent evt) {
     }
 
     public void btn_sendMouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
+        int selectedRow = tbl_Patron.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "You need to choose who to send to!");
+            return;
+        }
+        String m = JOptionPane.showInputDialog(this, "What notification do you want to send?",
+                "Send Notification", JOptionPane.INFORMATION_MESSAGE);
+        if (m == null) {
+            return;
+        }
+        try {
+            Notification notification = new Notification();
+
+            Date date = new Date();
+            Timestamp time_now = new Timestamp(date.getTime());
+
+            notification.setMessage(m);
+            notification.setPatron_id(Integer.parseInt(tf_ID_Patron.getText()));
+            notification.setSend_at(time_now);
+
+            Response response = controller.createNotificationController(notification);
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            } else {
+                JOptionPane.showMessageDialog(this, "Send Notify to Patron Successfully!");
+            }
+
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Block
@@ -2029,6 +2112,8 @@ public class LibraryGUI extends javax.swing.JFrame {
             throw new RuntimeException(e);
         }
     }
+
+
     // Book - done
 
     public void tbl_BookMousePressed(java.awt.event.MouseEvent evt) {
@@ -2421,7 +2506,7 @@ public class LibraryGUI extends javax.swing.JFrame {
             int category_id = Integer.parseInt(tf_ID_Category.getText());
 
             try {
-                Response res = controller.deleteAuthorController(category_id);
+                Response res = controller.deleteCategoryController(category_id);
                 if (res.getStatus() == 100) {
                     JOptionPane.showMessageDialog(this, res.getData());
                 } else {
@@ -2485,11 +2570,88 @@ public class LibraryGUI extends javax.swing.JFrame {
 
     // Patron Account
     public void tbl_PatronMousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
+        int selectedRow = tbl_Patron.getSelectedRow();
+        tf_ID_Patron.setEditable(false);
+        if (selectedRow != -1) {
+            table_name = "patron_account";
+            // Lấy thông tin từ hàng dữ liệu được chọn
+            int author_id = (int) tbl_Patron.getValueAt(selectedRow, 0);
+            String fname = (String) tbl_Patron.getValueAt(selectedRow, 1);
+            String lname = (String) tbl_Patron.getValueAt(selectedRow, 2);
+            String email = (String) tbl_Patron.getValueAt(selectedRow, 3);
+            String status = (String) tbl_Patron.getValueAt(selectedRow, 4);
+
+
+            // check block
+            if (checkBlock(table_name, author_id)) {
+                JOptionPane.showMessageDialog(this, "Bạn không thể thao tác với bản ghi này! Có người dùng khác đang sử dụng bản ghi này!", "Warning", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Set vào tf
+            tf_ID_Patron.setText(String.valueOf(author_id));
+            tf_fname_Patron.setText(fname);
+            tf_lname_Patron.setText(lname);
+            tf_email_Patron.setText(email);
+            if (status.equals("Available")) {
+                checkBox_Patron.setEnabled(true);
+            } else {
+                checkBox_Patron.setEnabled(false);
+            }
+
+            Date date = new Date();
+            Timestamp time_now = new Timestamp(date.getTime());
+            if (log == null) {
+                log = new Log(ip, username, table_name, author_id, time_now);
+                try {
+                    log.setId(controller.createLog(log));
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } else
+                // TH: Click vào bảng khác
+                if (log.getTable_name() != table_name) {
+
+                    try {
+                        controller.deleteLog(log.getId());
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    // Lấy thời gian hiện tại
+
+                    log = new Log(ip, username, table_name, author_id, time_now);
+                    try {
+                        log.setId(controller.createLog(log));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                } else
+                    // TH: Click vào cùng bảng
+                    if (log.getTable_name().equals(table_name)) {
+                        log.setCol_id(author_id);
+                        try {
+                            controller.updateLog(log);
+                        } catch (RemoteException ex) {
+                            throw new RuntimeException(ex);
+                        }
+
+                    }
+            System.out.println(" LOG: " + log.toString());
+
+        }
     }
 
     public void btn_refresh_PatronActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        tf_ID_Patron.setEditable(true);
+
+        tf_ID_Patron.setText("");
+        tf_fname_Patron.setText("");
+        tf_lname_Patron.setText("");
+        tf_email_Patron.setText("");
+        tf_pass_Patron.setText("");
+
+        showTableNotification();
     }
 
     public void btn_delete_PatronActionPerformed(java.awt.event.ActionEvent evt) {
@@ -2591,6 +2753,15 @@ public class LibraryGUI extends javax.swing.JFrame {
     }
 
 
+    //
+    public void btn_refresh_HistoryActionPerformed(ActionEvent evt) {
+        showTableHistory();
+    }
+
+    public void btn_refresh_NotificationActionPerformed(ActionEvent evt) {
+        showTableNotification();
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -2608,20 +2779,20 @@ public class LibraryGUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LibraryGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ManageGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LibraryGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ManageGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LibraryGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ManageGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LibraryGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ManageGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new LibraryGUI().setVisible(true);
+                new ManageGUI().setVisible(true);
             }
         });
     }

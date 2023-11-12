@@ -9,7 +9,12 @@ public class Patron implements Serializable {
     private String password;
     private boolean status;
 
-    public Patron() {
+    public Patron(Object[] data) {
+        this.id = (int) data[0];
+        this.first_name = (String) data[1];
+        this.last_name = (String) data[2];
+        this.email = (String) data[3];
+        this.status = (boolean) data[4].toString().equals("Available");
     }
 
     public Patron(int id, String first_name, String last_name, String email, String password, boolean status) {
@@ -19,6 +24,10 @@ public class Patron implements Serializable {
         this.email = email;
         this.password = password;
         this.status = status;
+    }
+
+    public Patron() {
+
     }
 
     public int getId() {
@@ -67,5 +76,10 @@ public class Patron implements Serializable {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return this.email;
     }
 }

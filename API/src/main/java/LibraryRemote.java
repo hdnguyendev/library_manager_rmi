@@ -134,4 +134,10 @@ public interface LibraryRemote extends Remote {
 
     public boolean checkLog(String table_name, int col_id) throws RemoteException;
 
+    // login - register
+    public Response loginClient(Patron patron) throws RemoteException;
+    public Response registerClient(Patron patron) throws RemoteException;
+
+
+
 }
