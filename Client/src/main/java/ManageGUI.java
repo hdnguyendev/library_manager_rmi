@@ -602,6 +602,7 @@ public class ManageGUI extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+
     public synchronized void showDataComboBoxPublished() {
         try {
             Response response = controller.getDataComboBoxPublished();
@@ -2668,7 +2669,84 @@ public class ManageGUI extends javax.swing.JFrame {
 
     // Hold
     public void tbl_HoldMousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
+        int selectedRow = tbl_Hold.getSelectedRow();
+        tf_ID_Hold.setEditable(false);
+        if (selectedRow != -1) {
+            table_name = "hold";
+            // Lấy thông tin từ hàng dữ liệu được chọn
+            int hold_id = (int) tbl_Hold.getValueAt(selectedRow, 0);
+            String patron = (String) tbl_Hold.getValueAt(selectedRow, 1);
+            String book_copy = (String) tbl_Hold.getValueAt(selectedRow, 3);
+            Timestamp time_start = (Timestamp) tbl_Hold.getValueAt(selectedRow, 4);
+            Timestamp time_end = (Timestamp) tbl_Hold.getValueAt(selectedRow, 5);
+
+            // check block
+            if (checkBlock(table_name, hold_id)) {
+                JOptionPane.showMessageDialog(this, "Bạn không thể thao tác với bản ghi này! Có người dùng khác đang sử dụng bản ghi này!", "Warning", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Set vào tf
+            tf_ID_Hold.setText(String.valueOf(hold_id));
+            tf_start_Hold.setText(String.valueOf(time_start));
+            tf_end_Hold.setText(String.valueOf(time_end));
+
+            ComboBoxModel<BookCopy> cb_model_bookcopy = cb_book_Hold.getModel();
+            for (int i = 0; i < cb_model_bookcopy.getSize(); i++) {
+                if (cb_model_bookcopy.getElementAt(i).toString().equals(book_copy)) {
+                    cb_model_bookcopy.setSelectedItem(cb_model_bookcopy.getElementAt(i));
+                    break;
+                }
+            }
+            ComboBoxModel<Patron> cb_model_patron = cb_patron_Hold.getModel();
+            for (int i = 0; i < cb_model_patron.getSize(); i++) {
+                if (cb_model_patron.getElementAt(i).toString().equals(patron)) {
+                    cb_model_patron.setSelectedItem(cb_model_patron.getElementAt(i));
+                    break;
+                }
+            }
+
+            Date date = new Date();
+            Timestamp time_now = new Timestamp(date.getTime());
+            if (log == null) {
+                log = new Log(ip, username, table_name, hold_id, time_now);
+                try {
+                    log.setId(controller.createLog(log));
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } else
+                // TH: Click vào bảng khác
+                if (log.getTable_name() != table_name) {
+
+                    try {
+                        controller.deleteLog(log.getId());
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    // Lấy thời gian hiện tại
+
+                    log = new Log(ip, username, table_name, hold_id, time_now);
+                    try {
+                        log.setId(controller.createLog(log));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                } else
+                    // TH: Click vào cùng bảng
+                    if (log.getTable_name().equals(table_name)) {
+                        log.setCol_id(hold_id);
+                        try {
+                            controller.updateLog(log);
+                        } catch (RemoteException ex) {
+                            throw new RuntimeException(ex);
+                        }
+
+                    }
+            System.out.println(" LOG: " + log.toString());
+
+        }
     }
 
     public void btn_create_HoldActionPerformed(java.awt.event.ActionEvent evt) {
@@ -2712,7 +2790,84 @@ public class ManageGUI extends javax.swing.JFrame {
     // Checkout
 
     public void tbl_CheckoutMousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
+        int selectedRow = tbl_Checkout.getSelectedRow();
+        tf_ID_Checkout.setEditable(false);
+        if (selectedRow != -1) {
+            table_name = "checkout";
+            // Lấy thông tin từ hàng dữ liệu được chọn
+            int checkout_id = (int) tbl_Checkout.getValueAt(selectedRow, 0);
+            String patron = (String) tbl_Checkout.getValueAt(selectedRow, 1);
+            String book_copy = (String) tbl_Checkout.getValueAt(selectedRow, 3);
+            Timestamp time_start = (Timestamp) tbl_Checkout.getValueAt(selectedRow, 4);
+            Timestamp time_end = (Timestamp) tbl_Checkout.getValueAt(selectedRow, 5);
+
+            // check block
+            if (checkBlock(table_name, checkout_id)) {
+                JOptionPane.showMessageDialog(this, "Bạn không thể thao tác với bản ghi này! Có người dùng khác đang sử dụng bản ghi này!", "Warning", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Set vào tf
+            tf_ID_Checkout.setText(String.valueOf(checkout_id));
+            tf_start_Checkout.setText(String.valueOf(time_start));
+            tf_end_Checkout.setText(String.valueOf(time_end));
+
+            ComboBoxModel<BookCopy> cb_model_bookcopy = cb_book_Checkout.getModel();
+            for (int i = 0; i < cb_model_bookcopy.getSize(); i++) {
+                if (cb_model_bookcopy.getElementAt(i).toString().equals(book_copy)) {
+                    cb_model_bookcopy.setSelectedItem(cb_model_bookcopy.getElementAt(i));
+                    break;
+                }
+            }
+            ComboBoxModel<Patron> cb_model_patron = cb_patron_Checkout.getModel();
+            for (int i = 0; i < cb_model_patron.getSize(); i++) {
+                if (cb_model_patron.getElementAt(i).toString().equals(patron)) {
+                    cb_model_patron.setSelectedItem(cb_model_patron.getElementAt(i));
+                    break;
+                }
+            }
+
+            Date date = new Date();
+            Timestamp time_now = new Timestamp(date.getTime());
+            if (log == null) {
+                log = new Log(ip, username, table_name, checkout_id, time_now);
+                try {
+                    log.setId(controller.createLog(log));
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } else
+                // TH: Click vào bảng khác
+                if (log.getTable_name() != table_name) {
+
+                    try {
+                        controller.deleteLog(log.getId());
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    // Lấy thời gian hiện tại
+
+                    log = new Log(ip, username, table_name, checkout_id, time_now);
+                    try {
+                        log.setId(controller.createLog(log));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                } else
+                    // TH: Click vào cùng bảng
+                    if (log.getTable_name().equals(table_name)) {
+                        log.setCol_id(checkout_id);
+                        try {
+                            controller.updateLog(log);
+                        } catch (RemoteException ex) {
+                            throw new RuntimeException(ex);
+                        }
+
+                    }
+            System.out.println(" LOG: " + log.toString());
+
+        }
     }
 
     public void btn_create_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
@@ -2733,7 +2888,82 @@ public class ManageGUI extends javax.swing.JFrame {
 
     // Book Copy
     public void tbl_BookCopyMousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
+        int selectedRow = tbl_BookCopy.getSelectedRow();
+        tf_ID_BookCopy.setEditable(false);
+        if (selectedRow != -1) {
+            table_name = "book_copy";
+            // Lấy thông tin từ hàng dữ liệu được chọn
+            int book_copy_id = (int) tbl_BookCopy.getValueAt(selectedRow, 0);
+            String book = (String) tbl_BookCopy.getValueAt(selectedRow, 1);
+            int year_publish = (int) tbl_BookCopy.getValueAt(selectedRow, 2);
+            String published = (String) tbl_BookCopy.getValueAt(selectedRow, 3);
+
+            // check block
+            if (checkBlock(table_name, book_copy_id)) {
+                JOptionPane.showMessageDialog(this, "Bạn không thể thao tác với bản ghi này! Có người dùng khác đang sử dụng bản ghi này!", "Warning", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Set vào tf
+            tf_ID_BookCopy.setText(String.valueOf(book_copy_id));
+            tf_year_BookCopy.setText(String.valueOf(year_publish));
+
+            ComboBoxModel<BookCopy> cb_model_book = cb_book_BookCopy.getModel();
+            for (int i = 0; i < cb_model_book.getSize(); i++) {
+                if (cb_model_book.getElementAt(i).toString().equals(book)) {
+                    cb_model_book.setSelectedItem(cb_model_book.getElementAt(i));
+                    break;
+                }
+            }
+            ComboBoxModel<Published> cb_model_published = cb_published_BookCopy.getModel();
+            for (int i = 0; i < cb_model_published.getSize(); i++) {
+                if (cb_model_published.getElementAt(i).toString().equals(published)) {
+                    cb_model_published.setSelectedItem(cb_model_published.getElementAt(i));
+                    break;
+                }
+            }
+
+            Date date = new Date();
+            Timestamp time_now = new Timestamp(date.getTime());
+            if (log == null) {
+                log = new Log(ip, username, table_name, book_copy_id, time_now);
+                try {
+                    log.setId(controller.createLog(log));
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } else
+                // TH: Click vào bảng khác
+                if (log.getTable_name() != table_name) {
+
+                    try {
+                        controller.deleteLog(log.getId());
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    // Lấy thời gian hiện tại
+
+                    log = new Log(ip, username, table_name, book_copy_id, time_now);
+                    try {
+                        log.setId(controller.createLog(log));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                } else
+                    // TH: Click vào cùng bảng
+                    if (log.getTable_name().equals(table_name)) {
+                        log.setCol_id(book_copy_id);
+                        try {
+                            controller.updateLog(log);
+                        } catch (RemoteException ex) {
+                            throw new RuntimeException(ex);
+                        }
+
+                    }
+            System.out.println(" LOG: " + log.toString());
+
+        }
     }
 
     public void btn_create_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {

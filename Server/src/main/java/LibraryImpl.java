@@ -282,7 +282,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             vTitle.clear();
             vData.clear();
 
-            String query = "SELECT c.id,c.is_returned, pa.email, CONCAT(pa.first_name, ' ', pa.last_name) as fullname, b.title , c.start_time, c.end_time " +
+            String query = "SELECT c.id, pa.email, CONCAT(pa.first_name, ' ', pa.last_name) as fullname, b.title , c.start_time, c.end_time ,c.is_returned " +
                     "FROM checkout as c " +
                     "INNER JOIN patron_account as pa ON pa.id = c.patron_id " +
                     "INNER JOIN book_copy as bc ON bc.id = c.book_copy_id " +
@@ -291,19 +291,20 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
             rst = stm.executeQuery(query);
 
             String[] title = new String[]{
-                    "Checkout ID", "Is Returned", "Patron Email", "Patron Name", "Book Title", "Time start", "Time end"
+                    "Checkout ID", "Patron Email", "Patron Name", "Book Title", "Time start", "Time end", "Is Returned"
             };
             Collections.addAll(vTitle, title);
             while (rst.next()) {
                 Vector row = new Vector();
 
                 row.add(rst.getInt("id"));
-                row.add(rst.getBoolean("is_returned") ? "Yes" : "No");
                 row.add(rst.getString("email"));
                 row.add(rst.getString("fullname"));
                 row.add(rst.getString("title"));
                 row.add(rst.getTimestamp("start_time"));
                 row.add(rst.getTimestamp("end_time"));
+                row.add(rst.getBoolean("is_returned") ? "Yes" : "No");
+
                 vData.add(row);
             }
             rst.close();
