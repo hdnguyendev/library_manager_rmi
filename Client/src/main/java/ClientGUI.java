@@ -85,6 +85,7 @@ public class ClientGUI extends javax.swing.JFrame {
 
         panel_banner = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        filler32 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 10));
         panel_main = new javax.swing.JTabbedPane();
         panel_home = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
@@ -112,13 +113,13 @@ public class ClientGUI extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        lb_Search_BookName = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
+        lb_Search_Published = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        lb_Search_Year = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
+        lb_Search_Category = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         btn_Report_Book = new javax.swing.JButton();
@@ -145,17 +146,13 @@ public class ClientGUI extends javax.swing.JFrame {
         jPanel16 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         jPanel17 = new javax.swing.JPanel();
-        filler29 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 10));
-        filler30 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 10));
         jLabel17 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
+        lb_BookName_Return = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
+        lb_Return_TimeStart = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
-        filler27 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 20), new java.awt.Dimension(0, 20), new java.awt.Dimension(32767, 20));
-        filler28 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 20), new java.awt.Dimension(0, 20), new java.awt.Dimension(32767, 20));
-        btn_Report_Profile = new javax.swing.JButton();
+        lb_Return_TimeEnd = new javax.swing.JLabel();
+        btn_Report_Return = new javax.swing.JButton();
         btn_Return = new javax.swing.JButton();
         jLabel27 = new javax.swing.JLabel();
         jPanel18 = new javax.swing.JPanel();
@@ -163,13 +160,33 @@ public class ClientGUI extends javax.swing.JFrame {
         tbl_Profile = new javax.swing.JTable();
         jPanel19 = new javax.swing.JPanel();
         jLabel28 = new javax.swing.JLabel();
-        tf_Search_Profile = new javax.swing.JTextField();
+        tf_Search_Return = new javax.swing.JTextField();
         filler21 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 10));
         filler22 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 10));
         filler23 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
         filler24 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
         filler25 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
         filler26 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 10));
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel23 = new javax.swing.JLabel();
+        filler30 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 30), new java.awt.Dimension(0, 30), new java.awt.Dimension(32767, 30));
+        jPanel13 = new javax.swing.JPanel();
+        jPanel20 = new javax.swing.JPanel();
+        jLabel24 = new javax.swing.JLabel();
+        tf_FirstName = new javax.swing.JTextField();
+        jLabel25 = new javax.swing.JLabel();
+        tf_LastName = new javax.swing.JTextField();
+        jLabel26 = new javax.swing.JLabel();
+        tf_Email = new javax.swing.JTextField();
+        jLabel29 = new javax.swing.JLabel();
+        tf_Password = new javax.swing.JTextField();
+        filler31 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
+        btn_Profile_Save = new javax.swing.JButton();
+        filler27 = new javax.swing.Box.Filler(new java.awt.Dimension(50, 0), new java.awt.Dimension(300, 0), new java.awt.Dimension(50, 32767));
+        filler28 = new javax.swing.Box.Filler(new java.awt.Dimension(50, 0), new java.awt.Dimension(300, 0), new java.awt.Dimension(50, 32767));
+        filler29 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 50), new java.awt.Dimension(0, 400), new java.awt.Dimension(32767, 50));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -180,6 +197,7 @@ public class ClientGUI extends javax.swing.JFrame {
         jLabel1.setMinimumSize(new java.awt.Dimension(1000, 150));
         jLabel1.setPreferredSize(new java.awt.Dimension(1000, 150));
         panel_banner.add(jLabel1, java.awt.BorderLayout.CENTER);
+        panel_banner.add(filler32, java.awt.BorderLayout.PAGE_END);
 
         getContentPane().add(panel_banner, java.awt.BorderLayout.NORTH);
 
@@ -254,33 +272,33 @@ public class ClientGUI extends javax.swing.JFrame {
         jLabel4.setText("Book Name");
         jPanel9.add(jLabel4);
 
-        jLabel9.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
-        jLabel9.setText("OOP");
-        jPanel9.add(jLabel9);
+        lb_Search_BookName.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
+        lb_Search_BookName.setText("Toán Cao cấp");
+        jPanel9.add(lb_Search_BookName);
 
         jLabel5.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
         jLabel5.setText("Publishing");
         jPanel9.add(jLabel5);
 
-        jLabel11.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
-        jLabel11.setText("Huynh Cong Phap");
-        jPanel9.add(jLabel11);
+        lb_Search_Published.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
+        lb_Search_Published.setText("Louisa May Alcott");
+        jPanel9.add(lb_Search_Published);
 
         jLabel6.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
         jLabel6.setText("Year Published");
         jPanel9.add(jLabel6);
 
-        jLabel12.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
-        jLabel12.setText("2024");
-        jPanel9.add(jLabel12);
+        lb_Search_Year.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
+        lb_Search_Year.setText("2010");
+        jPanel9.add(lb_Search_Year);
 
         jLabel7.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
         jLabel7.setText("Category");
         jPanel9.add(jLabel7);
 
-        jLabel13.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
-        jLabel13.setText("Tham Khao");
-        jPanel9.add(jLabel13);
+        lb_Search_Category.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
+        lb_Search_Category.setText("Sách giáo khoa");
+        jPanel9.add(lb_Search_Category);
 
         jLabel8.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
         jLabel8.setText("Detail");
@@ -290,9 +308,7 @@ public class ClientGUI extends javax.swing.JFrame {
         jLabel14.setText("This Book very good!");
         jPanel9.add(jLabel14);
 
-        btn_Report_Book.setBackground(new java.awt.Color(255, 0, 0));
         btn_Report_Book.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
-        btn_Report_Book.setForeground(new java.awt.Color(255, 255, 255));
         btn_Report_Book.setText("Report");
         btn_Report_Book.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -301,10 +317,9 @@ public class ClientGUI extends javax.swing.JFrame {
         });
         jPanel9.add(btn_Report_Book);
 
-        btn_Borrow.setBackground(new java.awt.Color(0, 204, 0));
         btn_Borrow.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
-        btn_Borrow.setForeground(new java.awt.Color(255, 255, 255));
         btn_Borrow.setText("Borrow this book !");
+        btn_Borrow.setPreferredSize(new java.awt.Dimension(143, 35));
         btn_Borrow.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_BorrowActionPerformed(evt);
@@ -372,50 +387,44 @@ public class ClientGUI extends javax.swing.JFrame {
         jPanel16.add(jLabel16, java.awt.BorderLayout.PAGE_START);
 
         jPanel17.setLayout(new java.awt.GridLayout(6, 2, 10, 30));
-        jPanel17.add(filler29);
-        jPanel17.add(filler30);
 
         jLabel17.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
         jLabel17.setText("Book Name");
         jPanel17.add(jLabel17);
 
-        jLabel18.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
-        jLabel18.setText("OOP");
-        jPanel17.add(jLabel18);
+        lb_BookName_Return.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
+        lb_BookName_Return.setText("Toán Cao cấp");
+        jPanel17.add(lb_BookName_Return);
 
         jLabel19.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
         jLabel19.setText("Start Time");
         jPanel17.add(jLabel19);
 
-        jLabel20.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
-        jLabel20.setText("2023-10-15");
-        jPanel17.add(jLabel20);
+        lb_Return_TimeStart.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
+        lb_Return_TimeStart.setText("12:03:12 2023-10-15");
+        jPanel17.add(lb_Return_TimeStart);
 
         jLabel21.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
         jLabel21.setText("End Time");
         jPanel17.add(jLabel21);
 
-        jLabel22.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
-        jLabel22.setText("2023-10-15");
-        jPanel17.add(jLabel22);
-        jPanel17.add(filler27);
-        jPanel17.add(filler28);
+        lb_Return_TimeEnd.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
+        lb_Return_TimeEnd.setText("12:03-12 2023-10-24");
+        jPanel17.add(lb_Return_TimeEnd);
 
-        btn_Report_Profile.setBackground(new java.awt.Color(255, 0, 0));
-        btn_Report_Profile.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
-        btn_Report_Profile.setForeground(new java.awt.Color(255, 255, 255));
-        btn_Report_Profile.setText("Report");
-        btn_Report_Profile.addActionListener(new java.awt.event.ActionListener() {
+        btn_Report_Return.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
+        btn_Report_Return.setText("Report");
+        btn_Report_Return.setPreferredSize(new java.awt.Dimension(73, 35));
+        btn_Report_Return.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_Report_ProfileActionPerformed(evt);
+                btn_Report_ReturnActionPerformed(evt);
             }
         });
-        jPanel17.add(btn_Report_Profile);
+        jPanel17.add(btn_Report_Return);
 
-        btn_Return.setBackground(new java.awt.Color(0, 204, 0));
         btn_Return.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
-        btn_Return.setForeground(new java.awt.Color(255, 255, 255));
         btn_Return.setText("Return this book");
+        btn_Return.setPreferredSize(new java.awt.Dimension(134, 35));
         btn_Return.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_ReturnActionPerformed(evt);
@@ -451,7 +460,7 @@ public class ClientGUI extends javax.swing.JFrame {
         jLabel28.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/search_32.png"))); // NOI18N
         jLabel28.setText("Search");
         jPanel19.add(jLabel28, java.awt.BorderLayout.WEST);
-        jPanel19.add(tf_Search_Profile, java.awt.BorderLayout.CENTER);
+        jPanel19.add(tf_Search_Return, java.awt.BorderLayout.CENTER);
         jPanel19.add(filler21, java.awt.BorderLayout.PAGE_END);
         jPanel19.add(filler22, java.awt.BorderLayout.PAGE_START);
         jPanel19.add(filler23, java.awt.BorderLayout.LINE_END);
@@ -465,7 +474,71 @@ public class ClientGUI extends javax.swing.JFrame {
 
         panel_profile.add(jPanel14, java.awt.BorderLayout.CENTER);
 
-        panel_main.addTab("Profile", new javax.swing.ImageIcon(getClass().getResource("/images/reading_24.png")), panel_profile); // NOI18N
+        panel_main.addTab("Return", new javax.swing.ImageIcon(getClass().getResource("/images/reading_24.png")), panel_profile); // NOI18N
+
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        jPanel2.setLayout(new java.awt.BorderLayout());
+
+        jPanel3.setLayout(new java.awt.BorderLayout());
+
+        jLabel23.setFont(new java.awt.Font("Times New Roman", 1, 48)); // NOI18N
+        jLabel23.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel23.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/reading_1.png"))); // NOI18N
+        jLabel23.setText("Profile");
+        jPanel3.add(jLabel23, java.awt.BorderLayout.CENTER);
+        jPanel3.add(filler30, java.awt.BorderLayout.PAGE_END);
+
+        jPanel2.add(jPanel3, java.awt.BorderLayout.PAGE_START);
+
+        jPanel13.setLayout(new java.awt.BorderLayout());
+
+        jPanel20.setLayout(new java.awt.GridLayout(5, 2, 0, 10));
+
+        jLabel24.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel24.setText("First Name");
+        jPanel20.add(jLabel24);
+
+        tf_FirstName.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jPanel20.add(tf_FirstName);
+
+        jLabel25.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel25.setText("Last Name");
+        jPanel20.add(jLabel25);
+
+        tf_LastName.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jPanel20.add(tf_LastName);
+
+        jLabel26.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel26.setText("Email");
+        jPanel20.add(jLabel26);
+
+        tf_Email.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jPanel20.add(tf_Email);
+
+        jLabel29.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel29.setText("Password");
+        jPanel20.add(jLabel29);
+
+        tf_Password.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jPanel20.add(tf_Password);
+        jPanel20.add(filler31);
+
+        btn_Profile_Save.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        btn_Profile_Save.setText("Save");
+        btn_Profile_Save.setPreferredSize(new java.awt.Dimension(72, 35));
+        jPanel20.add(btn_Profile_Save);
+
+        jPanel13.add(jPanel20, java.awt.BorderLayout.CENTER);
+        jPanel13.add(filler27, java.awt.BorderLayout.WEST);
+        jPanel13.add(filler28, java.awt.BorderLayout.EAST);
+        jPanel13.add(filler29, java.awt.BorderLayout.SOUTH);
+
+        jPanel2.add(jPanel13, java.awt.BorderLayout.CENTER);
+
+        jPanel1.add(jPanel2, java.awt.BorderLayout.CENTER);
+
+        panel_main.addTab("Profile", new javax.swing.ImageIcon(getClass().getResource("/images/setting.png")), jPanel1); // NOI18N
 
         getContentPane().add(panel_main, java.awt.BorderLayout.PAGE_END);
 
@@ -501,15 +574,17 @@ public class ClientGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
-    private void btn_Report_ProfileActionPerformed(java.awt.event.ActionEvent evt) {
+    private void btn_Report_ReturnActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
+
 
     // Variables declaration - do not modify
     private javax.swing.JButton btn_Borrow;
     private javax.swing.JButton btn_Logout;
+    private javax.swing.JButton btn_Profile_Save;
     private javax.swing.JButton btn_Report_Book;
-    private javax.swing.JButton btn_Report_Profile;
+    private javax.swing.JButton btn_Report_Return;
     private javax.swing.JButton btn_Return;
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler10;
@@ -535,6 +610,8 @@ public class ClientGUI extends javax.swing.JFrame {
     private javax.swing.Box.Filler filler29;
     private javax.swing.Box.Filler filler3;
     private javax.swing.Box.Filler filler30;
+    private javax.swing.Box.Filler filler31;
+    private javax.swing.Box.Filler filler32;
     private javax.swing.Box.Filler filler4;
     private javax.swing.Box.Filler filler5;
     private javax.swing.Box.Filler filler6;
@@ -543,43 +620,53 @@ public class ClientGUI extends javax.swing.JFrame {
     private javax.swing.Box.Filler filler9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel17;
     private javax.swing.JPanel jPanel18;
     private javax.swing.JPanel jPanel19;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel20;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
+    private javax.swing.JLabel lb_BookName_Return;
+    private javax.swing.JLabel lb_Return_TimeEnd;
+    private javax.swing.JLabel lb_Return_TimeStart;
+    private javax.swing.JLabel lb_Search_BookName;
+    private javax.swing.JLabel lb_Search_Category;
+    private javax.swing.JLabel lb_Search_Published;
+    private javax.swing.JLabel lb_Search_Year;
     private javax.swing.JPanel panel_banner;
     private javax.swing.JPanel panel_home;
     private javax.swing.JTabbedPane panel_main;
@@ -591,7 +678,11 @@ public class ClientGUI extends javax.swing.JFrame {
     private javax.swing.JTable tbl_Book;
     private javax.swing.JTable tbl_Notification;
     private javax.swing.JTable tbl_Profile;
+    private javax.swing.JTextField tf_Email;
+    private javax.swing.JTextField tf_FirstName;
+    private javax.swing.JTextField tf_LastName;
+    private javax.swing.JTextField tf_Password;
     private javax.swing.JTextField tf_Search_Book;
-    private javax.swing.JTextField tf_Search_Profile;
+    private javax.swing.JTextField tf_Search_Return;
     // End of variables declaration
 }
