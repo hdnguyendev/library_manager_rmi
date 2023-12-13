@@ -61,6 +61,7 @@ public class ManagerController {
 
     }
 
+
     public Response createBookController(Book book, int author_id) throws RemoteException, SQLException {
         Response response = libraryRemote.createBook(book, author_id,false);
         return response;
@@ -125,10 +126,20 @@ public class ManagerController {
     }
 
     // CRUD - Hold
+    public Response createHoldController(Hold hold) throws RemoteException {
+        return libraryRemote.createHold(hold, false);
+    }
+
     public Response getHoldsController() throws RemoteException {
         return libraryRemote.getHolds();
     }
+    public Response updateHoldController(Hold hold) throws RemoteException {
+        return libraryRemote.updateHold(hold,false);
+    }
 
+    public Response deleteHoldController(int holdId) throws RemoteException {
+        return libraryRemote.deleteHold(holdId,false);
+    }
     // CRUD - Checkout
     public Response getCheckoutsController() throws RemoteException {
         return libraryRemote.getCheckouts();

@@ -53,4 +53,9 @@ public class ClientController {
     public Response getNotificationByPatronId(int patron_id) throws RemoteException {
         return libraryRemote.getNotification(patron_id);
     }
+    public Response getBookForSearchController() throws RemoteException {
+        Response response = libraryRemote.getBooksForSearch();
+        return response;
+
+    }
 }

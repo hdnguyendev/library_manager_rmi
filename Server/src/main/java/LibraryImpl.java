@@ -112,6 +112,53 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
     @Override
+    public Response getBooksForSearch() throws RemoteException {
+        try {
+            vTitle.clear();
+            vData.clear();
+
+            String query = "SELECT\n" +
+                    "book_copy.id,\n " +
+                    "  book.title,\n" +
+                    "  category.name as 'category',\n" +
+                    "  author.name as 'author',\n" +
+                    "  published.name as 'published',\n" +
+                    "  book_copy.year_published\n" +
+                    "FROM\n" +
+                    "  book\n" +
+                    "  INNER JOIN book_author ON book.id = book_author.book_id\n" +
+                    "  INNER JOIN author ON book_author.author_id = author.id\n" +
+                    "  INNER JOIN category ON book.category_id = category.id\n" +
+                    "  INNER JOIN book_copy ON book.id = book_copy.book_id\n" +
+                    "  INNER JOIN published ON book_copy.published_id = published.id;\n";
+
+            rst = stm.executeQuery(query);
+
+            String[] title = new String[]{
+                    "ID", "Book Title", "Category", "Author","Published","Year"
+            };
+            Collections.addAll(vTitle, title);
+            while (rst.next()) {
+                Vector row = new Vector();
+
+                row.add(rst.getInt("id"));
+                row.add(rst.getString("title"));
+                row.add(rst.getString("category"));
+                row.add(rst.getString("author"));
+                row.add(rst.getString("published"));
+                row.add(rst.getString("year_published"));
+                vData.add(row);
+            }
+            rst.close();
+            return new Response(200, new DefaultTableModel(vData, vTitle));
+        } catch (SQLException e) {
+            System.out.println("!!!---Error: " + e);
+            return new Response(100, null);
+
+        }
+    }
+
+    @Override
     public Response getAuthors() throws RemoteException {
         try {
             vTitle.clear();
@@ -248,7 +295,8 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
                     "FROM hold as h " +
                     "INNER JOIN patron_account as pa ON pa.id = h.patron_id " +
                     "INNER JOIN book_copy as bc ON bc.id = h.book_copy_id " +
-                    "INNER JOIN book as b ON b.id = bc.book_id";
+                    "INNER JOIN book as b ON b.id = bc.book_id " +
+                    "ORDER BY h.id DESC ";
 
             rst = stm.executeQuery(query);
 

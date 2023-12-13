@@ -14,6 +14,7 @@ public interface LibraryRemote extends Remote {
     // Manage
     // Return DefaultTableModel
     public Response getBooks() throws RemoteException;
+    public Response getBooksForSearch() throws RemoteException;
 
     public Response getAuthors() throws RemoteException;
 
@@ -126,12 +127,9 @@ public interface LibraryRemote extends Remote {
     //
     // Log - Block
     public int createLog(Log log, boolean isCallFromSever) throws RemoteException;
-
     public void updateLog(Log log, boolean isCallFromSever) throws RemoteException;
-
     public void deleteLog(int id, boolean isCallFromSever) throws RemoteException;
     public void deleteAllLog(boolean isCallFromSever) throws RemoteException;
-
     public boolean checkLog(String table_name, int col_id) throws RemoteException;
 
     // login - register

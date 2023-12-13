@@ -2750,19 +2750,99 @@ public class ManageGUI extends javax.swing.JFrame {
     }
 
     public void btn_create_HoldActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        Hold hold = new Hold();
+        String start = tf_start_Hold.getText();
+        Timestamp timestamp_start = Timestamp.valueOf(start);
+        String end = tf_end_Hold.getText();
+        Timestamp timestamp_end = Timestamp.valueOf(end);
+        BookCopy bookCopy = (BookCopy) cb_book_Hold.getSelectedItem();
+        int bookCopyId = bookCopy.getId();
+        Patron patron = (Patron) cb_patron_Hold.getSelectedItem();
+        int patronId = patron.getId();
+
+        hold.setStart_time(timestamp_start);
+        hold.setEnd_time(timestamp_end);
+        hold.setBook_copy_id(bookCopyId);
+        hold.setPatron_id(patronId);
+
+        try {
+            Response response = controller.createHoldController(hold);
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            } else {
+                showTableBook();
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+
+        } catch (RemoteException ex) {
+            throw new RuntimeException(ex);
+        }
+        btn_refresh_HoldActionPerformed(null);
     }
 
     public void btn_refresh_HoldActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        tf_ID_Hold.setEditable(true);
+        long currentTimeMillis = System.currentTimeMillis();
+        Timestamp now = new Timestamp(currentTimeMillis);
+        tf_ID_Hold.setText("");
+        tf_start_Hold.setText(now.toString());
+        tf_end_Hold.setText(now.toString());
+        showTableHold();
     }
 
     public void btn_delete_HoldActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa phiếu mượn này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+        if (result == JOptionPane.YES_OPTION) {
+
+
+            int holdId = Integer.parseInt(tf_ID_Hold.getText());
+
+            try {
+                Response res = controller.deleteHoldController(holdId);
+                if (res.getStatus() == 100) {
+                    JOptionPane.showMessageDialog(this, res.getData());
+                } else {
+                    showTableBook();
+                    JOptionPane.showMessageDialog(this, res.getData());
+                }
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        btn_refresh_BookActionPerformed(null);
     }
 
     public void btn_update_HoldActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        Hold hold = new Hold();
+        int holdId = Integer.parseInt(tf_ID_Hold.getText());
+        hold.setId(holdId);
+        String start = tf_start_Hold.getText();
+        Timestamp timestamp_start = Timestamp.valueOf(start);
+        String end = tf_end_Hold.getText();
+        Timestamp timestamp_end = Timestamp.valueOf(end);
+        BookCopy bookCopy = (BookCopy) cb_book_Hold.getSelectedItem();
+        int bookCopyId = bookCopy.getId();
+        Patron patron = (Patron) cb_patron_Hold.getSelectedItem();
+        int patronId = patron.getId();
+
+        hold.setStart_time(timestamp_start);
+        hold.setEnd_time(timestamp_end);
+        hold.setBook_copy_id(bookCopyId);
+        hold.setPatron_id(patronId);
+
+        try {
+            Response response = controller.updateHoldController(hold);
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            } else {
+                showTableBook();
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+
+        } catch (RemoteException ex) {
+            throw new RuntimeException(ex);
+        }
+        btn_refresh_HoldActionPerformed(null);
     }
 
 
