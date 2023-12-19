@@ -15,7 +15,7 @@ public interface LibraryRemote extends Remote {
     // Return DefaultTableModel
     public Response getBooks() throws RemoteException;
     public Response getBooksForSearch() throws RemoteException;
-
+    public Response getCheckoutsClient(int patron_id) throws RemoteException;
     public Response getAuthors() throws RemoteException;
 
     public Response getBooksCopy() throws RemoteException;

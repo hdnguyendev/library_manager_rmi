@@ -18,6 +18,7 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class ClientGUI extends javax.swing.JFrame {
     Patron patron;
+    TableRowSorter sorter;
     /**
      * Creates new form ClientGUI
      */
@@ -51,14 +52,59 @@ public class ClientGUI extends javax.swing.JFrame {
     }
     private void showBookForSearch() {
         try {
+
             Response response = controller.getBookForSearchController();
             if (response.getStatus() == 100) {
                 JOptionPane.showMessageDialog(this, response.getData());
             }
+
+
+            sorter = new TableRowSorter<>((DefaultTableModel) response.getData());
+            tbl_Book.setRowSorter(sorter);
+            tf_Search_Book.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    search(tf_Search_Book.getText());
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    search(tf_Search_Book.getText());
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    search(tf_Search_Book.getText());
+                }
+
+                public void search(String str) {
+                    if (str.length() == 0) {
+                        sorter.setRowFilter(null);
+                    } else {
+                        sorter.setRowFilter(RowFilter.regexFilter(str));
+                    }
+                }
+            });
+
             tbl_Book.setModel((DefaultTableModel) response.getData());
             tbl_Book.setRowHeight(50);
             tbl_Book.setDefaultEditor(Object.class, null);
             sp_Book.setViewportView(tbl_Book);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+    private void showCheckouts() {
+        try {
+            int patron_id = patron.getId();
+            Response response = controller.getCheckoutsClient(patron_id);
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+            tbl_Profile.setModel((DefaultTableModel) response.getData());
+            tbl_Profile.setRowHeight(50);
+            tbl_Profile.setDefaultEditor(Object.class, null);
+            sp_Profile.setViewportView(tbl_Profile);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -76,7 +122,7 @@ public class ClientGUI extends javax.swing.JFrame {
         }
         showNotification();
         showBookForSearch();
-
+        showCheckouts();
     }
 
     @SuppressWarnings("unchecked")

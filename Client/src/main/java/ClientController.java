@@ -56,6 +56,9 @@ public class ClientController {
     public Response getBookForSearchController() throws RemoteException {
         Response response = libraryRemote.getBooksForSearch();
         return response;
-
+    }
+    public Response getCheckoutsClient(int patron_id) throws RemoteException {
+        Response response = libraryRemote.getCheckoutsClient(patron_id);
+        return response;
     }
 }

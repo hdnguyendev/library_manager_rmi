@@ -159,6 +159,49 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     }
 
     @Override
+    public Response getCheckoutsClient(int patron_id) throws RemoteException {
+        try {
+            vTitle.clear();
+            vData.clear();
+
+            String query = "SELECT " +
+                    "c.id, " +
+                    "b.title AS book_title, " +
+                    "c.start_time AS borrowed_date, " +
+                    "c.end_time AS returned_date, " +
+                    "c.is_returned AS borrow_status " +
+                    "FROM checkout c " +
+                    "INNER JOIN book_copy bc ON c.book_copy_id = bc.id " +
+                    "INNER JOIN book b ON bc.book_id = b.id " +
+                    "WHERE c.patron_id = ?";
+            pst =  conn.prepareStatement(query);
+            pst.setInt(1,patron_id);
+            rst = pst.executeQuery();
+
+            String[] title = new String[]{
+                    "ID", "Book Title", "Borrowed Date", "Returned Date","Status"
+            };
+            Collections.addAll(vTitle, title);
+            while (rst.next()) {
+                Vector row = new Vector();
+
+                row.add(rst.getInt("id"));
+                row.add(rst.getString("book_title"));
+                row.add(rst.getString("borrowed_date"));
+                row.add(rst.getString("returned_date"));
+                row.add(rst.getString("borrow_status"));
+                vData.add(row);
+            }
+            rst.close();
+            return new Response(200, new DefaultTableModel(vData, vTitle));
+        } catch (SQLException e) {
+            System.out.println("!!!---Error: " + e);
+            return new Response(100, null);
+
+        }
+    }
+
+    @Override
     public Response getAuthors() throws RemoteException {
         try {
             vTitle.clear();
