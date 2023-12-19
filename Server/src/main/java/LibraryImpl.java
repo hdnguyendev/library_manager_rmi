@@ -824,7 +824,20 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     // CRUD BookCopy
     @Override
     public Response createBookCopy(BookCopy bookCopy, boolean isCallFromSever) throws RemoteException {
-        return null;
+        try {
+            String query = "INSERT INTO book_copy (year_published, book_id, published_id) VALUES (?, ?, ?)";
+            pst = conn.prepareStatement(query);
+
+            pst.setInt(1, bookCopy.getYear_published());
+            pst.setInt(2, bookCopy.getPublished_id());
+            pst.setInt(3, bookCopy.getBook_id());
+
+            pst.executeUpdate();
+
+            return new Response(200, "Create book copy successfully");
+        } catch (SQLException e) {
+            return new Response(100, e.getMessage());
+        }
     }
 
     @Override

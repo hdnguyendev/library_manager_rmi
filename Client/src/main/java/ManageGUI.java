@@ -99,6 +99,7 @@ public class ManageGUI extends javax.swing.JFrame {
         showDataComboBoxPublished();
         showDataComboBoxAuthor();
         showDataComboBoxBookCopy();
+        showDataComboBoxBooks();
         showDataComboBoxPatron();
         //
     }
@@ -631,6 +632,24 @@ public class ManageGUI extends javax.swing.JFrame {
             List<Author> authorList = (List<Author>) response.getData();
             for (Author i : authorList) {
                 cb_author_Book.addItem(i);
+            }
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+    public synchronized void showDataComboBoxBooks() {
+        try {
+            Response response = controller.getDataComboBoxBooks();
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+            cb_book_BookCopy.removeAllItems();
+
+            List<Book> booksList = (List<Book>) response.getData();
+            for (Book i : booksList) {
+                cb_book_BookCopy.addItem(i);
+
             }
 
         } catch (RemoteException e) {
@@ -2256,7 +2275,7 @@ public class ManageGUI extends javax.swing.JFrame {
         }
         btn_refresh_BookActionPerformed(null);
     }
-
+    // TODO vị trí ở đây
     public void btn_create_BookActionPerformed(java.awt.event.ActionEvent evt) {
         Book book = new Book();
         String book_title = tf_title_Book.getText();
@@ -2955,7 +2974,7 @@ public class ManageGUI extends javax.swing.JFrame {
     }
 
     public void btn_update_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        // TODO update dday:
     }
 
     public void btn_delete_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
@@ -2988,7 +3007,7 @@ public class ManageGUI extends javax.swing.JFrame {
             tf_ID_BookCopy.setText(String.valueOf(book_copy_id));
             tf_year_BookCopy.setText(String.valueOf(year_publish));
 
-            ComboBoxModel<BookCopy> cb_model_book = cb_book_BookCopy.getModel();
+            ComboBoxModel<Book> cb_model_book = cb_book_BookCopy.getModel();
             for (int i = 0; i < cb_model_book.getSize(); i++) {
                 if (cb_model_book.getElementAt(i).toString().equals(book)) {
                     cb_model_book.setSelectedItem(cb_model_book.getElementAt(i));
@@ -3047,7 +3066,32 @@ public class ManageGUI extends javax.swing.JFrame {
     }
 
     public void btn_create_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+       // TODO code ở đây
+        Book book = (Book) cb_book_BookCopy.getSelectedItem();
+        int book_id = book.getId();
+        Published published = (Published) cb_published_BookCopy.getSelectedItem();
+        int published_id = published.getId();
+        int year = Integer.parseInt(tf_year_BookCopy.getText());
+        BookCopy bookCopy = new BookCopy();
+        bookCopy.setPublished_id(published_id);
+        bookCopy.setBook_id(book_id);
+        bookCopy.setYear_published(year);
+        try {
+            Response response = controller.createBookCopyController(bookCopy);
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            } else {
+                showTableBookCopy();
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+
+        } catch (RemoteException ex) {
+            throw new RuntimeException(ex);
+        }
+        btn_refresh_BookActionPerformed(null);
+
+
+
     }
 
     public void btn_delete_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
@@ -3059,7 +3103,10 @@ public class ManageGUI extends javax.swing.JFrame {
     }
 
     public void btn_refresh_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        tf_ID_BookCopy.setEditable(true);
+        tf_ID_BookCopy.setText("");
+        tf_year_BookCopy.setText("");
+        showTableBookCopy();
     }
 
 

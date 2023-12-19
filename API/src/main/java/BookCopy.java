@@ -17,6 +17,9 @@ public class BookCopy implements Serializable {
         this.published_name = (String) data[3];
     }
 
+    public BookCopy() {
+    }
+
     public BookCopy(int id, int year_published, int book_id, int published_id) {
         this.id = id;
         this.year_published = year_published;

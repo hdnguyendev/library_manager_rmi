@@ -124,7 +124,9 @@ public class ManagerController {
     public Response getBooksCopyController() throws RemoteException {
         return libraryRemote.getBooksCopy();
     }
-
+    public Response createBookCopyController(BookCopy bookCopy) throws RemoteException {
+        return libraryRemote.createBookCopy(bookCopy,false);
+    }
     // CRUD - Hold
     public Response createHoldController(Hold hold) throws RemoteException {
         return libraryRemote.createHold(hold, false);
@@ -245,6 +247,23 @@ public class ManagerController {
 
         return dataList;
     }
+    private static List<Book> getTableDataBooks(DefaultTableModel model) {
+        List<Book> dataList = new ArrayList<>();
+
+        int rowCount = model.getRowCount();
+        int columnCount = model.getColumnCount();
+
+        for (int row = 0; row < rowCount; row++) {
+            Object[] rowData = new Object[columnCount];
+            for (int column = 0; column < columnCount; column++) {
+                rowData[column] = model.getValueAt(row, column);
+            }
+            Book book = new Book(rowData);
+            dataList.add(book);
+        }
+
+        return dataList;
+    }
     private static List<BookCopy> getTableDataBookCopy(DefaultTableModel model) {
         List<BookCopy> dataList = new ArrayList<>();
 
@@ -314,6 +333,19 @@ public class ManagerController {
         List<Author> authorsList = getTableDataAuthor(defaultTableModel);
 
         return new Response(200, authorsList);
+
+    }
+
+    public Response getDataComboBoxBooks() throws RemoteException {
+        Response response = libraryRemote.getBooks();
+        if (response.getStatus() == 100) {
+            return response;
+        }
+
+        DefaultTableModel defaultTableModel = (DefaultTableModel) response.getData();
+        List<Book> booksList = getTableDataBooks(defaultTableModel);
+
+        return new Response(200, booksList);
 
     }
     public Response getDataComboBoxBookCopies() throws RemoteException {
