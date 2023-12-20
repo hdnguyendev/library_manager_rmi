@@ -6,7 +6,7 @@ public class Checkout implements Serializable {
     private int id;
     private Timestamp start_time;
     private Timestamp end_time;
-    private boolean is_returned;
+    private boolean is_returned = false;
     private int patron_id;
     private int book_copy_id;
 

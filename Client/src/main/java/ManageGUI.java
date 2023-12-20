@@ -98,6 +98,7 @@ public class ManageGUI extends javax.swing.JFrame {
         showDataComboBoxCategory();
         showDataComboBoxPublished();
         showDataComboBoxAuthor();
+        showDataComboBoxBooks();
         showDataComboBoxBookCopy();
         showDataComboBoxPatron();
         //
@@ -343,7 +344,6 @@ public class ManageGUI extends javax.swing.JFrame {
 
 
     }
-
     public synchronized void showTableHold() {
         try {
             Response response = controller.getHoldsController();
@@ -644,12 +644,10 @@ public class ManageGUI extends javax.swing.JFrame {
             if (response.getStatus() == 100) {
                 JOptionPane.showMessageDialog(this, response.getData());
             }
-            cb_book_BookCopy.removeAllItems();
             cb_book_Hold.removeAllItems();
             cb_book_Checkout.removeAllItems();
             List<BookCopy> bookCopyList = (List<BookCopy>) response.getData();
             for (BookCopy i : bookCopyList) {
-                cb_book_BookCopy.addItem(i);
                 cb_book_Hold.addItem(i);
                 cb_book_Checkout.addItem(i);
             }
@@ -677,6 +675,25 @@ public class ManageGUI extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+    public synchronized void showDataComboBoxBooks() {
+        try {
+            Response response = controller.getDataComboBoxBooks();
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+            cb_book_BookCopy.removeAllItems();
+
+            List<Book> booksList = (List<Book>) response.getData();
+            for (Book i : booksList) {
+                cb_book_BookCopy.addItem(i);
+
+            }
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
@@ -1370,7 +1387,7 @@ public class ManageGUI extends javax.swing.JFrame {
 
         jLabel51.setText("Patron");
 
-        checkBox_Checkout.setText("Returned");
+        checkBox_Checkout.setText("Approved");
 
         jLabel52.setText("Status");
 
@@ -2656,16 +2673,95 @@ public class ManageGUI extends javax.swing.JFrame {
     }
 
     public void btn_delete_PatronActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+        if (result == JOptionPane.YES_OPTION) {
+
+
+            int patron_id = Integer.parseInt(tf_ID_Patron.getText());
+
+            try {
+                Response res = controller.deleteControllerPatron(patron_id);
+                if (res.getStatus() == 100) {
+                    JOptionPane.showMessageDialog(this, res.getData());
+                } else {
+                    showTablePatrons();
+                    JOptionPane.showMessageDialog(this, res.getData());
+                }
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        btn_refresh_PatronActionPerformed(null);
     }
 
+
     public void btn_update_PatronActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        Patron patron = new Patron();
+        int patron_id = Integer.parseInt(tf_ID_Patron.getText());
+        String patron_fname = tf_fname_Patron.getText();
+        String patron_lname =  tf_lname_Patron.getText();
+        String patron_email = tf_email_Patron.getText();
+
+
+
+
+        patron.setId(patron_id);
+        patron.setFirstName(patron_fname);
+        patron.setLastName(patron_lname);
+        patron.setEmail(patron_email);
+
+
+
+
+        try {
+                Response response = controller.updatePatronController(patron);
+                if (response.getStatus() == 100) {
+                    JOptionPane.showMessageDialog(this, response.getData());
+                } else {
+                    showTablePatrons();
+                    JOptionPane.showMessageDialog(this, response.getData());
+                }
+
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+            btn_refresh_PatronActionPerformed(null);
+
+
     }
 
     public void btn_create_PatronActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        Patron patron = new Patron();
+        if (!tf_ID_Patron.getText().isEmpty()) {
+            int patron_id = Integer.parseInt(tf_ID_Patron.getText());
+            patron.setId(patron_id);
+        }
+        String patron_fname = tf_fname_Patron.getText();
+        String patron_lname =  tf_lname_Patron.getText();
+        String patron_email = tf_email_Patron.getText();
+        String patron_pass  = tf_pass_Patron.getText();
+
+
+        patron.setFirstName(patron_fname);
+        patron.setLastName(patron_lname);
+        patron.setEmail(patron_email);
+        patron.setPassword(patron_pass);
+
+        try {
+            Response response = controller.createPatronController(patron);
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            } else {
+                showTablePatrons();
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        btn_refresh_PatronActionPerformed(null);
     }
+
 
     // Hold
     public void tbl_HoldMousePressed(java.awt.event.MouseEvent evt) {
@@ -2809,7 +2905,7 @@ public class ManageGUI extends javax.swing.JFrame {
                 throw new RuntimeException(ex);
             }
         }
-        btn_refresh_BookActionPerformed(null);
+        btn_refresh_HoldActionPerformed(null);
     }
 
     public void btn_update_HoldActionPerformed(java.awt.event.ActionEvent evt) {
@@ -2849,6 +2945,7 @@ public class ManageGUI extends javax.swing.JFrame {
     // Published
     public void tbl_PublishedMousePressed(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
+
     }
 
     public void btn_refresh_PublishedActionPerformed(java.awt.event.ActionEvent evt) {
@@ -2880,6 +2977,14 @@ public class ManageGUI extends javax.swing.JFrame {
             String book_copy = (String) tbl_Checkout.getValueAt(selectedRow, 3);
             Timestamp time_start = (Timestamp) tbl_Checkout.getValueAt(selectedRow, 4);
             Timestamp time_end = (Timestamp) tbl_Checkout.getValueAt(selectedRow, 5);
+            String status = (String) tbl_Checkout.getValueAt(selectedRow, 6);
+
+            if (status.equals("Yes")) {
+                checkBox_Checkout.setSelected(true);
+            }
+            else {
+                checkBox_Checkout.setSelected(false);
+            }
 
             // check block
             if (checkBlock(table_name, checkout_id)) {
@@ -2951,19 +3056,104 @@ public class ManageGUI extends javax.swing.JFrame {
     }
 
     public void btn_create_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        Checkout checkout = new Checkout();
+        String start = tf_start_Checkout.getText();
+        Timestamp timestamp_start = Timestamp.valueOf(start);
+        String end = tf_end_Checkout.getText();
+        Timestamp timestamp_end = Timestamp.valueOf(end);
+        BookCopy bookCopy = (BookCopy) cb_book_Checkout.getSelectedItem();
+        int bookCopyId = bookCopy.getId();
+        Patron patron = (Patron) cb_patron_Checkout.getSelectedItem();
+        int patronId = patron.getId();
+
+        checkout.setStart_time(timestamp_start);
+        checkout.setEnd_time(timestamp_end);
+        checkout.setBook_copy_id(bookCopyId);
+        checkout.setPatron_id(patronId);
+
+        try {
+            Response response = controller.createCheckoutController(checkout);
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            } else {
+                showTableCheckout();
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+
+        } catch (RemoteException ex) {
+            throw new RuntimeException(ex);
+        }
+        btn_refresh_CheckoutActionPerformed(null);
     }
 
     public void btn_update_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        Checkout checkout = new Checkout();
+        int checkoutId = Integer.parseInt(tf_ID_Checkout.getText());
+        checkout.setId(checkoutId);
+        String start = tf_start_Checkout.getText();
+        Timestamp timestamp_start = Timestamp.valueOf(start);
+        String end = tf_end_Checkout.getText();
+        Timestamp timestamp_end = Timestamp.valueOf(end);
+        BookCopy bookCopy = (BookCopy) cb_book_Checkout.getSelectedItem();
+        int bookCopyId = bookCopy.getId();
+        Patron patron = (Patron) cb_patron_Checkout.getSelectedItem();
+        int patronId = patron.getId();
+        Boolean status = checkBox_Checkout.isSelected();
+
+
+        checkout.setStart_time(timestamp_start);
+        checkout.setEnd_time(timestamp_end);
+        checkout.setBook_copy_id(bookCopyId);
+        checkout.setPatron_id(patronId);
+        checkout.setIs_returned(status);
+
+        try {
+            Response response = controller.updateCheckoutController(checkout);
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            } else {
+                showTableCheckout();
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+
+        } catch (RemoteException ex) {
+            throw new RuntimeException(ex);
+        }
+        btn_refresh_CheckoutActionPerformed(null);
     }
 
     public void btn_delete_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa sách này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+        if (result == JOptionPane.YES_OPTION) {
+
+
+            int checkoutId = Integer.parseInt(tf_ID_Checkout.getText());
+
+            try {
+                Response res = controller.deleteCheckoutController(checkoutId);
+                if (res.getStatus() == 100) {
+                    JOptionPane.showMessageDialog(this, res.getData());
+                } else {
+                    showTableCheckout();
+                    JOptionPane.showMessageDialog(this, res.getData());
+                }
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        btn_refresh_CheckoutActionPerformed(null);
     }
 
     public void btn_refresh_CheckoutActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        tf_ID_Checkout.setEditable(true);
+        long currentTimeMillis = System.currentTimeMillis();
+        Timestamp now = new Timestamp(currentTimeMillis);
+        tf_ID_Checkout.setText("");
+        tf_start_Checkout.setText(now.toString());
+        tf_end_Checkout.setText(now.toString());
+        showTableCheckout();
     }
 
     // Book Copy
@@ -2988,7 +3178,7 @@ public class ManageGUI extends javax.swing.JFrame {
             tf_ID_BookCopy.setText(String.valueOf(book_copy_id));
             tf_year_BookCopy.setText(String.valueOf(year_publish));
 
-            ComboBoxModel<BookCopy> cb_model_book = cb_book_BookCopy.getModel();
+            ComboBoxModel<Book> cb_model_book = cb_book_BookCopy.getModel();
             for (int i = 0; i < cb_model_book.getSize(); i++) {
                 if (cb_model_book.getElementAt(i).toString().equals(book)) {
                     cb_model_book.setSelectedItem(cb_model_book.getElementAt(i));
@@ -3047,7 +3237,28 @@ public class ManageGUI extends javax.swing.JFrame {
     }
 
     public void btn_create_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        Book book = (Book) cb_book_BookCopy.getSelectedItem();
+        int book_id = book.getId();
+        Published published = (Published) cb_published_BookCopy.getSelectedItem();
+        int published_id = published.getId();
+        int year = Integer.parseInt(tf_year_BookCopy.getText());
+        BookCopy bookCopy = new BookCopy();
+        bookCopy.setPublished_id(published_id);
+        bookCopy.setBook_id(book_id);
+        bookCopy.setYear_published(year);
+        try {
+            Response response = controller.createBookCopyController(bookCopy);
+            if (response.getStatus() == 100) {
+                JOptionPane.showMessageDialog(this, response.getData());
+            } else {
+                showTableBookCopy();
+                JOptionPane.showMessageDialog(this, response.getData());
+            }
+
+        } catch (RemoteException ex) {
+            throw new RuntimeException(ex);
+        }
+        btn_refresh_BookActionPerformed(null);
     }
 
     public void btn_delete_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
@@ -3059,7 +3270,10 @@ public class ManageGUI extends javax.swing.JFrame {
     }
 
     public void btn_refresh_BookCopyActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        tf_ID_BookCopy.setEditable(true);
+        tf_ID_BookCopy.setText("");
+        tf_year_BookCopy.setText("");
+        showTableBookCopy();
     }
 
 

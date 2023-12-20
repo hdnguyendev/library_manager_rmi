@@ -49,7 +49,6 @@ public class ClientController {
     public Response loginClient(Patron patron) throws RemoteException {
         return libraryRemote.loginClient(patron);
     }
-
     public Response getNotificationByPatronId(int patron_id) throws RemoteException {
         return libraryRemote.getNotification(patron_id);
     }
@@ -59,6 +58,19 @@ public class ClientController {
     }
     public Response getCheckoutsClient(int patron_id) throws RemoteException {
         Response response = libraryRemote.getCheckoutsClient(patron_id);
+        return response;
+    }
+    public Response clientBorrowBookCopy(Checkout checkout) throws RemoteException {
+        Response response = libraryRemote.createCheckout(checkout, false);
+        return response;
+    }
+
+    public void exit() throws RemoteException {
+        libraryRemote.unregisterForCallback(callbackObj);
+    }
+
+    public Response clientReturnBookCopy(int checkout_id) throws RemoteException {
+        Response response = libraryRemote.deleteCheckout(checkout_id,false);
         return response;
     }
 }

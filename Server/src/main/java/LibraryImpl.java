@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.*;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Vector;
 
 public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
@@ -189,7 +190,7 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
                 row.add(rst.getString("book_title"));
                 row.add(rst.getString("borrowed_date"));
                 row.add(rst.getString("returned_date"));
-                row.add(rst.getString("borrow_status"));
+                row.add(rst.getBoolean("borrow_status") ? "Yes" : "No");
                 vData.add(row);
             }
             rst.close();
@@ -377,12 +378,13 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
                     "FROM checkout as c " +
                     "INNER JOIN patron_account as pa ON pa.id = c.patron_id " +
                     "INNER JOIN book_copy as bc ON bc.id = c.book_copy_id " +
-                    "INNER JOIN book as b ON b.id = bc.book_id";
+                    "INNER JOIN book as b ON b.id = bc.book_id " +
+                    "ORDER BY c.id DESC ";
 
             rst = stm.executeQuery(query);
 
             String[] title = new String[]{
-                    "Checkout ID", "Patron Email", "Patron Name", "Book Title", "Time start", "Time end", "Is Returned"
+                    "ID", "Patron Email", "Patron Name", "Book Title", "Time start", "Time end", "Approved"
             };
             Collections.addAll(vTitle, title);
             while (rst.next()) {
@@ -813,18 +815,71 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
     @Override
     public Response updatePatron(Patron patron, boolean isCallFromSever) throws RemoteException {
-        return null;
+        try  {
+            if (!isCallFromSever && !(server2() == null)) {
+                server2().updatePatron(patron, true);
+            }
+            String query = "UPDATE patron_account SET first_name = ?, last_name = ?, email = ? WHERE id = ?";
+            pst = conn.prepareStatement(query);
+
+            pst.setString(1, patron.getFirstName());
+            pst.setString(2, patron.getLastName());
+            pst.setString(3, patron.getEmail());
+            pst.setInt(4, patron.getId());
+
+            int rowsUpdated = pst.executeUpdate();
+            if (rowsUpdated > 0) {
+                return new Response(200, "Update patron account successfully");
+            } else {
+                return new Response(100, "Some error when update patron account");
+            }
+
+        } catch (SQLException e) {
+            return new Response(100, e.getMessage());
+        }
     }
 
     @Override
     public Response deletePatron(int id, boolean isCallFromSever) throws RemoteException {
-        return null;
+        try {
+            if (!isCallFromSever && !(server2() == null)) {
+                server2().deletePatron(id, true);
+            }
+            String query = "DELETE FROM patron_account WHERE id = ?";
+            pst = conn.prepareStatement(query);
+
+            pst.setInt(1, id);
+
+            int rowsDeleted = pst.executeUpdate();
+            if (rowsDeleted > 0) {
+                return new Response(200, "Successfully.");
+            } else {
+                return new Response(100, "No patron found with the given ID.");
+            }
+        } catch (SQLException e) {
+            return new Response(100, e.getMessage());
+        }
     }
+
+
 
     // CRUD BookCopy
     @Override
     public Response createBookCopy(BookCopy bookCopy, boolean isCallFromSever) throws RemoteException {
-        return null;
+        try {
+            String query = "INSERT INTO book_copy (year_published, book_id, published_id) VALUES (?, ?, ?)";
+            pst = conn.prepareStatement(query);
+
+            pst.setInt(1, bookCopy.getYear_published());
+            pst.setInt(2, bookCopy.getPublished_id());
+            pst.setInt(3, bookCopy.getBook_id());
+
+            pst.executeUpdate();
+
+            return new Response(200, "Create book copy successfully");
+        } catch (SQLException e) {
+            return new Response(100, e.getMessage());
+        }
     }
 
     @Override
@@ -914,6 +969,9 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response createCheckout(Checkout checkout, boolean isCallFromSever) throws RemoteException {
         try {
+            if (!isCallFromSever && !(server2() == null)) {
+                server2().createCheckout(checkout, true);
+            }
             String query = "INSERT INTO checkout (start_time, end_time, is_returned, patron_id, book_copy_id) VALUES (?, ?, ?, ?, ?)";
             pst = conn.prepareStatement(query);
 
@@ -925,7 +983,10 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
             pst.executeUpdate();
 
-            return new Response(200, "Create checkout successfully");
+            doCallbacks(NOTIFY.CLIENT_UPDATE_CHECKOUT);
+            doCallbacks(NOTIFY.UPDATE_CHECKOUT);
+
+            return new Response(200, "Successfully");
         } catch (SQLException e) {
             return new Response(100, e.getMessage());
         }
@@ -939,6 +1000,9 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response updateCheckout(Checkout checkout, boolean isCallFromSever) throws RemoteException {
         try  {
+            if (!isCallFromSever && !(server2() == null)) {
+                server2().updateCheckout(checkout, true);
+            }
             String query = "UPDATE checkout SET start_time = ?, end_time = ?, is_returned = ?, patron_id = ?, book_copy_id = ? WHERE id = ?";
             pst = conn.prepareStatement(query);
 
@@ -951,9 +1015,31 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
             int rowsUpdated = pst.executeUpdate();
             if (rowsUpdated > 0) {
-                return new Response(200, "Checkout updated successfully.");
+                if (checkout.isIs_returned()) {
+                    Notification notification = new Notification();
+
+                    java.util.Date date = new Date();
+                    Timestamp time_now = new Timestamp(date.getTime());
+
+                    notification.setMessage("ID " + checkout.getId() + ": Thủ thư cho phép bạn mượn sách!");
+                    notification.setPatron_id(checkout.getPatron_id());
+                    notification.setSend_at(time_now);
+
+                    String insertNotificationQuery = "INSERT INTO notification (sent_at, message, patron_id) VALUES (?, ?, ?)";
+                    PreparedStatement insertNotificationStatement = conn.prepareStatement(insertNotificationQuery, Statement.RETURN_GENERATED_KEYS);
+                    insertNotificationStatement.setTimestamp(1, notification.getSend_at());
+                    insertNotificationStatement.setString(2, notification.getMessage());
+                    insertNotificationStatement.setInt(3, notification.getPatron_id());
+                    insertNotificationStatement.executeUpdate();
+
+                    doCallbacks(NOTIFY.UPDATE_NOTIFICATION);
+                    doCallbacks(NOTIFY.CLIENT_UPDATE_NOTIFICATION);
+                    doCallbacks(NOTIFY.CLIENT_UPDATE_CHECKOUT);
+
+                }
+                return new Response(200, "Updated successfully.");
             } else {
-                return new Response(100, "No checkout found with the given ID.");
+                return new Response(100, "No record found with the given ID.");
             }
         } catch (SQLException e) {
             return new Response(100, e.getMessage());
@@ -963,6 +1049,9 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
     @Override
     public Response deleteCheckout(int id, boolean isCallFromSever) throws RemoteException {
         try {
+            if (!isCallFromSever && !(server2() == null)) {
+                server2().deleteCheckout(id, true);
+            }
             String query = "DELETE FROM checkout WHERE id = ?";
             pst = conn.prepareStatement(query);
 
@@ -970,7 +1059,9 @@ public class LibraryImpl extends UnicastRemoteObject implements LibraryRemote {
 
             int rowsDeleted = pst.executeUpdate();
             if (rowsDeleted > 0) {
-                return new Response(200, "Checkout deleted successfully.");
+                doCallbacks(NOTIFY.CLIENT_UPDATE_CHECKOUT);
+                doCallbacks(NOTIFY.UPDATE_CHECKOUT);
+                return new Response(200, "Successfully.");
             } else {
                 return new Response(100, "No checkout found with the given ID.");
             }

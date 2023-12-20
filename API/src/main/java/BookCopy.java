@@ -9,6 +9,8 @@ public class BookCopy implements Serializable {
 
     private String book_name;
     private String published_name;
+    public BookCopy() {
+    }
 
     public BookCopy(Object[] data) {
         this.id = (int) data[0];

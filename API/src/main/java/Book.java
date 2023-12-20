@@ -8,7 +8,10 @@ public class Book implements Serializable {
 
     public Book() {
     }
-
+    public Book(Object[] data) {
+        this.id = (int) data[0];
+        this.title = (String) data[1];
+    }
     public Book(int id, String title, int category_id) {
         this.id = id;
         this.title = title;
@@ -37,5 +40,8 @@ public class Book implements Serializable {
 
     public void setCategory_id(int category_id) {
         this.category_id = category_id;
+    }
+    public String toString() {
+        return this.title;
     }
 }

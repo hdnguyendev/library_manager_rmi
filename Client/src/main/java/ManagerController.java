@@ -60,8 +60,6 @@ public class ManagerController {
         return response;
 
     }
-
-
     public Response createBookController(Book book, int author_id) throws RemoteException, SQLException {
         Response response = libraryRemote.createBook(book, author_id,false);
         return response;
@@ -124,6 +122,9 @@ public class ManagerController {
     public Response getBooksCopyController() throws RemoteException {
         return libraryRemote.getBooksCopy();
     }
+    public Response createBookCopyController(BookCopy bookCopy) throws RemoteException {
+        return libraryRemote.createBookCopy(bookCopy,false);
+    }
 
     // CRUD - Hold
     public Response createHoldController(Hold hold) throws RemoteException {
@@ -144,6 +145,18 @@ public class ManagerController {
     public Response getCheckoutsController() throws RemoteException {
         return libraryRemote.getCheckouts();
     }
+    public Response updateCheckoutController(Checkout checkout) throws RemoteException{
+        return libraryRemote.updateCheckout(checkout,false);
+    }
+
+    public Response createCheckoutController(Checkout checkout) throws RemoteException {
+        return  libraryRemote.createCheckout(checkout, false);
+    }
+    public Response deleteCheckoutController(int checkoutId) throws RemoteException {
+        return libraryRemote.deleteCheckout(checkoutId, false);
+    }
+
+
 
     // CRUD - Notification
     public Response getNotificationsController() throws RemoteException {
@@ -166,7 +179,15 @@ public class ManagerController {
     public Response getPatronsController() throws RemoteException {
         return libraryRemote.getPatrons();
     }
-
+    public Response updatePatronController(Patron patron) throws RemoteException {
+        return libraryRemote.updatePatron(patron, false);
+    }
+    public Response createPatronController(Patron patron) throws RemoteException {
+        return libraryRemote.createPatron(patron, false);
+    }
+    public Response deleteControllerPatron(int patronId) throws RemoteException {
+        return libraryRemote.deletePatron(patronId,false);
+    }
     // CRUD - History
     public Response getHistoryController() throws RemoteException {
         return libraryRemote.getHistory();
@@ -262,6 +283,23 @@ public class ManagerController {
 
         return dataList;
     }
+    private static List<Book> getTableDataBooks(DefaultTableModel model) {
+        List<Book> dataList = new ArrayList<>();
+
+        int rowCount = model.getRowCount();
+        int columnCount = model.getColumnCount();
+
+        for (int row = 0; row < rowCount; row++) {
+            Object[] rowData = new Object[columnCount];
+            for (int column = 0; column < columnCount; column++) {
+                rowData[column] = model.getValueAt(row, column);
+            }
+            Book book = new Book(rowData);
+            dataList.add(book);
+        }
+
+        return dataList;
+    }
     private static List<Patron> getTableDataPatron(DefaultTableModel model) {
         List<Patron> dataList = new ArrayList<>();
 
@@ -316,6 +354,18 @@ public class ManagerController {
         return new Response(200, authorsList);
 
     }
+    public Response getDataComboBoxBooks() throws RemoteException {
+        Response response = libraryRemote.getBooks();
+        if (response.getStatus() == 100) {
+            return response;
+        }
+
+        DefaultTableModel defaultTableModel = (DefaultTableModel) response.getData();
+        List<Book> booksList = getTableDataBooks(defaultTableModel);
+
+        return new Response(200, booksList);
+
+    }
     public Response getDataComboBoxBookCopies() throws RemoteException {
         Response response = libraryRemote.getBooksCopy();
         if (response.getStatus() == 100) {
@@ -340,6 +390,7 @@ public class ManagerController {
         return new Response(200, patronsList);
 
     }
+
 
 
 }

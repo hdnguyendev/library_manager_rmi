@@ -9,4 +9,6 @@ public class Config {
     public static String USER_DB = "root";
     public static String PASSWORD_DB = "";
 
+    public static Integer DAY_FOR_BORROW = 7;
+
 }

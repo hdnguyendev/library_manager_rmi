@@ -9,16 +9,23 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
- *
  * @author nguye
  */
 public class ClientGUI extends javax.swing.JFrame {
     Patron patron;
     TableRowSorter sorter;
+
     /**
      * Creates new form ClientGUI
      */
@@ -31,10 +38,13 @@ public class ClientGUI extends javax.swing.JFrame {
         public void notify(NOTIFY notify) throws RemoteException {
 
             if (notify == NOTIFY.CLIENT_UPDATE_NOTIFICATION) showNotification();
+            if (notify == NOTIFY.CLIENT_UPDATE_CHECKOUT) showCheckouts();
 
         }
     }
+
     ClientController controller;
+
     private void showNotification() {
         try {
             Response response = controller.getNotificationByPatronId(patron.getId());
@@ -50,6 +60,7 @@ public class ClientGUI extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+
     private void showBookForSearch() {
         try {
 
@@ -94,6 +105,7 @@ public class ClientGUI extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+
     private void showCheckouts() {
         try {
             int patron_id = patron.getId();
@@ -112,6 +124,18 @@ public class ClientGUI extends javax.swing.JFrame {
 
     public ClientGUI(Patron patron) {
         initComponents();
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+
+                try {
+                    controller.exit();
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
         this.patron = patron;
         setTitle("VKU Library - " + patron.getEmail());
 
@@ -167,7 +191,7 @@ public class ClientGUI extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         lb_Search_Category = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
+        lb_Search_Author = new javax.swing.JLabel();
         btn_Report_Book = new javax.swing.JButton();
         btn_Borrow = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -319,7 +343,7 @@ public class ClientGUI extends javax.swing.JFrame {
         jPanel9.add(jLabel4);
 
         lb_Search_BookName.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
-        lb_Search_BookName.setText("Toán Cao cấp");
+        lb_Search_BookName.setText(null);
         jPanel9.add(lb_Search_BookName);
 
         jLabel5.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
@@ -327,7 +351,7 @@ public class ClientGUI extends javax.swing.JFrame {
         jPanel9.add(jLabel5);
 
         lb_Search_Published.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
-        lb_Search_Published.setText("Louisa May Alcott");
+        lb_Search_Published.setText(null);
         jPanel9.add(lb_Search_Published);
 
         jLabel6.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
@@ -335,7 +359,7 @@ public class ClientGUI extends javax.swing.JFrame {
         jPanel9.add(jLabel6);
 
         lb_Search_Year.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
-        lb_Search_Year.setText("2010");
+        lb_Search_Year.setText(null);
         jPanel9.add(lb_Search_Year);
 
         jLabel7.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
@@ -343,16 +367,16 @@ public class ClientGUI extends javax.swing.JFrame {
         jPanel9.add(jLabel7);
 
         lb_Search_Category.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
-        lb_Search_Category.setText("Sách giáo khoa");
+        lb_Search_Category.setText(null);
         jPanel9.add(lb_Search_Category);
 
         jLabel8.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
-        jLabel8.setText("Detail");
+        jLabel8.setText("Author");
         jPanel9.add(jLabel8);
 
-        jLabel14.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
-        jLabel14.setText("This Book very good!");
-        jPanel9.add(jLabel14);
+        lb_Search_Author.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
+        lb_Search_Author.setText(null);
+        jPanel9.add(lb_Search_Author);
 
         btn_Report_Book.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
         btn_Report_Book.setText("Report");
@@ -439,7 +463,7 @@ public class ClientGUI extends javax.swing.JFrame {
         jPanel17.add(jLabel17);
 
         lb_BookName_Return.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
-        lb_BookName_Return.setText("Toán Cao cấp");
+        lb_BookName_Return.setText(null);
         jPanel17.add(lb_BookName_Return);
 
         jLabel19.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
@@ -447,7 +471,7 @@ public class ClientGUI extends javax.swing.JFrame {
         jPanel17.add(jLabel19);
 
         lb_Return_TimeStart.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
-        lb_Return_TimeStart.setText("12:03:12 2023-10-15");
+        lb_Return_TimeStart.setText(null);
         jPanel17.add(lb_Return_TimeStart);
 
         jLabel21.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
@@ -455,7 +479,7 @@ public class ClientGUI extends javax.swing.JFrame {
         jPanel17.add(jLabel21);
 
         lb_Return_TimeEnd.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
-        lb_Return_TimeEnd.setText("12:03-12 2023-10-24");
+        lb_Return_TimeEnd.setText(null);
         jPanel17.add(lb_Return_TimeEnd);
 
         btn_Report_Return.setFont(new java.awt.Font("Montserrat", 1, 12)); // NOI18N
@@ -593,11 +617,60 @@ public class ClientGUI extends javax.swing.JFrame {
     }// </editor-fold>
 
     private void btn_BorrowActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        int selectedRow = tbl_Book.getSelectedRow();
+        if (selectedRow != -1) {
+            int id = (int) tbl_Book.getValueAt(selectedRow, 0);
+
+            Checkout checkout = new Checkout();
+            checkout.setPatron_id(patron.getId());
+            checkout.setBook_copy_id(id);
+            // NOW
+            long currentTimeMillis = System.currentTimeMillis();
+            Timestamp now = new Timestamp(currentTimeMillis);
+            checkout.setStart_time(now);
+
+            // AFTER 7 DAYS
+            LocalDateTime nowW = LocalDateTime.now();
+            LocalDateTime afterW = nowW.plus(Config.DAY_FOR_BORROW, ChronoUnit.DAYS);
+            Timestamp after = Timestamp.valueOf(afterW);
+            checkout.setEnd_time(after);
+
+            try {
+                Response response = controller.clientBorrowBookCopy(checkout);
+                if (response.getStatus() == 100) {
+                    JOptionPane.showMessageDialog(this, response.getData());
+                } else {
+                    JOptionPane.showMessageDialog(this, response.getData());
+                }
+
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+
     }
 
     private void btn_ReturnActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        int selectedRow = tbl_Profile.getSelectedRow();
+        if (selectedRow != -1) {
+            int id = (int) tbl_Profile.getValueAt(selectedRow, 0);
+
+            try {
+                Response response = controller.clientReturnBookCopy(id);
+                if (response.getStatus() == 100) {
+                    JOptionPane.showMessageDialog(this, response.getData());
+                } else {
+                    JOptionPane.showMessageDialog(this, response.getData());
+                }
+
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+
     }
 
     private void tbl_NotificationMousePressed(java.awt.event.MouseEvent evt) {
@@ -605,23 +678,57 @@ public class ClientGUI extends javax.swing.JFrame {
     }
 
     private void btn_LogoutActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        LoginGUI login = new LoginGUI();
+        login.setVisible(true);
+        try {
+            controller.exit();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        this.dispose();
     }
 
     private void tbl_BookMousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
+        int selectedRow = tbl_Book.getSelectedRow();
+        if (selectedRow != -1) {
+            // Lấy thông tin từ hàng dữ liệu được chọn
+            int author_id = (int) tbl_Book.getValueAt(selectedRow, 0);
+            String Title = (String) tbl_Book.getValueAt(selectedRow, 1);
+            String Cate = (String) tbl_Book.getValueAt(selectedRow, 2);
+            String Author = (String) tbl_Book.getValueAt(selectedRow, 3);
+            String Published = (String) tbl_Book.getValueAt(selectedRow, 4);
+            String Year = (String) tbl_Book.getValueAt(selectedRow, 5);
+
+
+            // Set vào lb
+            lb_Search_BookName.setText(String.valueOf(Title));
+            lb_Search_Category.setText(String.valueOf(Cate));
+            lb_Search_Author.setText(String.valueOf(Author));
+            lb_Search_Published.setText(String.valueOf(Published));
+            lb_Search_Year.setText(String.valueOf(Year));
+
+        }
     }
 
-    private void btn_Report_BookActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
 
     private void tbl_ProfileMousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
+        int selectedRow = tbl_Profile.getSelectedRow();
+        if (selectedRow != -1) {
+            // Lấy thông tin từ hàng dữ liệu được chọn
+            String Title = (String) tbl_Profile.getValueAt(selectedRow, 1);
+            String Bor = (String) tbl_Profile.getValueAt(selectedRow, 2);
+            String Ret = (String) tbl_Profile.getValueAt(selectedRow, 3);
+            // Set vào lb
+            lb_BookName_Return.setText(String.valueOf(Title));
+            lb_Return_TimeStart.setText(String.valueOf(Bor));
+            lb_Return_TimeEnd.setText(String.valueOf(Ret));
+        }
     }
 
     private void btn_Report_ReturnActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+    }
+
+    private void btn_Report_BookActionPerformed(java.awt.event.ActionEvent evt) {
     }
 
 
@@ -666,7 +773,6 @@ public class ClientGUI extends javax.swing.JFrame {
     private javax.swing.Box.Filler filler9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
@@ -712,6 +818,7 @@ public class ClientGUI extends javax.swing.JFrame {
     private javax.swing.JLabel lb_Search_BookName;
     private javax.swing.JLabel lb_Search_Category;
     private javax.swing.JLabel lb_Search_Published;
+    private javax.swing.JLabel lb_Search_Author;
     private javax.swing.JLabel lb_Search_Year;
     private javax.swing.JPanel panel_banner;
     private javax.swing.JPanel panel_home;
